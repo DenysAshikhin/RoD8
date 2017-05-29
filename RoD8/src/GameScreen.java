@@ -1,6 +1,7 @@
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,8 +19,12 @@ public class GameScreen implements Screen{
 	final float SPEED = 300;
 	float stateTime;
 	float rollTimer;
+	float shootTimer;
+	float asteroidSpawnTimer;
+	Random random;
 	
 	ArrayList<Bullet> bullets;
+	ArrayList<Asteroid> asteroids;
 	
 	public static final float SHIP_ANIMATION_SPEED = 0.5f;
 	public static final int SHIP_WIDTH_PIXEL = 17;
@@ -27,6 +32,10 @@ public class GameScreen implements Screen{
 	public static final int SHIP_WIDTH = SHIP_WIDTH_PIXEL * 3;
 	public static final int SHIP_HEIGHT = SHIP_HEIGHT_PIXEL * 3;
 	public static final float ROLL_TIME_SWITCH_TIME = 0.12f;
+	public static final float SHOOT_WAIT_TIME = 0.3f;
+	public static final float MIN_ASTEROID_SPAWN_TIME = 0.3f;
+	public static final float MAX_ASTEROID_SPAWN_TIME = 0.6f;
+	
 	
 	Animation<TextureRegion>[] rolls;
 		
@@ -38,9 +47,14 @@ public class GameScreen implements Screen{
 		y = 15;
 		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;
 		
+		random = new Random();//Episode 11 for logic on timing
+		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
+		
+		asteroids = new ArrayList<Asteroid>();
 		bullets = new ArrayList<Bullet>();
 		
 		roll = 2;
+		shootTimer = 0;
 		rollTimer = 0;
 		rolls = new Animation[5];//Figure this underline later
 		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
@@ -63,11 +77,42 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 
 		//Shooting code
-		if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
+		shootTimer += delta;
+		if(Gdx.input.isKeyPressed(Keys.SPACE) && shootTimer >= SHOOT_WAIT_TIME){
 			
-			bullets.add(new Bullet(x + 4));
-			bullets.add(new Bullet(x + SHIP_WIDTH -4));
+			shootTimer = 0;
+			
+			int offset = 4;
+			if (roll == 1 || roll == 3)//Slight Tilt
+				offset = 8;
+			
+			if (roll == 0 || roll == 4)//Full Tilt
+				offset = 16;
+			
+			
+			bullets.add(new Bullet(x + offset));
+			bullets.add(new Bullet(x + SHIP_WIDTH - offset));
 		}
+		
+		
+		//Asteroid Logic
+		asteroidSpawnTimer -= delta;
+		if (asteroidSpawnTimer <= 0){
+			
+			asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
+			asteroids.add(new Asteroid(random.nextInt(Gdx.graphics.getWidth() - Asteroid.WIDTH)));
+		}
+		
+		//Update Asteroids
+		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+		for(Asteroid asteroid : asteroids){
+			
+			asteroid.update(delta);
+			if(asteroid.remove)
+				asteroidsRemove.add(asteroid);
+		}
+		asteroids.remove(asteroidsRemove);
+
 		
 		//Update Bullets
 		ArrayList<Bullet> bulletsRemove = new ArrayList<Bullet>();
@@ -97,7 +142,7 @@ public class GameScreen implements Screen{
 			rollTimer -= Gdx.graphics.getDeltaTime();
 			if (rollTimer < -ROLL_TIME_SWITCH_TIME && roll != 0){
 				
-				rollTimer = 0;
+				rollTimer += ROLL_TIME_SWITCH_TIME;
 				roll--;					
 			}
 
@@ -109,7 +154,7 @@ public class GameScreen implements Screen{
 				rollTimer += Gdx.graphics.getDeltaTime();
 				if (rollTimer > ROLL_TIME_SWITCH_TIME && roll != 4){		
 					
-					rollTimer = 0;
+					rollTimer += ROLL_TIME_SWITCH_TIME;
 					roll++;
 				}
 			}	
@@ -135,7 +180,7 @@ public class GameScreen implements Screen{
 			rollTimer += Gdx.graphics.getDeltaTime();
 			if (rollTimer > ROLL_TIME_SWITCH_TIME && roll !=4){
 				
-				rollTimer = 0;
+				rollTimer -= ROLL_TIME_SWITCH_TIME;
 				roll++;				
 			}
 		}
@@ -146,7 +191,7 @@ public class GameScreen implements Screen{
 				rollTimer -= Gdx.graphics.getDeltaTime();
 				if (rollTimer < -ROLL_TIME_SWITCH_TIME && roll != 0){
 					
-					rollTimer = 0;
+					rollTimer -= ROLL_TIME_SWITCH_TIME;
 					roll--;				
 				}
 			}
@@ -163,6 +208,11 @@ public class GameScreen implements Screen{
 		for (Bullet bullet : bullets){
 			
 			bullet.render(game.batch);
+		}
+		
+		for (Asteroid asteroid : asteroids){
+			
+			asteroid.render(game.batch);
 		}
 		game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 		
