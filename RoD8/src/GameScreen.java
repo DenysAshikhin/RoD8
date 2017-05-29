@@ -33,7 +33,7 @@ public class GameScreen implements Screen{
 		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;
 		
 		roll = 2;
-		rolls = new Animation[5];
+		rolls = new Animation[5];//Figure this underline later
 		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
 	
 		rolls[roll] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[0]);
