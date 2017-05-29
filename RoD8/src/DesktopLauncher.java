@@ -6,6 +6,11 @@ public class DesktopLauncher {
 	public static void main (String[] args) {
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new MyGdxGame(), config);
+		
+		config.foregroundFPS = 60;    
+		
+		new LwjglApplication(new SpaceGame(), config);
+		
+		
 	}
 }
