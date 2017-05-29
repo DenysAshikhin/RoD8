@@ -1,9 +1,10 @@
-package Screens;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Input.Keys;
 
 public class GameScreen implements Screen{
@@ -11,17 +12,18 @@ public class GameScreen implements Screen{
 	Texture img;
 	float x,y;
 	final float SPEED = 120;
-	
+		
 	SpaceGame game;
 	
 	public GameScreen(SpaceGame game){
 		
+		this.game = game;
 	}
 	
 	@Override
 	public void show() {
 
-		
+		img = new Texture("badlogic.jpg");
 	}
 
 	@Override
@@ -50,9 +52,9 @@ public class GameScreen implements Screen{
 			x += SPEED*Gdx.graphics.getDeltaTime();
 		}
 		
-		batch.begin();
-		batch.draw(img, x, y);
-		batch.end();
+		game.batch.begin();
+		game.batch.draw(img, x, y);
+		game.batch.end();
 	}
 
 	@Override
