@@ -6,6 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -26,10 +27,17 @@ public class GameScreen implements Screen{
 	
 	ArrayList<Bullet> bullets;
 	ArrayList<Asteroid> asteroids;
+	ArrayList<Explosion> explosions;
 	
 	BitmapFont scoreFont;
 	
+	float health = 1;// 0 = dead, 1 = full health
+	
 	int score;
+	
+	CollisionRect playerRect;
+	
+	Texture healthTexture;
 	
 	public static final float SHIP_ANIMATION_SPEED = 0.5f;
 	public static final int SHIP_WIDTH_PIXEL = 17;
@@ -57,10 +65,15 @@ public class GameScreen implements Screen{
 		
 		asteroids = new ArrayList<Asteroid>();
 		bullets = new ArrayList<Bullet>();
+		explosions = new ArrayList<Explosion>();
+		
+		playerRect = new CollisionRect(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
 		
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 		
 		score = 0;
+		
+		healthTexture = new Texture("blank.png");
 		
 		roll = 2;
 		shootTimer = 0;
@@ -84,7 +97,37 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
+		
+		//Update Asteroids
+		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+		for(Asteroid asteroid : asteroids){
+			
+			asteroid.update(delta);
+			if(asteroid.remove)
+				asteroidsRemove.add(asteroid);
+		}
+		
 
+		
+		//Update Bullets
+		ArrayList<Bullet> bulletsRemove = new ArrayList<Bullet>();
+		for (Bullet bullet : bullets){
+			
+			bullet.update(delta);
+			if(bullet.remove)
+				bulletsRemove.add(bullet);
+		}
+		
+		//Update Explosions
+		ArrayList<Explosion> explosionsRemove = new ArrayList<Explosion>();
+		for (Explosion explosion : explosions){
+			
+			explosion.update(delta);
+			if (explosion.remove)
+				explosionsRemove.add(explosion);
+			
+		}
+		
 		//Shooting code
 		shootTimer += delta;
 		if(Gdx.input.isKeyPressed(Keys.SPACE) && shootTimer >= SHOOT_WAIT_TIME){
@@ -146,7 +189,6 @@ public class GameScreen implements Screen{
 			}	
 		}
 		
-		
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
 			
 			if (x + SHIP_WIDTH <= Gdx.graphics.getWidth()){
@@ -183,26 +225,18 @@ public class GameScreen implements Screen{
 			}
 		}
 		
-		//Update Asteroids
-		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+
+		//After player moves, collision update
+		playerRect.move(x, y);
+		
 		for(Asteroid asteroid : asteroids){
 			
-			asteroid.update(delta);
-			if(asteroid.remove)
+			if (asteroid.getCollisionRect().collidesWith(playerRect)){
+				
 				asteroidsRemove.add(asteroid);
+				health -= 0.1;//Add f?
+			}
 		}
-		
-
-		
-		//Update Bullets
-		ArrayList<Bullet> bulletsRemove = new ArrayList<Bullet>();
-		for (Bullet bullet : bullets){
-			
-			bullet.update(delta);
-			if(bullet.remove)
-				bulletsRemove.add(bullet);
-		}
-		
 		
 		//After all updates, check collision
 		for (Bullet bullet : bullets){
@@ -213,6 +247,7 @@ public class GameScreen implements Screen{
 					
 					asteroidsRemove.add(asteroid);
 					bulletsRemove.add(bullet);
+					explosions.add(new Explosion(asteroid.getX(), asteroid.getY()));
 					score += 100;
 				}
 				
@@ -221,6 +256,7 @@ public class GameScreen implements Screen{
 		
 		bullets.removeAll(bulletsRemove);
 		asteroids.removeAll(asteroidsRemove);
+		explosions.removeAll(explosionsRemove);
 		
 		stateTime += delta;
 		
@@ -240,6 +276,22 @@ public class GameScreen implements Screen{
 			
 			asteroid.render(game.batch);
 		}
+		
+		for (Explosion explosion : explosions){
+			
+			explosion.render(game.batch);
+		}
+		
+		
+		//Draw Health
+		if(health > 0.6f)
+			game.batch.setColor(Color.GREEN);
+		else if(health > 0.2f)
+			game.batch.setColor(Color.ORANGE);
+		else
+			game.batch.setColor(Color.RED);
+		game.batch.draw(healthTexture, 0, 0, Gdx.graphics.getWidth() * health, 5);	
+		game.batch.setColor(Color.WHITE);
 		
 		game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 		

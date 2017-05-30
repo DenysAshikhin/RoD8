@@ -44,5 +44,7 @@ public class Asteroid {
 	}
 	
 	public CollisionRect getCollisionRect(){return rect;}
+	public float getX(){return x;}
+	public float getY(){return y;}
+	}
 	
-}
