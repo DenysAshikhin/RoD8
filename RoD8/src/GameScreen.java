@@ -235,6 +235,13 @@ public class GameScreen implements Screen{
 				
 				asteroidsRemove.add(asteroid);
 				health -= 0.1;//Add f?
+				//Check depleted health
+				if (health <=0){
+					
+					this.dispose();
+					game.setScreen(new GameOverScreen(game, score));
+					return;
+				}
 			}
 		}
 		
@@ -258,12 +265,12 @@ public class GameScreen implements Screen{
 		asteroids.removeAll(asteroidsRemove);
 		explosions.removeAll(explosionsRemove);
 		
+		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "" + score);
+		
 		stateTime += delta;
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "" + score);
 		
 		game.batch.begin();
 	
