@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -133,7 +134,7 @@ public class GameScreen implements Screen{
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_GROUND;
 		fdef.filter.maskBits = BIT_BOX | BIT_BALL;
-		body.createFixture(fdef);
+		body.createFixture(fdef).setUserData("ground");
 		
 		//Create Faling Box
 		bdef.position.set(200 / PPM, 100 / PPM);
@@ -144,10 +145,9 @@ public class GameScreen implements Screen{
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_BOX;
 		fdef.filter.maskBits = BIT_GROUND;
-		body.createFixture(fdef);
+		body.createFixture(fdef).setUserData("box");
 		
 		//Create ball
-		
 		bdef.position.set(230/PPM, 10 / PPM);
 		body = world.createBody(bdef);
 		
@@ -157,7 +157,7 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_GROUND;
 		fdef.filter.categoryBits = BIT_BALL;
 
-		body.createFixture(fdef);
+		body.createFixture(fdef).setUserData("ball");
 		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
