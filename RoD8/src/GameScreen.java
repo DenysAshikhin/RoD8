@@ -8,16 +8,21 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class GameScreen implements Screen{
 
@@ -32,6 +37,8 @@ public class GameScreen implements Screen{
 	
 	private World world;
 	private Box2DDebugRenderer b2dr;
+	private OrthographicCamera cam;
+	private OrthographicCamera b2dCam;
 	
 	ArrayList<Bullet> bullets;
 	ArrayList<Asteroid> asteroids;
@@ -56,6 +63,7 @@ public class GameScreen implements Screen{
 	public static final float SHOOT_WAIT_TIME = 0.3f;
 	public static final float MIN_ASTEROID_SPAWN_TIME = 0.3f;
 	public static final float MAX_ASTEROID_SPAWN_TIME = 0.6f;
+	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
 	
 	
 	Animation<TextureRegion>[] rolls;
@@ -66,17 +74,7 @@ public class GameScreen implements Screen{
 		
 		this.game = game;
 		y = 15;
-		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;
-		
-
-		
-		//Create platform
-		BodyDef bdef = new BodyDef();
-		bdef.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		bdef.type = BodyType.StaticBody;//Static don't move, unaffected by forces
-										//Dyanamic - always get affected by forces
-										//Kinematic - don't get affected by world froces, but can change velocities
-		
+		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;		
 		
 		random = new Random();//Episode 11 for logic on timing
 		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
@@ -107,22 +105,68 @@ public class GameScreen implements Screen{
 	
 		game.scrollingBackground.setSpeedFixed(false);
 		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
+	
+		/**Setting up the camera and world*/
+		
+		b2dr = new Box2DDebugRenderer();
+		world = new World(new Vector2(0, 9.8f), true);
+		
+		//Create platform
+		BodyDef bdef = new BodyDef();
+		bdef.position.set(60 / PPM, Gdx.graphics.getHeight() / PPM);
+		bdef.type = BodyType.StaticBody;//Static don't move, unaffected by forces
+										//Dyanamic - always get affected by forces
+										//Kinematic - don't get affected by world forces, but can change velocities
+		Body body = world.createBody(bdef);
+		
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(470 / PPM, 100 / PPM);//1/2 width and height
+		
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		body.createFixture(fdef);
+		
+		//Create Faling Box
+		bdef.position.set(200 / PPM, 0);
+		bdef.type = BodyType.DynamicBody;
+		body = world.createBody(bdef);
+		
+		shape.setAsBox(25 / PPM, 25 / PPM);
+		fdef.shape = shape;
+		body.createFixture(fdef);
+		
+		cam = new OrthographicCamera();
+		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		
+		//Set up box2d cam
+		b2dCam = new OrthographicCamera();
+		b2dCam.setToOrtho(true, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM);
+		
+
+		/***/
 	}
 	
 	@Override
 	public void show() {
-		
-		//b2dr = new Box2DDebugRenderer();
-		world = new World(new Vector2(0, -9.8f), true);
+
 	}
 
 	@Override
 	public void render(float delta) {
+		/**Get rid of this to return to default tutorial game*/
 		
-
+		world.step(delta, 6, 2);
 		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		b2dr.render(world, b2dCam.combined);;
+	
+		
+		/**Get rid of this to return to default tutorial game*/
 		//Update Asteroids
-		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+		/*ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
 		for(Asteroid asteroid : asteroids){
 			
 			asteroid.update(delta);
@@ -330,7 +374,7 @@ public class GameScreen implements Screen{
 		scoreFont.draw(game.batch, scoreLayout, Gdx.graphics.getWidth()/2 - scoreLayout.width/2, Gdx.graphics.getHeight() - scoreLayout.height / 2);
 
 		
-		game.batch.end();
+		game.batch.end();*/
 	}
 
 	@Override
