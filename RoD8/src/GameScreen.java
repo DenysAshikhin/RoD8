@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -65,10 +66,16 @@ public class GameScreen implements Screen{
 	public static final float MAX_ASTEROID_SPAWN_TIME = 0.6f;
 	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
 	
+	public static final short BIT_GROUND = 2;
+	public static final short BIT_BOX = 4;
+	public static final short BIT_BALL = 8;
+	
 	
 	Animation<TextureRegion>[] rolls;
 		
 	SpaceGame game;
+	
+	
 	
 	public GameScreen(SpaceGame game){
 		
@@ -109,7 +116,7 @@ public class GameScreen implements Screen{
 		/**Setting up the camera and world*/
 		
 		b2dr = new Box2DDebugRenderer();
-		world = new World(new Vector2(0, 9.8f), true);
+		world = new World(new Vector2(0, 1.98f), true);
 		
 		//Create platform
 		BodyDef bdef = new BodyDef();
@@ -124,15 +131,32 @@ public class GameScreen implements Screen{
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_GROUND;
+		fdef.filter.maskBits = BIT_BOX | BIT_BALL;
 		body.createFixture(fdef);
 		
 		//Create Faling Box
-		bdef.position.set(200 / PPM, 0);
+		bdef.position.set(200 / PPM, 100 / PPM);
 		bdef.type = BodyType.DynamicBody;
 		body = world.createBody(bdef);
 		
 		shape.setAsBox(25 / PPM, 25 / PPM);
 		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_BOX;
+		fdef.filter.maskBits = BIT_GROUND;
+		body.createFixture(fdef);
+		
+		//Create ball
+		
+		bdef.position.set(230/PPM, 10 / PPM);
+		body = world.createBody(bdef);
+		
+		CircleShape cshape = new CircleShape();
+		cshape.setRadius(25 / PPM);
+		fdef.shape = cshape;
+		fdef.filter.maskBits = BIT_GROUND;
+		fdef.filter.categoryBits = BIT_BALL;
+
 		body.createFixture(fdef);
 		
 		cam = new OrthographicCamera();
@@ -142,9 +166,14 @@ public class GameScreen implements Screen{
 		//Set up box2d cam
 		b2dCam = new OrthographicCamera();
 		b2dCam.setToOrtho(true, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM);
-		
 
 		/***/
+		
+		//Collision set up?
+		 world.setContactListener(new MyContactListener());
+		  
+		  
+		 //
 	}
 	
 	@Override
@@ -403,6 +432,7 @@ public class GameScreen implements Screen{
 	}
 }
 
+/**Group index filtering - look it up later*/
 
 
 
