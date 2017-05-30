@@ -29,6 +29,8 @@ public class MainMenu implements Screen{
 		playButtonInactive = new Texture("play_button_inactive.png");
 		exitButttonActive = new Texture("exit_button_active.png");
 		exitButtonInactive = new Texture("exit_button_inactive.png");
+
+		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
 	
 	}
 	@Override
@@ -43,6 +45,9 @@ public class MainMenu implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
+		
+		game.scrollingBackground.updateAndRender(delta, game.batch);
+
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
 		

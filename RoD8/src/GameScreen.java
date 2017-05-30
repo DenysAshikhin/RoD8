@@ -13,6 +13,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class GameScreen implements Screen{
 
@@ -24,6 +29,9 @@ public class GameScreen implements Screen{
 	float shootTimer;
 	float asteroidSpawnTimer;
 	Random random;
+	
+	private World world;
+	private Box2DDebugRenderer b2dr;
 	
 	ArrayList<Bullet> bullets;
 	ArrayList<Asteroid> asteroids;
@@ -60,6 +68,16 @@ public class GameScreen implements Screen{
 		y = 15;
 		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;
 		
+
+		
+		//Create platform
+		BodyDef bdef = new BodyDef();
+		bdef.position.set(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		bdef.type = BodyType.StaticBody;//Static don't move, unaffected by forces
+										//Dyanamic - always get affected by forces
+										//Kinematic - don't get affected by world froces, but can change velocities
+		
+		
 		random = new Random();//Episode 11 for logic on timing
 		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
 		
@@ -87,16 +105,21 @@ public class GameScreen implements Screen{
 		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
 		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
 	
+		game.scrollingBackground.setSpeedFixed(false);
+		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
 	}
 	
 	@Override
 	public void show() {
-
-
+		
+		//b2dr = new Box2DDebugRenderer();
+		world = new World(new Vector2(0, -9.8f), true);
 	}
 
 	@Override
 	public void render(float delta) {
+		
+
 		
 		//Update Asteroids
 		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
@@ -273,6 +296,8 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
+		
+		game.scrollingBackground.updateAndRender(delta, game.batch);
 	
 		for (Bullet bullet : bullets){
 			
