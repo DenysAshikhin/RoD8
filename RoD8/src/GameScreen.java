@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.Input.Keys;
 
 public class GameScreen implements Screen{
 
@@ -25,6 +26,10 @@ public class GameScreen implements Screen{
 	
 	ArrayList<Bullet> bullets;
 	ArrayList<Asteroid> asteroids;
+	
+	BitmapFont scoreFont;
+	
+	int score;
 	
 	public static final float SHIP_ANIMATION_SPEED = 0.5f;
 	public static final int SHIP_WIDTH_PIXEL = 17;
@@ -52,6 +57,10 @@ public class GameScreen implements Screen{
 		
 		asteroids = new ArrayList<Asteroid>();
 		bullets = new ArrayList<Bullet>();
+		
+		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		
+		score = 0;
 		
 		roll = 2;
 		shootTimer = 0;
@@ -101,30 +110,7 @@ public class GameScreen implements Screen{
 			
 			asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
 			asteroids.add(new Asteroid(random.nextInt(Gdx.graphics.getWidth() - Asteroid.WIDTH)));
-		}
-		
-		//Update Asteroids
-		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
-		for(Asteroid asteroid : asteroids){
-			
-			asteroid.update(delta);
-			if(asteroid.remove)
-				asteroidsRemove.add(asteroid);
-		}
-		asteroids.remove(asteroidsRemove);
-
-		
-		//Update Bullets
-		ArrayList<Bullet> bulletsRemove = new ArrayList<Bullet>();
-		for (Bullet bullet : bullets){
-			
-			bullet.update(delta);
-			if(bullet.remove)
-				bulletsRemove.add(bullet);
-		}
-		
-		bullets.remove(bulletsRemove);
-		
+		}		
 		
 		//Movement code
 		if(Gdx.input.isKeyPressed(Keys.LEFT)){
@@ -197,14 +183,54 @@ public class GameScreen implements Screen{
 			}
 		}
 		
+		//Update Asteroids
+		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+		for(Asteroid asteroid : asteroids){
+			
+			asteroid.update(delta);
+			if(asteroid.remove)
+				asteroidsRemove.add(asteroid);
+		}
+		
+
+		
+		//Update Bullets
+		ArrayList<Bullet> bulletsRemove = new ArrayList<Bullet>();
+		for (Bullet bullet : bullets){
+			
+			bullet.update(delta);
+			if(bullet.remove)
+				bulletsRemove.add(bullet);
+		}
+		
+		
+		//After all updates, check collision
+		for (Bullet bullet : bullets){
+			
+			for (Asteroid asteroid : asteroids){
+				
+				if (bullet.getCollisionRect().collidesWith(asteroid.getCollisionRect())){
+					
+					asteroidsRemove.add(asteroid);
+					bulletsRemove.add(bullet);
+					score += 100;
+				}
+				
+			}
+		}
+		
+		bullets.removeAll(bulletsRemove);
+		asteroids.removeAll(asteroidsRemove);
+		
 		stateTime += delta;
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "" + score);
 		
 		game.batch.begin();
-		
+	
 		for (Bullet bullet : bullets){
 			
 			bullet.render(game.batch);
@@ -214,8 +240,11 @@ public class GameScreen implements Screen{
 			
 			asteroid.render(game.batch);
 		}
+		
 		game.batch.draw(rolls[roll].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 		
+		scoreFont.draw(game.batch, scoreLayout, Gdx.graphics.getWidth()/2 - scoreLayout.width/2, Gdx.graphics.getHeight() - scoreLayout.height / 2);
+
 		
 		game.batch.end();
 	}
