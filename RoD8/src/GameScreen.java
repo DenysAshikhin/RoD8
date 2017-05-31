@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen{
 
-	private boolean debug = false;
+	private boolean debug = true;
 	
 	int roll;
 	float x,y;
@@ -45,9 +45,12 @@ public class GameScreen implements Screen{
 	float asteroidSpawnTimer;
 	Random random;
 	
+	private float stillTime;
+	
 	private World world;
 	private Box2DDebugRenderer b2dr;
 	private OrthographicCamera cam;
+	private OrthographicCamera hudCam;
 	private OrthographicCamera b2dCam;
 	
 	ArrayList<Bullet> bullets;
@@ -57,7 +60,7 @@ public class GameScreen implements Screen{
 	
 	BitmapFont scoreFont;
 	
-	float health = 1;// 0 = dead, 1 = full health
+	float health = 1f;// 0 = dead, 1 = full health
 	
 	int score;
 	
@@ -88,7 +91,7 @@ public class GameScreen implements Screen{
 	public static final short BIT_CRYSTAL = 32;
 	
 	private Player player;
-	
+	private HUD hud;
 	private MyContactListener contactListener;
 	
 	Animation<TextureRegion>[] rolls;
@@ -107,15 +110,21 @@ public class GameScreen implements Screen{
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		 hudCam = new OrthographicCamera();
+		 hudCam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		spriteBatch = new SpriteBatch();
+		spriteBatch.setProjectionMatrix(cam.combined);
 		
 		world = new World(new Vector2(0, -9.81f), true);
 
 		contactListener = new MyContactListener();
-
-		//Collision set up?
-		 world.setContactListener(contactListener);
 		
+		//Collision set up?
+		 world.setContactListener(contactListener);	
+		 
+		stillTime = 0;
+		 
 		y = 15;
 		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;		
 		
@@ -157,6 +166,7 @@ public class GameScreen implements Screen{
 		textures = new Content();
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
+		textures.loadTexture("hud.png", "hud");
 
 		
 		createPlayer();
@@ -176,6 +186,10 @@ public class GameScreen implements Screen{
 		b2dCam = new OrthographicCamera();
 		b2dCam.setToOrtho(false, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM);
 
+		 //Set up hud
+		 hud = new HUD(player);
+		 
+		
 		/***/	
 	}
 	
@@ -206,14 +220,35 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if (Gdx.input.isKeyJustPressed(Keys.DOWN)){
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			if(contactListener.isPlayerOnGround()){
 				
 				player.getBody().applyForceToCenter(0, 300, true);
 			}
 		}
 		
+		if(Gdx.input.isKeyPressed(Keys.LEFT) && player.getBody().getLinearVelocity().x > -2f){
+				
+				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
+				
+		}
 		
+		if(Gdx.input.isKeyPressed(Keys.RIGHT) && player.getBody().getLinearVelocity().x < 2f){
+				
+				player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+			
+		}
+		
+		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
+			
+			stillTime += Gdx.graphics.getDeltaTime();
+			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
+		}
+
+
+		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+		cam.update();
+		spriteBatch.setProjectionMatrix(cam.combined);
 
 		
 		//Draw player
@@ -230,16 +265,178 @@ public class GameScreen implements Screen{
 		tmr.setView(cam);
 		tmr.render();
 		
-		if(debug){
-			
-			b2dr.render(world, b2dCam.combined);;
-		}
 		
+		//draw hud
+		spriteBatch.setProjectionMatrix(hudCam.combined);
+		hud.render(spriteBatch);
 
 		
-		
+		if(debug){
+			
+	
+			b2dCam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+			b2dCam.update();
+			b2dr.render(world, b2dCam.combined);;
+		}
+			
 		/**Get rid of this to return to default tutorial game*/
-		//Update Asteroids
+	
+	}
+	
+	private void createPlayer(){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//Create Player
+		bdef.position.set(90 / PPM, 100 / PPM);
+		bdef.type = BodyType.DynamicBody;
+		//bdef.linearVelocity.set(1f, 0);
+		Body body = world.createBody(bdef);
+		
+		shape.setAsBox(15 / PPM, 15 / PPM);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_PLAYER;
+		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL;
+		body.createFixture(fdef).setUserData("player");
+		
+		
+		//Create Player
+		player = new Player(body);
+		
+		//Create foot sensor
+		shape.setAsBox(13 / PPM,  6 / PPM, new Vector2(0, -14 / PPM), 0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_PLAYER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("foot");
+	}
+	
+	private void createTiles(){
+		
+		 tileMap = new TmxMapLoader().load("tester3.tmx");
+		 tmr = new OrthogonalTiledMapRenderer(tileMap);
+
+		 tileSize = (int) tileMap.getProperties().get("tilewidth");
+		 
+		 TiledMapTileLayer layer;
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("red");
+		 createLayer(layer, BIT_RED);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("green");
+		 createLayer(layer, BIT_GREEN);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("blue");
+		 createLayer(layer, BIT_BLUE);
+	}
+	
+	private void createLayer(TiledMapTileLayer layer, short bits){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		 //Go through all cells in layer
+		 for(int row = 0; row < layer.getHeight(); row++){
+			 
+			 for(int col = 0; col < layer.getWidth(); col++){
+				 
+				 //Get cell
+				 Cell cell = layer.getCell(col, row);
+				 
+				 //Check if cell exists
+				 if (cell == null) continue;
+				 if (cell.getTile() == null) continue;
+				 
+				 //Create a body + fixture from cell
+				 
+				 bdef.type = BodyType.StaticBody;//Episode 5
+				 bdef.position.set((col + 0.5f) * tileSize / PPM, (row + 0.5f) * tileSize / PPM);
+
+				 ChainShape chainShape = new ChainShape();
+				 Vector2[] vertices = new Vector2[4];
+				 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
+				 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
+				 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
+				 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
+				 chainShape.createChain(vertices);
+				 fdef.isSensor = false;
+				 fdef.friction = 0;
+				 fdef.shape = chainShape;
+				 fdef.filter.categoryBits = bits;
+				 fdef.filter.maskBits = BIT_PLAYER;
+				 
+				 world.createBody(bdef).createFixture(fdef);
+			 }
+		 }
+	}
+	
+	private void createCrystals(){
+		
+		crystals = new Array<Crystal>();
+		
+		MapLayer layer = tileMap.getLayers().get("crystals");
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		
+		for (MapObject mapObject : layer.getObjects()){
+			
+			bdef.type = BodyType.StaticBody;
+			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
+
+			bdef.position.set(x,y);
+			CircleShape circleShape = new CircleShape();
+			circleShape.setRadius(8 / PPM);
+			
+			fdef.shape = circleShape;
+			fdef.isSensor = true;
+			fdef.filter.categoryBits = BIT_CRYSTAL;
+			fdef.filter.maskBits = BIT_PLAYER;
+			
+			Body body = world.createBody(bdef);
+			body.createFixture(fdef).setUserData("crystal");;
+			
+			Crystal c = new Crystal(body);
+			crystals.add(c);
+			
+			body.setUserData(c);
+		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+	}
+
+	@Override
+	public void pause() {
+		
+	}
+
+	@Override
+	public void resume() {
+		
+	}
+
+	@Override
+	public void hide() {
+		
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+}
+
+/**Group index filtering - look it up later*/
+
+/*
+
+
+The following is for render:	//Update Asteroids
 		/*ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
 		for(Asteroid asteroid : asteroids){
 			
@@ -448,159 +645,9 @@ public class GameScreen implements Screen{
 		scoreFont.draw(game.batch, scoreLayout, Gdx.graphics.getWidth()/2 - scoreLayout.width/2, Gdx.graphics.getHeight() - scoreLayout.height / 2);
 
 		
-		game.batch.end();*/
-	}
-	
-	private void createPlayer(){
-		
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		
-		//Create Player
-		bdef.position.set(90 / PPM, 100 / PPM);
-		bdef.type = BodyType.DynamicBody;
-		bdef.linearVelocity.set(.1f, 0);
-		Body body = world.createBody(bdef);
-		
-		shape.setAsBox(15 / PPM, 15 / PPM);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL;
-		body.createFixture(fdef).setUserData("player");
-		
-		
-		//Create Player
-		player = new Player(body);
-		
-		//Create foot sensor
-		shape.setAsBox(15 / PPM,  6 / PPM, new Vector2(0, -14 / PPM), 0);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED;	
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("foot");
-	}
-	
-	private void createTiles(){
-		
-		 tileMap = new TmxMapLoader().load("tester2.tmx");
-		 tmr = new OrthogonalTiledMapRenderer(tileMap);
+		game.batch.end();
 
-		 tileSize = (int) tileMap.getProperties().get("tilewidth");
-		 
-		 TiledMapTileLayer layer;
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("red");
-		 createLayer(layer, BIT_RED);
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("green");
-		 createLayer(layer, BIT_GREEN);
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("blue");
-		 createLayer(layer, BIT_BLUE);
-	}
-	
-	private void createLayer(TiledMapTileLayer layer, short bits){
-		
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		
-		 //Go through all cells in layer
-		 for(int row = 0; row < layer.getHeight(); row++){
-			 
-			 for(int col = 0; col < layer.getWidth(); col++){
-				 
-				 //Get cell
-				 Cell cell = layer.getCell(col, row);
-				 
-				 //Check if cell exists
-				 if (cell == null) continue;
-				 if (cell.getTile() == null) continue;
-				 
-				 //Create a body + fixture from cell
-				 
-				 bdef.type = BodyType.StaticBody;//Episode 5
-				 bdef.position.set((col + 0.5f) * tileSize / PPM, (row + 0.5f) * tileSize / PPM);
 
-				 ChainShape chainShape = new ChainShape();
-				 Vector2[] vertices = new Vector2[3];
-				 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
-				 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
-				 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
-				 chainShape.createChain(vertices);
-				 fdef.isSensor = false;
-				 fdef.friction = 0;
-				 fdef.shape = chainShape;
-				 fdef.filter.categoryBits = bits;
-				 fdef.filter.maskBits = BIT_PLAYER;
-				 
-				 world.createBody(bdef).createFixture(fdef);
-			 }
-		 }
-	}
-	
-	private void createCrystals(){
-		
-		crystals = new Array<Crystal>();
-		
-		MapLayer layer = tileMap.getLayers().get("crystals");
-		
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		
-		
-		for (MapObject mapObject : layer.getObjects()){
-			
-			bdef.type = BodyType.StaticBody;
-			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
-			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
-
-			bdef.position.set(x,y);
-			CircleShape circleShape = new CircleShape();
-			circleShape.setRadius(8 / PPM);
-			
-			fdef.shape = circleShape;
-			fdef.isSensor = true;
-			fdef.filter.categoryBits = BIT_CRYSTAL;
-			fdef.filter.maskBits = BIT_PLAYER;
-			
-			Body body = world.createBody(bdef);
-			body.createFixture(fdef).setUserData("crystal");;
-			
-			Crystal c = new Crystal(body);
-			crystals.add(c);
-			
-			body.setUserData(c);
-		}
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		
-	}
-
-	@Override
-	public void pause() {
-		
-	}
-
-	@Override
-	public void resume() {
-		
-	}
-
-	@Override
-	public void hide() {
-		
-	}
-
-	@Override
-	public void dispose() {
-		
-	}
-}
-
-/**Group index filtering - look it up later*/
-
-/*
 //Create platform
 		BodyDef bdef = new BodyDef();
 		bdef.position.set(200 / PPM, (Gdx.graphics.getHeight() - 100) / PPM);
