@@ -32,7 +32,7 @@ public class Animation {
 	
 	public void update(float dt){
 		
-		//if(delay <= 0) return;
+		if(delay <= 0) return;
 		time += dt;
 		while(time >= delay){
 			

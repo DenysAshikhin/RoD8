@@ -162,11 +162,19 @@ public class GameScreen implements Screen{
 		
 		TextureRegion[] run = new TextureRegion[8];
 		
+		
+		
 		for(int i = 1; i < sprites.length; i++){
 			
 			for(int j = 0; j < sprites[i].length; j++){
-				System.out.println(sprites[i].length);
+				
 				run[j] = sprites[i][j];
+				System.out.println("i: " + i + ": j : " + j);
+				
+				if(j == 1){
+					
+					//System.out.println(run[j]);
+				}
 			}
 			
 			switch(i){
@@ -177,9 +185,12 @@ public class GameScreen implements Screen{
 				break;
 			case 2:
 
+				System.out.println(run.length);
 				runLeft = new Animation<TextureRegion>(0.07f, run);
 				break;
 			}
+			
+			run = new TextureRegion[8];
 		}
 				
 			
@@ -212,9 +223,7 @@ public class GameScreen implements Screen{
 			world.destroyBody(body);
 		}
 		bodies.clear();
-		
-		player.update(delta);
-		
+				
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -228,26 +237,23 @@ public class GameScreen implements Screen{
 			}
 		}
 		
-		if(contactListener.isPlayerOnGround()){
-			
-			player.setState(0);
-		}
+
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT)){
 				
 			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 			player.setState(3);
+			
 			if(player.getBody().getLinearVelocity().x > -2f){
 				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
 			}
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-			
-			//spriteBatch.draw(run[2].getKeyFrame(stateTime, true), x, y, 8, 12)''
-			
+						
 			player.setState(2);
-				if(player.getBody().getLinearVelocity().x < 2f){
+				
+			if(player.getBody().getLinearVelocity().x < 2f){
 					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
 				}
 
@@ -260,6 +266,10 @@ public class GameScreen implements Screen{
 			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
 		}
 
+		if(!contactListener.isPlayerOnGround()){
+			
+			player.setState(1);
+		}
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -284,11 +294,11 @@ public class GameScreen implements Screen{
 
 			break;
 		case 2:
-			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
 
 			break;
 		case 3:
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
 
 			break;
 		}
