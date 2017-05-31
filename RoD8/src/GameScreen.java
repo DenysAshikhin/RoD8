@@ -99,8 +99,10 @@ public class GameScreen implements Screen{
 
 	Animation<TextureRegion> runLeft;
 	Animation<TextureRegion> runRight;
-	Animation<TextureRegion> jump;
-	Animation<TextureRegion> standing;
+	Animation<TextureRegion> jumpDefault;
+	Animation<TextureRegion> jumpLeft;
+	Animation<TextureRegion> standingLeft;
+	Animation<TextureRegion> standingRight;
 		
 	SpaceGame game;
 	
@@ -139,10 +141,7 @@ public class GameScreen implements Screen{
 		createCrystals();
 			
 		b2dr = new Box2DDebugRenderer();
-		
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
+	
 		
 		//Set up box2d cam
 		b2dCam = new OrthographicCamera();
@@ -150,8 +149,6 @@ public class GameScreen implements Screen{
 
 		 //Set up hud
 		 //hud = new HUD(player);
-		
-		
 		
 		Texture texture = GameScreen.textures.getTexture("commando");
 		TextureRegion[][] sprites = new TextureRegion[3][8];
@@ -162,19 +159,11 @@ public class GameScreen implements Screen{
 		
 		TextureRegion[] run = new TextureRegion[8];
 		
-		
-		
 		for(int i = 1; i < sprites.length; i++){
 			
 			for(int j = 0; j < sprites[i].length; j++){
 				
 				run[j] = sprites[i][j];
-				System.out.println("i: " + i + ": j : " + j);
-				
-				if(j == 1){
-					
-					//System.out.println(run[j]);
-				}
 			}
 			
 			switch(i){
@@ -193,9 +182,11 @@ public class GameScreen implements Screen{
 			run = new TextureRegion[8];
 		}
 				
-			
-		standing = new Animation<TextureRegion>(0.07f, sprites[0][0]);
-		jump = new Animation<TextureRegion>(0.07f, sprites[0][1]);
+		
+		standingRight = new Animation<TextureRegion>(0.07f, sprites[0][0]); 
+		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0][1]);
+		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
+		jumpLeft = new Animation<TextureRegion>(0.07f, sprites[0][3]);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 		
@@ -243,7 +234,7 @@ public class GameScreen implements Screen{
 				
 			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 			player.setState(3);
-			
+			player.setFace(true);//CHANGE!!!
 			if(player.getBody().getLinearVelocity().x > -2f){
 				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
 			}
@@ -252,7 +243,7 @@ public class GameScreen implements Screen{
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
 						
 			player.setState(2);
-				
+			player.setFace(false);
 			if(player.getBody().getLinearVelocity().x < 2f){
 					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
 				}
@@ -285,13 +276,30 @@ public class GameScreen implements Screen{
 		
 		switch(player.getState()){
 		
-		case 0: 
-			spriteBatch.draw(standing.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+		case 0: 		
+			
+			if(player.getFacing()){
+				
+				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
 
+			}
+			else{
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
+
+		
 			break;
 		case 1:
-			spriteBatch.draw(jump.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
-
+			
+			if(player.getBody().getLinearVelocity().x >= 0){
+			
+				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
+			else{
+				
+				spriteBatch.draw(jumpLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
 			break;
 		case 2:
 			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);

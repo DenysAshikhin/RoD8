@@ -10,6 +10,7 @@ public class B2DSprite {
 	protected float width = 8;
 	protected float height = 12;
 	private int state;
+	private boolean facing;
 
 	
 	public B2DSprite(Body body){
@@ -42,5 +43,7 @@ public class B2DSprite {
 		animation.setState(state);
 	}
 	public int getState(){return state;}
+	public void setFace(boolean value){facing = value;}
+	public boolean getFacing(){return facing;}
 	
 }
