@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="Assets"/>
+	<classpathentry excluding="TXTR/" kind="src" path="Assets"/>
+	<classpathentry kind="src" path="Assets/TXTR"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="libs/gdx-1.9.6-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gdx-1.9.6.jar" sourcepath="libs/gdx-1.9.6-sources.jar"/>
