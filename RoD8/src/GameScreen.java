@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen{
 
-	private boolean debug = false;
+	private boolean debug = true;
 	
 	int roll;
 	float x,y;
@@ -96,8 +96,11 @@ public class GameScreen implements Screen{
 	
 	private int direction;
 	
-	Animation<TextureRegion>[] rolls;
-	Animation<TextureRegion>[] run;
+
+	Animation<TextureRegion> runLeft;
+	Animation<TextureRegion> runRight;
+	Animation<TextureRegion> jump;
+	Animation<TextureRegion> standing;
 		
 	SpaceGame game;
 	
@@ -113,11 +116,10 @@ public class GameScreen implements Screen{
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		 hudCam = new OrthographicCamera();
-		 hudCam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		hudCam = new OrthographicCamera();
+		hudCam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		spriteBatch = new SpriteBatch();
-		spriteBatch.setProjectionMatrix(cam.combined);
 		
 		world = new World(new Vector2(0, -9.81f), true);
 
@@ -125,82 +127,17 @@ public class GameScreen implements Screen{
 		
 		//Collision set up?
 		 world.setContactListener(contactListener);	
-		 
-		stillTime = 0;
-		 
-		y = 15;
-		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;		
-		
-		random = new Random();//Episode 11 for logic on timing
-		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
-		
-		asteroids = new ArrayList<Asteroid>();
-		bullets = new ArrayList<Bullet>();
-		explosions = new ArrayList<Explosion>();
-		
-		playerRect = new CollisionRect(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
-		
-		
-		
-		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
-		
-		score = 0;
-		
-		healthTexture = new Texture("blank.png");
-		
-		roll = 2;
-		shootTimer = 0;
-		rollTimer = 0;
-		rolls = new Animation[5];//Figure this underline later
-		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
-	
-		rolls[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[2]);//All left
-		rolls[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[1]);
-		rolls[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
-		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
-		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
-	
 		
 		textures = new Content();
 		textures.loadTexture("commando_good.png", "commando");
-		
-		//Texture texture = textures.getTexture("commando");
-		//TextureRegion[] sprites = TextureRegion.split(texture, 8, 12)[1];
-		//System.out.println(sprites.length);
-		//run = new Animation[3];
-		//run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, sprites);
-		
-		
-		/*TextureRegion[][] playerMoveSheet = TextureRegion.split(new Texture("commando_good.png"), 8, 12);
-		run = new Animation[3];
-		
-		run[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[0]);//Still
-		run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[1]);//Right
-		run[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[2]);//Left*/
-		
-		
-		game.scrollingBackground.setSpeedFixed(false);
-		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
-	
-		
-		
-		
-		
-		/////////////////////
-		
-
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 	
-		
 		createPlayer();
 		createTiles();
 		createCrystals();
-		
-		/**Setting up the camera and world*/
-		
-		
+			
 		b2dr = new Box2DDebugRenderer();
 		
 		BodyDef bdef = new BodyDef();
@@ -212,10 +149,46 @@ public class GameScreen implements Screen{
 		b2dCam.setToOrtho(false, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM);
 
 		 //Set up hud
-		 hud = new HUD(player);
-		 
+		 //hud = new HUD(player);
 		
-		/***/	
+		
+		
+		Texture texture = GameScreen.textures.getTexture("commando");
+		TextureRegion[][] sprites = new TextureRegion[3][8];
+		
+		sprites[0] = TextureRegion.split(texture, 7, 12)[0];
+		sprites[1] = TextureRegion.split(texture, 7, 12)[1];
+		sprites[2] = TextureRegion.split(texture, 7, 12)[2];
+		
+		TextureRegion[] run = new TextureRegion[8];
+		
+		for(int i = 1; i < sprites.length; i++){
+			
+			for(int j = 0; j < sprites[i].length; j++){
+				System.out.println(sprites[i].length);
+				run[j] = sprites[i][j];
+			}
+			
+			switch(i){
+		
+			case 1:
+				
+				runRight = new Animation<TextureRegion>(0.07f, run);
+				break;
+			case 2:
+
+				runLeft = new Animation<TextureRegion>(0.07f, run);
+				break;
+			}
+		}
+				
+			
+		standing = new Animation<TextureRegion>(0.07f, sprites[0][0]);
+		jump = new Animation<TextureRegion>(0.07f, sprites[0][1]);
+		spriteBatch = new SpriteBatch();
+		stateTime = 0f;
+		
+	
 	}
 	
 	@Override
@@ -226,9 +199,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		/**Get rid of this to return to default tutorial game*/
-		
-		stateTime += delta;
-		
+				
+		stateTime += Gdx.graphics.getDeltaTime();
 		world.step(delta, 6, 2);
 		
 		//Remove crystals
@@ -243,25 +215,28 @@ public class GameScreen implements Screen{
 		
 		player.update(delta);
 		
-		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//spriteBatch.begin();
-		
-		//game.batch.begin();
-		
+			
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			if(contactListener.isPlayerOnGround()){
 				
 				player.getBody().applyForceToCenter(0, 300, true);
+				player.setState(1);
 			}
+		}
+		
+		if(contactListener.isPlayerOnGround()){
+			
+			player.setState(0);
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT)){
 				
 			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
-			player.setState(2);
+			player.setState(3);
 			if(player.getBody().getLinearVelocity().x > -2f){
 				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
 			}
@@ -271,7 +246,7 @@ public class GameScreen implements Screen{
 			
 			//spriteBatch.draw(run[2].getKeyFrame(stateTime, true), x, y, 8, 12)''
 			
-			player.setState(1);
+			player.setState(2);
 				if(player.getBody().getLinearVelocity().x < 2f){
 					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
 				}
@@ -281,7 +256,7 @@ public class GameScreen implements Screen{
 		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
 			
 			stillTime += Gdx.graphics.getDeltaTime();
-			direction = 0;
+			player.setState(0);
 			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
 		}
 
@@ -289,18 +264,36 @@ public class GameScreen implements Screen{
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
 		spriteBatch.setProjectionMatrix(cam.combined);
-		//spriteBatch.draw(run[direction].getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 4/2, player.getBody().getPosition().y * 100 - 6 / 2, 8, 12);
 
-		//spriteBatch.begin();
 		//Draw player
-		player.render(spriteBatch);
+		//player.render(spriteBatch);
+
+		Body body = player.getBody();
+		int width = 8;
+		int height = 12;
+		spriteBatch.begin();
 		
-			//int width = run[1].getKeyFrame(delta).getRegionWidth();
-			
-			//int height = run[1].getKeyFrame(delta).getRegionHeight();
-			
-			//spriteBatch.draw(rolls[1].getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - width/2, player.getBody().getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+		switch(player.getState()){
 		
+		case 0: 
+			spriteBatch.draw(standing.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		case 1:
+			spriteBatch.draw(jump.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		case 2:
+			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		case 3:
+			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		}
+		
+		spriteBatch.end();
 		
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
@@ -312,13 +305,6 @@ public class GameScreen implements Screen{
 		tmr.setView(cam);
 		tmr.render();
 
-		//draw hud
-		//spriteBatch.setProjectionMatrix(hudCam.combined);
-		//hud.render(spriteBatch);
-		
-
-
-		
 		if(debug){
 			
 			b2dCam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
@@ -326,8 +312,7 @@ public class GameScreen implements Screen{
 			b2dr.render(world, b2dCam.combined);;
 		}
 		
-		/**Get rid of this to return to default tutorial game*/
-	
+		//spriteBatch.end();	
 	}
 	
 	private void createPlayer(){
@@ -741,5 +726,63 @@ y += SPEED*Gdx.graphics.getDeltaTime();
 if(Gdx.input.isKeyPressed(Keys.DOWN)){
 
 y -= SPEED*Gdx.graphics.getDeltaTime();
-}*/
+}
+
+		 
+		stillTime = 0;
+		 
+		y = 15;
+		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;		
+		
+		random = new Random();//Episode 11 for logic on timing
+		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
+		
+		asteroids = new ArrayList<Asteroid>();
+		bullets = new ArrayList<Bullet>();
+		explosions = new ArrayList<Explosion>();
+		
+		playerRect = new CollisionRect(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
+		
+		
+		
+		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		
+		score = 0;
+		
+		healthTexture = new Texture("blank.png");
+		
+		roll = 2;
+		shootTimer = 0;
+		rollTimer = 0;
+		rolls = new Animation[5];//Figure this underline later
+		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
+	
+		rolls[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[2]);//All left
+		rolls[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[1]);
+		rolls[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
+		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
+		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
+		
+		
+				
+		//Texture texture = textures.getTexture("commando");
+		//TextureRegion[] sprites = TextureRegion.split(texture, 8, 12)[1];
+		//System.out.println(sprites.length);
+		//run = new Animation[3];
+		//run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, sprites);
+		
+		
+		/*TextureRegion[][] playerMoveSheet = TextureRegion.split(new Texture("commando_good.png"), 8, 12);
+		run = new Animation[3];
+		
+		run[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[0]);//Still
+		run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[1]);//Right
+		run[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[2]);//Left
+
+
+
+
+game.scrollingBackground.setSpeedFixed(false);
+game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
+*/
 

@@ -32,7 +32,7 @@ public class Animation {
 	
 	public void update(float dt){
 		
-		if(delay <= 0) return;
+		//if(delay <= 0) return;
 		time += dt;
 		while(time >= delay){
 			
@@ -44,10 +44,9 @@ public class Animation {
 		
 		time -= delay;
 		currentFrame++;
-		System.out.println(currentFrame);
+		//System.out.println(currentFrame);
 		if(currentFrame == frames[state].length){
 			
-			//System.
 			currentFrame = 0;
 			timesPlayed++;
 		}
