@@ -7,8 +7,10 @@ public class B2DSprite {
 
 	protected Body body;
 	protected Animation animation;
-	protected float width;
-	protected float height;
+	protected float width = 8;
+	protected float height = 12;
+	private int state;
+
 	
 	public B2DSprite(Body body){
 		
@@ -16,11 +18,9 @@ public class B2DSprite {
 		animation = new Animation();
 	}
 
-	public void setAnimation(TextureRegion[] reg, float delay){
+	public void setAnimation(TextureRegion[][] reg, float delay){
 		
 		animation.setFrames(reg, delay);
-		width = reg[0].getRegionWidth();
-		height = reg[0].getRegionHeight();
 	}
 	
 	public void update(float dt){
@@ -30,9 +30,7 @@ public class B2DSprite {
 	public void render(SpriteBatch sb){
 		
 		sb.begin();
-		sb.draw(animation.getFrame(), body.getPosition().x * 100 - width/2, body.getPosition().y * 100 - height / 2);
-		//sb.draw
-		//System.out.println(body.getPosition().y * 100);
+		sb.draw(animation.getFrame(state), body.getPosition().x * 100 - width/2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
 		sb.end();
 	}
 	
@@ -40,5 +38,8 @@ public class B2DSprite {
 	public Vector2 getPosition(){return body.getPosition();}
 	public float getWidth(){return width;}
 	public float getHeight(){return height;}
-	
+	public void setState(int i){
+		state = i;
+		animation.setState(state);
+	}
 }

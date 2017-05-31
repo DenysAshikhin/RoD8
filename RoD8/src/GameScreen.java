@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen{
 
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	int roll;
 	float x,y;
@@ -94,7 +94,10 @@ public class GameScreen implements Screen{
 	private HUD hud;
 	private MyContactListener contactListener;
 	
+	private int direction;
+	
 	Animation<TextureRegion>[] rolls;
+	Animation<TextureRegion>[] run;
 		
 	SpaceGame game;
 	
@@ -157,17 +160,39 @@ public class GameScreen implements Screen{
 		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
 		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
 	
+		
+		textures = new Content();
+		textures.loadTexture("commando_good.png", "commando");
+		
+		//Texture texture = textures.getTexture("commando");
+		//TextureRegion[] sprites = TextureRegion.split(texture, 8, 12)[1];
+		//System.out.println(sprites.length);
+		//run = new Animation[3];
+		//run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, sprites);
+		
+		
+		/*TextureRegion[][] playerMoveSheet = TextureRegion.split(new Texture("commando_good.png"), 8, 12);
+		run = new Animation[3];
+		
+		run[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[0]);//Still
+		run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[1]);//Right
+		run[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[2]);//Left*/
+		
+		
 		game.scrollingBackground.setSpeedFixed(false);
 		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
 	
 		
+		
+		
+		
 		/////////////////////
 		
-		textures = new Content();
+
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
-
+	
 		
 		createPlayer();
 		createTiles();
@@ -202,6 +227,8 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		/**Get rid of this to return to default tutorial game*/
 		
+		stateTime += delta;
+		
 		world.step(delta, 6, 2);
 		
 		//Remove crystals
@@ -220,6 +247,10 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		//spriteBatch.begin();
+		
+		//game.batch.begin();
+		
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			if(contactListener.isPlayerOnGround()){
 				
@@ -227,21 +258,30 @@ public class GameScreen implements Screen{
 			}
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.LEFT) && player.getBody().getLinearVelocity().x > -2f){
+		if(Gdx.input.isKeyPressed(Keys.LEFT)){
 				
+			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
+			player.setState(2);
+			if(player.getBody().getLinearVelocity().x > -2f){
 				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
-				
+			}
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.RIGHT) && player.getBody().getLinearVelocity().x < 2f){
-				
-				player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
 			
+			//spriteBatch.draw(run[2].getKeyFrame(stateTime, true), x, y, 8, 12)''
+			
+			player.setState(1);
+				if(player.getBody().getLinearVelocity().x < 2f){
+					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+				}
+
 		}
 		
 		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
 			
 			stillTime += Gdx.graphics.getDeltaTime();
+			direction = 0;
 			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
 		}
 
@@ -249,10 +289,18 @@ public class GameScreen implements Screen{
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
 		spriteBatch.setProjectionMatrix(cam.combined);
+		//spriteBatch.draw(run[direction].getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 4/2, player.getBody().getPosition().y * 100 - 6 / 2, 8, 12);
 
-		
+		//spriteBatch.begin();
 		//Draw player
 		player.render(spriteBatch);
+		
+			//int width = run[1].getKeyFrame(delta).getRegionWidth();
+			
+			//int height = run[1].getKeyFrame(delta).getRegionHeight();
+			
+			//spriteBatch.draw(rolls[1].getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - width/2, player.getBody().getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+		
 		
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
@@ -261,24 +309,23 @@ public class GameScreen implements Screen{
 			crystals.get(i).render(spriteBatch);
 		}
 		
-		
 		tmr.setView(cam);
 		tmr.render();
-		
-		
+
 		//draw hud
-		spriteBatch.setProjectionMatrix(hudCam.combined);
-		hud.render(spriteBatch);
+		//spriteBatch.setProjectionMatrix(hudCam.combined);
+		//hud.render(spriteBatch);
+		
+
 
 		
 		if(debug){
 			
-	
 			b2dCam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);;
 		}
-			
+		
 		/**Get rid of this to return to default tutorial game*/
 	
 	}
@@ -304,6 +351,7 @@ public class GameScreen implements Screen{
 		
 		//Create Player
 		player = new Player(body);
+		player.setState(1);
 		
 		//Create foot sensor
 		shape.setAsBox(13 / PPM,  6 / PPM, new Vector2(0, -14 / PPM), 0);

@@ -2,25 +2,26 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Animation {
 
-	private TextureRegion[] frames;
+	private TextureRegion[][] frames;
 	private float time;
 	private float delay;
 	private int currentFrame;
 	private int timesPlayed;
+	private int state;
 	
 	public Animation(){}
 	
-	public Animation(TextureRegion[] frames){
+	public Animation(TextureRegion[][] frames){
 		
 		this(frames, 1/12f);
 	}
 	
-	public Animation(TextureRegion[] frames, float delay){
+	public Animation(TextureRegion[][] frames, float delay){
 		
 		setFrames(frames, delay);
 	}
 	
-	public void setFrames(TextureRegion[] frames, float delay){
+	public void setFrames(TextureRegion[][] frames, float delay){
 		
 		this.frames = frames;
 		this.delay = delay;
@@ -43,13 +44,16 @@ public class Animation {
 		
 		time -= delay;
 		currentFrame++;
-		if(currentFrame == frames.length){
+		System.out.println(currentFrame);
+		if(currentFrame == frames[state].length){
 			
+			//System.
 			currentFrame = 0;
 			timesPlayed++;
 		}
 	}
 	
-	public TextureRegion getFrame(){return frames[currentFrame];}
+	public TextureRegion getFrame(int state){return frames[state][currentFrame];}
 	public int getTimesPlayerd(){return timesPlayed;}
+	public void setState(int state){this.state = state;}
 }

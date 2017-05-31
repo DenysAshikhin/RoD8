@@ -11,6 +11,6 @@ public class Crystal extends B2DSprite{
 		Texture texture = GameScreen.textures.getTexture("crystal");
 		TextureRegion[] sprites = TextureRegion.split(texture, 16, 16)[0];
 		
-		setAnimation(sprites, 1/12f);
+		//setAnimation(sprites, 1/12f);
 	}
 }
