@@ -11,7 +11,6 @@ public class DesktopLauncher {
 		config.width = SpaceGame.WIDTH;
 		config.height = SpaceGame.HEIGHT;
 		config.resizable = false;
-		
 		new LwjglApplication(new SpaceGame(), config);
 		
 		

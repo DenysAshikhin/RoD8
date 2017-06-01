@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="40" height="8" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="../../../../../Tester.tsx"/>
+ <layer name="Red" width="40" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjALaAEYseDABAAf4AAY=
+  </data>
+ </layer>
+ <layer name="Green" width="40" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUkAKYcOBRMPQAABoYAA0=
+  </data>
+ </layer>
+ <layer name="Blue" width="40" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DoAGY0PApGASUAACB4AA0=
+  </data>
+ </layer>
+ <layer name="Tile Layer 4" width="40" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKRCQAFAAAB
+  </data>
+ </layer>
+ <objectgroup name="Crystals"/>
+</map>

@@ -6,16 +6,36 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen{
 
+	private boolean debug = true;
+	
 	int roll;
 	float x,y;
 	final float SPEED = 300;
@@ -25,19 +45,30 @@ public class GameScreen implements Screen{
 	float asteroidSpawnTimer;
 	Random random;
 	
+	private float stillTime;
+	
+	private World world;
+	private Box2DDebugRenderer b2dr;
+	private OrthographicCamera cam;
+	private OrthographicCamera hudCam;
+	private OrthographicCamera b2dCam;
+	
 	ArrayList<Bullet> bullets;
 	ArrayList<Asteroid> asteroids;
 	ArrayList<Explosion> explosions;
+	Array<Crystal> crystals;
 	
 	BitmapFont scoreFont;
 	
-	float health = 1;// 0 = dead, 1 = full health
+	float health = 1f;// 0 = dead, 1 = full health
 	
 	int score;
 	
 	CollisionRect playerRect;
 	
 	Texture healthTexture;
+	
+	SpriteBatch spriteBatch;
 	
 	public static final float SHIP_ANIMATION_SPEED = 0.5f;
 	public static final int SHIP_WIDTH_PIXEL = 17;
@@ -48,58 +79,416 @@ public class GameScreen implements Screen{
 	public static final float SHOOT_WAIT_TIME = 0.3f;
 	public static final float MIN_ASTEROID_SPAWN_TIME = 0.3f;
 	public static final float MAX_ASTEROID_SPAWN_TIME = 0.6f;
+	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
+	public static Content textures;
 	
 	
-	Animation<TextureRegion>[] rolls;
+	//Filter Bits
+	public static final short BIT_PLAYER = 2;
+	public static final short BIT_RED = 4;
+	public static final short BIT_GREEN = 8;
+	public static final short BIT_BLUE = 16;
+	public static final short BIT_CRYSTAL = 32;
+	
+	private Player player;
+	private HUD hud;
+	private MyContactListener contactListener;
+	
+	private int direction;
+	
+
+	Animation<TextureRegion> runLeft;
+	Animation<TextureRegion> runRight;
+	Animation<TextureRegion> jumpDefault;
+	Animation<TextureRegion> jumpLeft;
+	Animation<TextureRegion> standingLeft;
+	Animation<TextureRegion> standingRight;
 		
 	SpaceGame game;
+	
+	private TiledMap tileMap;
+	private OrthogonalTiledMapRenderer tmr;
+	private float tileSize;
+	
 	
 	public GameScreen(SpaceGame game){
 		
 		this.game = game;
-		y = 15;
-		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;
 		
-		random = new Random();//Episode 11 for logic on timing
-		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		hudCam = new OrthographicCamera();
+		hudCam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		asteroids = new ArrayList<Asteroid>();
-		bullets = new ArrayList<Bullet>();
-		explosions = new ArrayList<Explosion>();
+		spriteBatch = new SpriteBatch();
 		
-		playerRect = new CollisionRect(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
+		world = new World(new Vector2(0, -9.81f), true);
+
+		contactListener = new MyContactListener();
 		
-		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		//Collision set up?
+		 world.setContactListener(contactListener);	
 		
-		score = 0;
-		
-		healthTexture = new Texture("blank.png");
-		
-		roll = 2;
-		shootTimer = 0;
-		rollTimer = 0;
-		rolls = new Animation[5];//Figure this underline later
-		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
+		textures = new Content();
+		textures.loadTexture("commando_good.png", "commando");
+		textures.loadTexture("bunny.png", "bunny");
+		textures.loadTexture("crystal.png", "crystal");
+		textures.loadTexture("hud.png", "hud");
 	
-		rolls[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[2]);//All left
-		rolls[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[1]);
-		rolls[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
-		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
-		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
+		createPlayer();
+		createTiles();
+		createCrystals();
+			
+		b2dr = new Box2DDebugRenderer();
+	
+		
+		//Set up box2d cam
+		b2dCam = new OrthographicCamera();
+		b2dCam.setToOrtho(false, Gdx.graphics.getWidth() / PPM, Gdx.graphics.getHeight() / PPM);
+
+		 //Set up hud
+		 //hud = new HUD(player);
+		
+		Texture texture = GameScreen.textures.getTexture("commando");
+		TextureRegion[][] sprites = new TextureRegion[3][8];
+		
+		sprites[0] = TextureRegion.split(texture, 7, 12)[0];
+		sprites[1] = TextureRegion.split(texture, 7, 12)[1];
+		sprites[2] = TextureRegion.split(texture, 7, 12)[2];
+		
+		TextureRegion[] run = new TextureRegion[8];
+		
+		for(int i = 1; i < sprites.length; i++){
+			
+			for(int j = 0; j < sprites[i].length; j++){
+				
+				run[j] = sprites[i][j];
+			}
+			
+			switch(i){
+		
+			case 1:
+				
+				runRight = new Animation<TextureRegion>(0.07f, run);
+				break;
+			case 2:
+
+				System.out.println(run.length);
+				runLeft = new Animation<TextureRegion>(0.07f, run);
+				break;
+			}
+			
+			run = new TextureRegion[8];
+		}
+				
+		
+		standingRight = new Animation<TextureRegion>(0.07f, sprites[0][0]); 
+		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0][1]);
+		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
+		jumpLeft = new Animation<TextureRegion>(0.07f, sprites[0][3]);
+		spriteBatch = new SpriteBatch();
+		stateTime = 0f;
+		
 	
 	}
 	
 	@Override
 	public void show() {
 
-
 	}
 
 	@Override
 	public void render(float delta) {
+		/**Get rid of this to return to default tutorial game*/
+				
+		stateTime += Gdx.graphics.getDeltaTime();
+		world.step(delta, 6, 2);
 		
-		//Update Asteroids
-		ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
+		//Remove crystals
+		Array<Body> bodies = contactListener.getBodiesToRemove();
+		for (Body body : bodies){
+			
+			player.collectCrystal();
+			crystals.removeValue((Crystal) body.getUserData(), true);
+			world.destroyBody(body);
+		}
+		bodies.clear();
+				
+		Gdx.gl.glClearColor(255, 255, 255, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//spriteBatch.begin();
+			
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			if(contactListener.isPlayerOnGround()){
+				
+				player.getBody().applyForceToCenter(0, 300, true);
+				player.setState(1);
+			}
+		}
+		
+
+		
+		if(Gdx.input.isKeyPressed(Keys.LEFT)){
+				
+			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
+			player.setState(3);
+			player.setFace(true);//CHANGE!!!
+			if(player.getBody().getLinearVelocity().x > -2f){
+				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
+			}
+		}
+		
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
+						
+			player.setState(2);
+			player.setFace(false);
+			if(player.getBody().getLinearVelocity().x < 2f){
+					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+				}
+
+		}
+		
+		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
+			
+			stillTime += Gdx.graphics.getDeltaTime();
+			player.setState(0);
+			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
+		}
+
+		if(!contactListener.isPlayerOnGround()){
+			
+			player.setState(1);
+		}
+
+		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+		cam.update();
+		spriteBatch.setProjectionMatrix(cam.combined);
+
+		//Draw player
+		//player.render(spriteBatch);
+
+		Body body = player.getBody();
+		int width = 8;
+		int height = 12;
+		spriteBatch.begin();
+		
+		switch(player.getState()){
+		
+		case 0: 		
+			
+			if(player.getFacing()){
+				
+				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			}
+			else{
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
+
+		
+			break;
+		case 1:
+			
+			if(player.getBody().getLinearVelocity().x >= 0){
+			
+				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
+			else{
+				
+				spriteBatch.draw(jumpLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			}
+			break;
+		case 2:
+			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		case 3:
+			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+
+			break;
+		}
+		
+		spriteBatch.end();
+		
+		//Draw crystals
+		for(int i = 0; i < crystals.size; i++){
+			
+			crystals.get(i).update(delta);
+			crystals.get(i).render(spriteBatch);
+		}
+		
+		tmr.setView(cam);
+		tmr.render();
+
+		if(debug){
+			
+			b2dCam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+			b2dCam.update();
+			b2dr.render(world, b2dCam.combined);;
+		}
+		
+		//spriteBatch.end();	
+	}
+	
+	private void createPlayer(){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//Create Player
+		bdef.position.set(90 / PPM, 100 / PPM);
+		bdef.type = BodyType.DynamicBody;
+		//bdef.linearVelocity.set(1f, 0);
+		Body body = world.createBody(bdef);
+		
+		shape.setAsBox(15 / PPM, 15 / PPM);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_PLAYER;
+		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL;
+		body.createFixture(fdef).setUserData("player");
+		
+		
+		//Create Player
+		player = new Player(body);
+		player.setState(1);
+		
+		//Create foot sensor
+		shape.setAsBox(13 / PPM,  6 / PPM, new Vector2(0, -14 / PPM), 0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_PLAYER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("foot");
+	}
+	
+	private void createTiles(){
+		
+		 tileMap = new TmxMapLoader().load("tester3.tmx");
+		 tmr = new OrthogonalTiledMapRenderer(tileMap);
+
+		 tileSize = (int) tileMap.getProperties().get("tilewidth");
+		 
+		 TiledMapTileLayer layer;
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("red");
+		 createLayer(layer, BIT_RED);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("green");
+		 createLayer(layer, BIT_GREEN);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("blue");
+		 createLayer(layer, BIT_BLUE);
+	}
+	
+	private void createLayer(TiledMapTileLayer layer, short bits){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		 //Go through all cells in layer
+		 for(int row = 0; row < layer.getHeight(); row++){
+			 
+			 for(int col = 0; col < layer.getWidth(); col++){
+				 
+				 //Get cell
+				 Cell cell = layer.getCell(col, row);
+				 
+				 //Check if cell exists
+				 if (cell == null) continue;
+				 if (cell.getTile() == null) continue;
+				 
+				 //Create a body + fixture from cell
+				 
+				 bdef.type = BodyType.StaticBody;//Episode 5
+				 bdef.position.set((col + 0.5f) * tileSize / PPM, (row + 0.5f) * tileSize / PPM);
+
+				 ChainShape chainShape = new ChainShape();
+				 Vector2[] vertices = new Vector2[4];
+				 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
+				 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
+				 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
+				 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
+				 chainShape.createChain(vertices);
+				 fdef.isSensor = false;
+				 fdef.friction = 0;
+				 fdef.shape = chainShape;
+				 fdef.filter.categoryBits = bits;
+				 fdef.filter.maskBits = BIT_PLAYER;
+				 
+				 world.createBody(bdef).createFixture(fdef);
+			 }
+		 }
+	}
+	
+	private void createCrystals(){
+		
+		crystals = new Array<Crystal>();
+		
+		MapLayer layer = tileMap.getLayers().get("crystals");
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		
+		for (MapObject mapObject : layer.getObjects()){
+			
+			bdef.type = BodyType.StaticBody;
+			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
+
+			bdef.position.set(x,y);
+			CircleShape circleShape = new CircleShape();
+			circleShape.setRadius(8 / PPM);
+			
+			fdef.shape = circleShape;
+			fdef.isSensor = true;
+			fdef.filter.categoryBits = BIT_CRYSTAL;
+			fdef.filter.maskBits = BIT_PLAYER;
+			
+			Body body = world.createBody(bdef);
+			body.createFixture(fdef).setUserData("crystal");;
+			
+			Crystal c = new Crystal(body);
+			crystals.add(c);
+			
+			body.setUserData(c);
+		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+	}
+
+	@Override
+	public void pause() {
+		
+	}
+
+	@Override
+	public void resume() {
+		
+	}
+
+	@Override
+	public void hide() {
+		
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+}
+
+/**Group index filtering - look it up later*/
+
+/*
+
+
+The following is for render:	//Update Asteroids
+		/*ArrayList<Asteroid> asteroidsRemove = new ArrayList<Asteroid>();
 		for(Asteroid asteroid : asteroids){
 			
 			asteroid.update(delta);
@@ -273,6 +662,8 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
+		
+		game.scrollingBackground.updateAndRender(delta, game.batch);
 	
 		for (Bullet bullet : bullets){
 			
@@ -306,36 +697,44 @@ public class GameScreen implements Screen{
 
 		
 		game.batch.end();
-	}
 
-	@Override
-	public void resize(int width, int height) {
+
+//Create platform
+		BodyDef bdef = new BodyDef();
+		bdef.position.set(200 / PPM, (Gdx.graphics.getHeight() - 100) / PPM);
+		bdef.type = BodyType.StaticBody;//Static don't move, unaffected by forces
+										//Dyanamic - always get affected by forces
+										//Kinematic - don't get affected by world forces, but can change velocities
+		Body body = world.createBody(bdef);
 		
-	}
-
-	@Override
-	public void pause() {
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(100 / PPM, 10 / PPM);//1/2 width and height
 		
-	}
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_GROUND;
+		fdef.filter.maskBits = BIT_PLAYER;
+		body.createFixture(fdef).setUserData("ground");
 
-	@Override
-	public void resume() {
+
+
+
+ * Ball code:
+ * //Create ball
+		bdef.position.set(230/PPM, 10 / PPM);
+		body = world.createBody(bdef);
 		
-	}
+		CircleShape cshape = new CircleShape();
+		cshape.setRadius(25 / PPM);
+		fdef.shape = cshape;
+		fdef.filter.maskBits = BIT_GROUND;
+		fdef.filter.categoryBits = BIT_BALL;
 
-	@Override
-	public void hide() {
+		body.createFixture(fdef).setUserData("ball");
 		
-	}
-
-	@Override
-	public void dispose() {
-		
-	}
-}
-
-
-
+		cam = new OrthographicCamera();
+		cam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+ */
 
 /*		if(Gdx.input.isKeyPressed(Keys.UP)){
 
@@ -345,5 +744,63 @@ y += SPEED*Gdx.graphics.getDeltaTime();
 if(Gdx.input.isKeyPressed(Keys.DOWN)){
 
 y -= SPEED*Gdx.graphics.getDeltaTime();
-}*/
+}
+
+		 
+		stillTime = 0;
+		 
+		y = 15;
+		x = SpaceGame.WIDTH / 2 - SHIP_WIDTH/2;		
+		
+		random = new Random();//Episode 11 for logic on timing
+		asteroidSpawnTimer = random.nextFloat() * (MAX_ASTEROID_SPAWN_TIME - MIN_ASTEROID_SPAWN_TIME) + MIN_ASTEROID_SPAWN_TIME;
+		
+		asteroids = new ArrayList<Asteroid>();
+		bullets = new ArrayList<Bullet>();
+		explosions = new ArrayList<Explosion>();
+		
+		playerRect = new CollisionRect(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
+		
+		
+		
+		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		
+		score = 0;
+		
+		healthTexture = new Texture("blank.png");
+		
+		roll = 2;
+		shootTimer = 0;
+		rollTimer = 0;
+		rolls = new Animation[5];//Figure this underline later
+		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"), SHIP_WIDTH_PIXEL, SHIP_HEIGHT_PIXEL);
+	
+		rolls[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[2]);//All left
+		rolls[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[1]);
+		rolls[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
+		rolls[3] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[3]);
+		rolls[4] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, rollSpriteSheet[4]);//All right
+		
+		
+				
+		//Texture texture = textures.getTexture("commando");
+		//TextureRegion[] sprites = TextureRegion.split(texture, 8, 12)[1];
+		//System.out.println(sprites.length);
+		//run = new Animation[3];
+		//run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, sprites);
+		
+		
+		/*TextureRegion[][] playerMoveSheet = TextureRegion.split(new Texture("commando_good.png"), 8, 12);
+		run = new Animation[3];
+		
+		run[0] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[0]);//Still
+		run[1] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[1]);//Right
+		run[2] = new Animation<TextureRegion>(SHIP_ANIMATION_SPEED, playerMoveSheet[2]);//Left
+
+
+
+
+game.scrollingBackground.setSpeedFixed(false);
+game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
+*/
 

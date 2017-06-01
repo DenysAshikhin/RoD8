@@ -39,6 +39,10 @@ public class GameOverScreen implements Screen{
 		gameOverBanner = new Texture("game_over.png");
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 			
+
+		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
+	
+		
 	}
 	
 	@Override
@@ -53,6 +57,8 @@ public class GameOverScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		
+		game.scrollingBackground.updateAndRender(delta, game.batch);
+
 		game.batch.draw(gameOverBanner, Gdx.graphics.getWidth()/2 - BANNER_WIDTH/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15, BANNER_WIDTH, BANNER_HEIGHT);
 		
 		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: \n" + score, Color.WHITE, 0, Align.left, false);
