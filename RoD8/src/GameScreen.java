@@ -39,7 +39,6 @@ public class GameScreen implements Screen{
 	private Box2DDebugRenderer b2dr;
 	
 	private OrthographicCamera b2dCam;
-	private MyContactListener cl;
 	
 	private TiledMap tileMap;
 	private float tileSize;
@@ -51,14 +50,11 @@ public class GameScreen implements Screen{
 	private HUD hud;
 	
 	float stateTime;
-
-	private float stillTime;
 	
 	private OrthographicCamera cam;
 	//private OrthographicCamera hudCam;
 
 	BitmapFont scoreFont;
-	
 
 	CollisionRect playerRect;
 	Texture healthTexture;
@@ -116,44 +112,20 @@ public class GameScreen implements Screen{
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		
-		//Create palyer, tiles and crystals
+		//Create player, tiles and crystals
 		createPlayer();
 		createTiles();
 		createCrystals();
 		
 		
-		//Temperoray loading of textures for commande animations
+		//Temperory loading of textures for commando animations
 		Texture texture = GameScreen.textures.getTexture("commando");
 		TextureRegion[][] sprites = new TextureRegion[3][8];
 		
 		sprites[0] = TextureRegion.split(texture, 7, 12)[0];
 		sprites[1] = TextureRegion.split(texture, 7, 12)[1];
 		sprites[2] = TextureRegion.split(texture, 7, 12)[2];
-		
-		TextureRegion[] run = new TextureRegion[8];
-		
-		/*for(int i = 1; i < sprites.length; i++){
-			
-			for(int j = 0; j < sprites[i].length; j++){
 				
-				run[j] = sprites[i][j];
-			}
-			
-			switch(i){
-		
-			case 1:
-				
-				runRight = new Animation<TextureRegion>(0.07f, run);
-				break;
-			case 2:
-
-				runLeft = new Animation<TextureRegion>(0.07f, run);
-				break;
-			}
-			
-			run = new TextureRegion[8];
-		}*/
-		
 		runRight = new Animation<TextureRegion>(0.07f, sprites[1].clone());
 		runLeft = new Animation<TextureRegion>(0.07f, sprites[2].clone());
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0][0]); 
@@ -249,7 +221,6 @@ public class GameScreen implements Screen{
 		
 		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
 			
-			stillTime += Gdx.graphics.getDeltaTime();
 			player.setState(0);
 			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
 		}
