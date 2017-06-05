@@ -67,6 +67,9 @@ public class GameScreen implements Screen{
 	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
 	public static Content textures;
 	
+	public static final float PLAYER_WIDTH = 8f;
+	public static final float PLAYER_HEIGHT = 20f;
+	public static final float SCALE = 4f;
 	
 	//Filter Bits
 	public static final short BIT_PLAYER = 2;
@@ -104,9 +107,6 @@ public class GameScreen implements Screen{
 		contactListener = new MyContactListener();
 		world.setContactListener(contactListener);	
 		b2dr = new Box2DDebugRenderer();
-
-		
-	
 		
 		//Load textures (temp)
 		
@@ -187,8 +187,41 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		//spriteBatch.begin();
+		//movement update
+		updateMovement();
+
+		
+		
+		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+		cam.update();
+
 			
+		tmr.setView(cam);
+		tmr.render();
+
+		spriteBatch.setProjectionMatrix(cam.combined);
+
+		//Draw player
+		this.drawPlayer(cam, spriteBatch);
+
+		//Draw crystals
+		for(int i = 0; i < crystals.size; i++){
+			
+			crystals.get(i).update(delta);
+			crystals.get(i).render(spriteBatch);
+		}
+
+		
+		if(debug){
+
+			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
+			b2dCam.update();
+			b2dr.render(world, b2dCam.combined);
+		}
+	}
+	
+	private void updateMovement(){
+		
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			if(contactListener.isPlayerOnGround()){
 				
@@ -228,73 +261,44 @@ public class GameScreen implements Screen{
 			
 			player.setState(1);
 		}
-
-		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM - 50, 0);
-		cam.update();
-
-		tmr.setView(cam);
-		tmr.render();
-
-		spriteBatch.setProjectionMatrix(cam.combined);
-
-		//Draw player
-		this.drawPlayer(cam, spriteBatch);
-
-		//Draw crystals
-		for(int i = 0; i < crystals.size; i++){
-			
-			crystals.get(i).update(delta);
-			crystals.get(i).render(spriteBatch);
-		}
-
-		if(debug){
-			
-			//b2dCam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
-			//b2dCam.update();
-			b2dr.render(world, b2dCam.combined);
-		}
-		
-		//spriteBatch.end();	
 	}
 	
 	private void drawPlayer(OrthographicCamera cam, SpriteBatch spriteBatch){
 		
-		Body body = player.getBody();
-		int width = 8;
-		int height = 12;
+		//Body body = player.getBody();
 		spriteBatch.begin();
 		
 		switch(player.getState()){
-		
+		// - width / 2
 		case 0: 		
 			
 			if(player.getFacing()){
 				
-				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 
 			}
 			else{
 				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			break;
 		case 1:
 			
 			if(player.getBody().getLinearVelocity().x >= 0){
 			
-				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(jumpLeft.getKeyFrame(stateTime, false), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+				spriteBatch.draw(jumpLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			break;
 		case 2:
 			
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			break;
 		case 3:
-			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), body.getPosition().x * 100 - width / 2, body.getPosition().y * 100 - height / 2, 0, 0, width, height, 4, 4, 0);
+			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 
 			break;
 		}
@@ -314,7 +318,10 @@ public class GameScreen implements Screen{
 		//bdef.linearVelocity.set(1f, 0);
 		Body body = world.createBody(bdef);
 		
-		shape.setAsBox(15 / PPM, 15 / PPM);
+		shape.setAsBox(
+				((PLAYER_WIDTH * SCALE) / 2) / PPM, 
+				((PLAYER_HEIGHT * SCALE) / 2) / PPM);
+	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
 		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL;
@@ -326,7 +333,11 @@ public class GameScreen implements Screen{
 		player.setState(1);
 		
 		//Create foot sensor
-		shape.setAsBox(13 / PPM,  6 / PPM, new Vector2(0, -14 / PPM), 0);
+		shape.setAsBox(
+				(((PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((PLAYER_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(PLAYER_HEIGHT / 2 * SCALE) / PPM),
+				0);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
 		fdef.filter.maskBits = BIT_RED;	
