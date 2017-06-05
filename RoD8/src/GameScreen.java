@@ -65,7 +65,7 @@ public class GameScreen implements Screen{
 	
 	public static final float PLAYER_WIDTH = 8f;
 	public static final float PLAYER_HEIGHT = 20f;
-	public static final float SCALE = 4.5f;
+	public static final float SCALE = 2f;
 	
 	//Filter Bits
 	public static final short BIT_PLAYER = 2;
@@ -76,12 +76,9 @@ public class GameScreen implements Screen{
 	
 	private MyContactListener contactListener;	
 
-	Animation<TextureRegion> runLeft;
 	Animation<TextureRegion> runRight;
 	Animation<TextureRegion> jumpDefault;
-	Animation<TextureRegion> jumpLeft;
 	Animation<TextureRegion> standingLeft;
-	Animation<TextureRegion> standingRight;
 		
 	SpaceGame game;
 		
@@ -126,12 +123,9 @@ public class GameScreen implements Screen{
 		sprites[1] = TextureRegion.split(texture, 7, 12)[1];
 		sprites[2] = TextureRegion.split(texture, 7, 12)[2];
 				
+		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0]);
 		runRight = new Animation<TextureRegion>(0.07f, sprites[1].clone());
-		runLeft = new Animation<TextureRegion>(0.07f, sprites[2].clone());
-		standingRight = new Animation<TextureRegion>(0.07f, sprites[0][0]); 
-		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0][1]);
 		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
-		jumpLeft = new Animation<TextureRegion>(0.07f, sprites[0][3]);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -244,7 +238,7 @@ public class GameScreen implements Screen{
 			}
 			else{
 				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 			}
 			break;
 		case 1:
@@ -255,7 +249,7 @@ public class GameScreen implements Screen{
 			}
 			else{
 				
-				spriteBatch.draw(jumpLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 			}
 			break;
 		case 2:
@@ -263,7 +257,7 @@ public class GameScreen implements Screen{
 			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			break;
 		case 3:
-			spriteBatch.draw(runLeft.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
+			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 
 			break;
 		}
