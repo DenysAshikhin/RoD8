@@ -237,7 +237,9 @@ public class Item {
 		stat.areaDamage += newItem.count * newItem.areaDamageChange;
 		stat.jumpStr += newItem.count * newItem.jumpIncrease;
 		stat.jumpCount += newItem.count * newItem.jumpExtra;
-		stat.visible = !(newItem.makeInvisible);
+		if(stat.visible){
+			stat.visible = !(newItem.makeInvisible);
+		}
 	}
 }
 
