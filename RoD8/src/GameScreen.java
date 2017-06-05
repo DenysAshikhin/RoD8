@@ -69,7 +69,7 @@ public class GameScreen implements Screen{
 	
 	public static final float PLAYER_WIDTH = 8f;
 	public static final float PLAYER_HEIGHT = 20f;
-	public static final float SCALE = 4f;
+	public static final float SCALE = 3f;
 	
 	//Filter Bits
 	public static final short BIT_PLAYER = 2;
@@ -265,17 +265,14 @@ public class GameScreen implements Screen{
 	
 	private void drawPlayer(OrthographicCamera cam, SpriteBatch spriteBatch){
 		
-		//Body body = player.getBody();
 		spriteBatch.begin();
 		
 		switch(player.getState()){
-		// - width / 2
 		case 0: 		
 			
 			if(player.getFacing()){
 				
 				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
-
 			}
 			else{
 				
