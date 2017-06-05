@@ -69,7 +69,7 @@ public class GameScreen implements Screen{
 	
 	public static final float PLAYER_WIDTH = 8f;
 	public static final float PLAYER_HEIGHT = 20f;
-	public static final float SCALE = 3f;
+	public static final float SCALE = 4.5f;
 	
 	//Filter Bits
 	public static final short BIT_PLAYER = 2;
@@ -132,7 +132,7 @@ public class GameScreen implements Screen{
 		
 		TextureRegion[] run = new TextureRegion[8];
 		
-		for(int i = 1; i < sprites.length; i++){
+		/*for(int i = 1; i < sprites.length; i++){
 			
 			for(int j = 0; j < sprites[i].length; j++){
 				
@@ -152,8 +152,10 @@ public class GameScreen implements Screen{
 			}
 			
 			run = new TextureRegion[8];
-		}
+		}*/
 		
+		runRight = new Animation<TextureRegion>(0.07f, sprites[1].clone());
+		runLeft = new Animation<TextureRegion>(0.07f, sprites[2].clone());
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0][0]); 
 		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0][1]);
 		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
@@ -190,11 +192,8 @@ public class GameScreen implements Screen{
 		//movement update
 		updateMovement();
 
-		
-		
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
-
 			
 		tmr.setView(cam);
 		tmr.render();
@@ -210,7 +209,6 @@ public class GameScreen implements Screen{
 			crystals.get(i).update(delta);
 			crystals.get(i).render(spriteBatch);
 		}
-
 		
 		if(debug){
 
@@ -232,7 +230,6 @@ public class GameScreen implements Screen{
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT)){
 				
-			//spriteBatch.draw(run[1].getKeyFrame(stateTime, true), x, y, SHIP_WIDTH, SHIP_HEIGHT);
 			player.setState(3);
 			player.setFace(true);//CHANGE!!!
 			if(player.getBody().getLinearVelocity().x > -2f){
