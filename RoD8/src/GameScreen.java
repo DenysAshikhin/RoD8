@@ -240,7 +240,6 @@ public class GameScreen implements Screen{
 		//Draw player
 		this.drawPlayer(cam, spriteBatch);
 
-		
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			
