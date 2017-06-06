@@ -79,7 +79,6 @@ public class GameScreen implements Screen{
 	Animation<TextureRegion> runRight;
 	Animation<TextureRegion> jumpDefault;
 	Animation<TextureRegion> standingLeft;
-	//Animation<TextureRegion> crystalsAnim;
 	
 	Texture crab;
 	Texture crystal; 
@@ -106,7 +105,6 @@ public class GameScreen implements Screen{
 		b2dr = new Box2DDebugRenderer();
 		
 		//Load textures (temp)
-		
 		textures = new Content();
 		textures.loadTexture("commando_good.png", "commando");
 		textures.loadTexture("bunny.png", "bunny");
@@ -122,7 +120,6 @@ public class GameScreen implements Screen{
 		createTiles();
 		createCrystals();
 		
-		
 		//Temperory loading of textures for commando animations
 		Texture texture = textures.getTexture("commando");
 		TextureRegion[][] sprites = new TextureRegion[3][8];
@@ -135,13 +132,7 @@ public class GameScreen implements Screen{
 		runRight = new Animation<TextureRegion>(0.07f, sprites[1].clone());
 		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
 		spriteBatch = new SpriteBatch();
-		stateTime = 0f;
-		//crystalsAnim = new Animation<TextureRegion>(0.07f, TextureRegion.split(textures.getTexture("crystal"), 16, 16)[0]);
-		
-		//spriteBatch.begin();
-		//spriteBatch.draw(crystal, 3.20, 2.00);
-		//spriteBatch.end();
-		
+		stateTime = 0f;	
 	}
 	
 	@Override
@@ -151,7 +142,6 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
-		/**Get rid of this to return to default tutorial game*/
 				
 		stateTime += Gdx.graphics.getDeltaTime();
 		world.step(delta, 6, 2);
@@ -181,17 +171,20 @@ public class GameScreen implements Screen{
 		spriteBatch.setProjectionMatrix(cam.combined);
 
 		//Draw player
-		this.drawPlayer(cam, spriteBatch);
+		this.drawPlayer();
 
 		spriteBatch.begin();
 		//Draw crystals
+		System.out.println("******");
 		for(int i = 0; i < crystals.size; i++){
 			
-			//System.out.println(i);
 			//System.out.println(crystals.get(i).getBody().getPosition().x);
+			//System.out.println(crystals.get(i).getBody().getPosition().y);
+
+			System.out.println(i);
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x, crystals.get(i).getBody().getPosition().y);
 		}
-		
+		System.out.println("******");
 		spriteBatch.end();
 		
 		if(debug){
@@ -228,7 +221,6 @@ public class GameScreen implements Screen{
 			if(player.getBody().getLinearVelocity().x < 2f){
 					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
 				}
-
 		}
 		
 		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -243,7 +235,7 @@ public class GameScreen implements Screen{
 		}
 	}
 	
-	private void drawPlayer(OrthographicCamera cam, SpriteBatch spriteBatch){
+	private void drawPlayer(){
 		
 		spriteBatch.begin();
 		
