@@ -79,6 +79,10 @@ public class GameScreen implements Screen{
 	Animation<TextureRegion> runRight;
 	Animation<TextureRegion> jumpDefault;
 	Animation<TextureRegion> standingLeft;
+	//Animation<TextureRegion> crystalsAnim;
+	
+	Texture crab;
+	Texture crystal; 
 		
 	SpaceGame game;
 		
@@ -108,6 +112,10 @@ public class GameScreen implements Screen{
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
+		textures.loadTexture("Monster Crab.png", "crab");
+		
+		crab = textures.getTexture("crab");
+		crystal = textures.getTexture("crystal");
 		
 		//Create player, tiles and crystals
 		createPlayer();
@@ -116,7 +124,7 @@ public class GameScreen implements Screen{
 		
 		
 		//Temperory loading of textures for commando animations
-		Texture texture = GameScreen.textures.getTexture("commando");
+		Texture texture = textures.getTexture("commando");
 		TextureRegion[][] sprites = new TextureRegion[3][8];
 		
 		sprites[0] = TextureRegion.split(texture, 7, 12)[0];
@@ -128,6 +136,12 @@ public class GameScreen implements Screen{
 		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
+		//crystalsAnim = new Animation<TextureRegion>(0.07f, TextureRegion.split(textures.getTexture("crystal"), 16, 16)[0]);
+		
+		//spriteBatch.begin();
+		//spriteBatch.draw(crystal, 3.20, 2.00);
+		//spriteBatch.end();
+		
 	}
 	
 	@Override
@@ -169,12 +183,16 @@ public class GameScreen implements Screen{
 		//Draw player
 		this.drawPlayer(cam, spriteBatch);
 
+		spriteBatch.begin();
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			
-			crystals.get(i).update(delta);
-			crystals.get(i).render(spriteBatch);
+			//System.out.println(i);
+			//System.out.println(crystals.get(i).getBody().getPosition().x);
+			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x, crystals.get(i).getBody().getPosition().y);
 		}
+		
+		spriteBatch.end();
 		
 		if(debug){
 
@@ -306,7 +324,7 @@ public class GameScreen implements Screen{
 	
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("tester3.tmx");
+		 tileMap = new TmxMapLoader().load("tester2.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
