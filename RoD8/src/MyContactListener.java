@@ -37,18 +37,14 @@ public class MyContactListener implements ContactListener{
 			playerOnGround++;
 		}
 		
-		//System.out.println("HI");
 		if(fa.getUserData() != null && fa.getUserData().equals("crystal")){
 			
 			bodiesToRemove.add(fa.getBody());
-			System.out.println("HI2");
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("crystal")){
 			
 			bodiesToRemove.add(fb.getBody());
-			System.out.println("HI3");
-
 		}
 	}
 
