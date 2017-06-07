@@ -175,16 +175,10 @@ public class GameScreen implements Screen{
 
 		spriteBatch.begin();
 		//Draw crystals
-		System.out.println("******");
 		for(int i = 0; i < crystals.size; i++){
 			
-			//System.out.println(crystals.get(i).getBody().getPosition().x);
-			//System.out.println(crystals.get(i).getBody().getPosition().y);
-
-			System.out.println(i);
-			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x, crystals.get(i).getBody().getPosition().y);
+			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
-		System.out.println("******");
 		spriteBatch.end();
 		
 		if(debug){
@@ -316,7 +310,7 @@ public class GameScreen implements Screen{
 	
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("tester2.tmx");
+		 tileMap = new TmxMapLoader().load("tester3.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
