@@ -8,17 +8,36 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Align;
 
+/**
+ * The Class GameOverScreen.
+ */
 public class GameOverScreen implements Screen{
 
+	/** The Constant BANNER_WIDTH. */
 	private static final int BANNER_WIDTH = 350;
+	
+	/** The Constant BANNER_HEIGHT. */
 	private static final int BANNER_HEIGHT = 100;
 	
 	
+	/** The game over banner. */
 	Texture gameOverBanner;
+	
+	/** The score font. */
 	BitmapFont scoreFont;
+	
+	/** The game. */
 	SpaceGame game;
+	
+	/** The highscore. */
 	int score, highscore;
 	
+	/**
+	 * Instantiates a new game over screen.
+	 *
+	 * @param game the game
+	 * @param score the score
+	 */
 	public GameOverScreen(SpaceGame game, int score){
 		
 		this.game = game;
@@ -45,11 +64,17 @@ public class GameOverScreen implements Screen{
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#show()
+	 */
 	@Override
 	public void show() {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#render(float)
+	 */
 	@Override
 	public void render(float delta) {
 	
@@ -103,26 +128,41 @@ public class GameOverScreen implements Screen{
 		game.batch.end();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resize(int, int)
+	 */
 	@Override
 	public void resize(int width, int height) {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#pause()
+	 */
 	@Override
 	public void pause() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resume()
+	 */
 	@Override
 	public void resume() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#hide()
+	 */
 	@Override
 	public void hide() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#dispose()
+	 */
 	@Override
 	public void dispose() {
 		

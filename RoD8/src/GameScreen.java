@@ -28,58 +28,112 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 
+/**
+ * The Class GameScreen.
+ */
 public class GameScreen implements Screen{
 
+	/** The debug. */
 	private boolean debug = true;
 		
+	/** The world. */
 	private World world;
+	
+	/** The b 2 dr. */
 	private Box2DDebugRenderer b2dr;
 	
+	/** The b 2 d cam. */
 	private OrthographicCamera b2dCam;
 	
+	/** The tile map. */
 	private TiledMap tileMap;
+	
+	/** The tile size. */
 	private float tileSize;
+	
+	/** The tmr. */
 	private OrthogonalTiledMapRenderer tmr;
 	
+	/** The player. */
 	private Player player;
+	
+	/** The crystals. */
 	private Array<Crystal> crystals;
 		
+	/** The state time. */
 	float stateTime;
 	
+	/** The cam. */
 	private OrthographicCamera cam;
 	//private OrthographicCamera hudCam;
 
+	/** The score font. */
 	BitmapFont scoreFont;
 
+	/** The health texture. */
 	Texture healthTexture;
+	
+	/** The sprite batch. */
 	SpriteBatch spriteBatch;
 	
+	/** The Constant PPM. */
 	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
+	
+	/** The textures. */
 	public static Content textures;
 	
+	/** The Constant PLAYER_WIDTH. */
 	public static final float PLAYER_WIDTH = 8f;
+	
+	/** The Constant PLAYER_HEIGHT. */
 	public static final float PLAYER_HEIGHT = 20f;
+	
+	/** The Constant SCALE. */
 	public static final float SCALE = 2f;
 	
+	/** The Constant BIT_PLAYER. */
 	//Filter Bits
 	public static final short BIT_PLAYER = 2;
+	
+	/** The Constant BIT_RED. */
 	public static final short BIT_RED = 4;
+	
+	/** The Constant BIT_GREEN. */
 	public static final short BIT_GREEN = 8;
+	
+	/** The Constant BIT_BLUE. */
 	public static final short BIT_BLUE = 16;
+	
+	/** The Constant BIT_CRYSTAL. */
 	public static final short BIT_CRYSTAL = 32;
 	
+	/** The contact listener. */
 	private MyContactListener contactListener;	
 
+	/** The run right. */
 	Animation<TextureRegion> runRight;
+	
+	/** The jump default. */
 	Animation<TextureRegion> jumpDefault;
+	
+	/** The standing left. */
 	Animation<TextureRegion> standingLeft;
 	
+	/** The crab. */
 	Texture crab;
+	
+	/** The crystal. */
 	Texture crystal; 
 		
+	/** The game. */
 	SpaceGame game;
 		
 	
+	/**
+	 * Instantiates a new game screen.
+	 *
+	 * @param game the game
+	 */
 	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
 		
@@ -130,11 +184,17 @@ public class GameScreen implements Screen{
 		stateTime = 0f;	
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#show()
+	 */
 	@Override
 	public void show() {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#render(float)
+	 */
 	@Override
 	public void render(float delta) {
 				
@@ -184,6 +244,9 @@ public class GameScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * Update movement.
+	 */
 	private void updateMovement(){
 		
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
@@ -224,6 +287,9 @@ public class GameScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * Draw player.
+	 */
 	private void drawPlayer(){
 		
 		spriteBatch.begin();
@@ -264,6 +330,9 @@ public class GameScreen implements Screen{
 		spriteBatch.end();
 	}
 	
+	/**
+	 * Creates the player.
+	 */
 	private void createPlayer(){
 		
 		BodyDef bdef = new BodyDef();
@@ -303,6 +372,9 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("foot");
 	}
 	
+	/**
+	 * Creates the tiles.
+	 */
 	private void createTiles(){
 		
 		 tileMap = new TmxMapLoader().load("tester3.tmx");
@@ -319,6 +391,12 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_BLUE);
 	}
 	
+	/**
+	 * Creates the layer.
+	 *
+	 * @param layer the layer
+	 * @param bits the bits
+	 */
 	private void createLayer(TiledMapTileLayer layer, short bits){
 		
 		BodyDef bdef = new BodyDef();
@@ -359,6 +437,9 @@ public class GameScreen implements Screen{
 		 }
 	}
 	
+	/**
+	 * Creates the crystals.
+	 */
 	private void createCrystals(){
 		
 		crystals = new Array<Crystal>();
@@ -394,26 +475,41 @@ public class GameScreen implements Screen{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resize(int, int)
+	 */
 	@Override
 	public void resize(int width, int height) {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#pause()
+	 */
 	@Override
 	public void pause() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resume()
+	 */
 	@Override
 	public void resume() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#hide()
+	 */
 	@Override
 	public void hide() {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#dispose()
+	 */
 	@Override
 	public void dispose() {
 		

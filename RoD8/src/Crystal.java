@@ -2,10 +2,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+/**
+ * The Class Crystal.
+ */
 public class Crystal extends B2DSprite{
 
+	/** The crystal anim. */
 	private Animation<TextureRegion>crystalAnim;
 	
+	/**
+	 * Instantiates a new crystal.
+	 *
+	 * @param body the body
+	 */
 	public Crystal(Body body){
 		
 		super(body);
@@ -18,5 +27,10 @@ public class Crystal extends B2DSprite{
 	}
 	
 	
+	/**
+	 * Gets the anim.
+	 *
+	 * @return the anim
+	 */
 	public Animation<TextureRegion> getAnim(){return crystalAnim;}
 }

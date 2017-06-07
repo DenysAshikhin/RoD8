@@ -2,19 +2,34 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/**
+ * The Class SpaceGame.
+ */
 public class SpaceGame extends Game{
 	
+	/** The batch. */
 	public SpriteBatch batch;
+	
+	/** The scrolling background. */
 	public ScrollingBackground scrollingBackground;
 	
+	/** The Constant WIDTH. */
 	public static final int WIDTH = 320;
+	
+	/** The Constant HEIGHT. */
 	public static final int HEIGHT = 240;
+	
+	/** The Constant SCALE. */
 	public static final int SCALE = 2;
 	
+	/** The cam. */
 	private OrthographicCamera cam;
 //	private StretchViewport viewPort;
 	
-	@Override
+	/* (non-Javadoc)
+ * @see com.badlogic.gdx.ApplicationListener#create()
+ */
+@Override
 	public void create (){
 		
 		//scrollingBackground = new ScrollingBackground();
@@ -28,6 +43,9 @@ public class SpaceGame extends Game{
 		this.setScreen(new GameScreen(this));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Game#render()
+	 */
 	@Override
 	public void render (){
 	
@@ -36,6 +54,9 @@ public class SpaceGame extends Game{
 		super.render();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Game#resize(int, int)
+	 */
 	public void resize(int width, int height){
 		
 		//this.scrollingBackground.resize(width, height);
@@ -44,6 +65,9 @@ public class SpaceGame extends Game{
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Game#dispose()
+	 */
 	@Override
 	public void dispose () {
 		batch.dispose();

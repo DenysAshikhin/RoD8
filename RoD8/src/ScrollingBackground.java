@@ -2,19 +2,41 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/**
+ * The Class ScrollingBackground.
+ */
 public class ScrollingBackground {
 
+	/** The Constant DEFAULT_SPEED. */
 	public static final int DEFAULT_SPEED = 80;
+	
+	/** The Constant ACCELERATION. */
 	public static final int ACCELERATION = 50;
+	
+	/** The Constant GOAL_REACHED_ACCELERATION. */
 	public static final int GOAL_REACHED_ACCELERATION = 200;
 	
+	/** The image. */
 	Texture image;
+	
+	/** The y 2. */
 	float y1, y2;
+	
+	/** The speed. */
 	int speed;//In pixels / second
+	
+	/** The goal speed. */
 	int goalSpeed;
+	
+	/** The image scale. */
 	float imageScale;
+	
+	/** The speed fixed. */
 	boolean speedFixed = true;
 
+	/**
+	 * Instantiates a new scrolling background.
+	 */
 	public ScrollingBackground(){
 		
 		image = new Texture("stars_background.png");
@@ -29,6 +51,12 @@ public class ScrollingBackground {
 	}
 	
 	
+	/**
+	 * Update and render.
+	 *
+	 * @param deltaTime the delta time
+	 * @param batch the batch
+	 */
 	public void updateAndRender(Float deltaTime, SpriteBatch batch){
 		//Speed adjustment to reach goal
 		
@@ -62,10 +90,27 @@ public class ScrollingBackground {
 		
 	}
 	
+	/**
+	 * Resize.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 */
 	public void resize(int width, int height){
 		imageScale = width / image.getWidth();
 	}
 	
+	/**
+	 * Sets the speed.
+	 *
+	 * @param goalSpeed the new speed
+	 */
 	public void setSpeed (int goalSpeed){this.goalSpeed = goalSpeed;}
+	
+	/**
+	 * Sets the speed fixed.
+	 *
+	 * @param speedFixed the new speed fixed
+	 */
 	public void setSpeedFixed(boolean speedFixed){this.speedFixed = speedFixed;}
 	}
