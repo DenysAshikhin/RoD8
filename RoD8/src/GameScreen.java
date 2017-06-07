@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -46,9 +43,7 @@ public class GameScreen implements Screen{
 	
 	private Player player;
 	private Array<Crystal> crystals;
-	
-	private HUD hud;
-	
+		
 	float stateTime;
 	
 	private OrthographicCamera cam;
@@ -56,7 +51,6 @@ public class GameScreen implements Screen{
 
 	BitmapFont scoreFont;
 
-	CollisionRect playerRect;
 	Texture healthTexture;
 	SpriteBatch spriteBatch;
 	
