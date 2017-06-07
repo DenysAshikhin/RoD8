@@ -80,6 +80,7 @@ public class GameScreen implements Screen{
 	SpaceGame game;
 		
 	
+	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
 		
 		this.game = game;
