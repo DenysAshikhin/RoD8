@@ -78,6 +78,18 @@ public class MyContactListener implements ContactListener{
 			
 			bodiesToRemove.add(fb.getBody());
 		}
+		
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("bullet")){
+			
+			bodiesToRemove.add(fa.getBody());
+			System.out.println("REMOVED");
+
+		}
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("bullet")){
+
+			bodiesToRemove.add(fb.getBody());
+			System.out.println("REMOVED");
+		}
 	}
 
 	/* (non-Javadoc)

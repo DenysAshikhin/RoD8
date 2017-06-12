@@ -39,7 +39,7 @@ public class GameScreen implements Screen{
 	private boolean debug = true;
 		
 	/** The world. */
-	private World world;
+	public World world;
 	
 	/** The b 2 dr. */
 	private Box2DDebugRenderer b2dr;
@@ -116,6 +116,8 @@ public class GameScreen implements Screen{
 	
 	/** The Constant BIT_MONSTER. */
 	public static final short BIT_MONSTER = 64;
+	
+	public static final short BIT_BULLET = 128;
 	
 	/** The contact listener. */
 
@@ -282,7 +284,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL;
+		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL | BIT_BULLET;
 		body.createFixture(fdef).setUserData("player");
 		
 		

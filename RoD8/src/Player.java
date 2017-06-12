@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 /**
  * The Class Player.
@@ -126,10 +130,35 @@ public class Player extends B2DSprite{
 
 			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
 				
+				if(framesRun == 0 || framesRun == 3){
+					
+					BodyDef bdef = new BodyDef();
+					FixtureDef fdef = new FixtureDef();
+					PolygonShape shape = new PolygonShape();
+					
+					//Create Player
+					//x set at X 100
+					//y set at X 100
+					bdef.position.set((this.getBody().getPosition().x * 110) / gameScreen.PPM, (this.getBody().getPosition().y * 100) / gameScreen.PPM);
+					bdef.type = BodyType.KinematicBody;
+					bdef.linearVelocity.set(0.5f, 0);
+					Body body = gameScreen.world.createBody(bdef);
+					
+					
+					shape.setAsBox(
+							1 / gameScreen.PPM, 
+							1 / gameScreen.PPM);
+				//	shape.setAs
+					fdef.shape = shape;
+					fdef.filter.categoryBits = gameScreen.BIT_BULLET;
+					fdef.filter.maskBits = gameScreen.BIT_PLAYER;
+					body.createFixture(fdef).setUserData("bullet:1.00");
+					
+				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
 			}
-		
+	
 			if (framesRun <= 5){
 
 				if(this.getFacing())
@@ -142,6 +171,7 @@ public class Player extends B2DSprite{
 				this.setState(0);
 				framesRun = 0;
 				animTime = 0;
+				prevFrame = null;
 			}
 			break;
 		case 5:
@@ -164,6 +194,7 @@ public class Player extends B2DSprite{
 				this.setState(0);
 				framesRun = 0;
 				animTime = 0;
+				prevFrame = null;
 			}
 			
 			break;
@@ -188,6 +219,7 @@ public class Player extends B2DSprite{
 				this.setState(0);
 				framesRun = 0;
 				animTime = 0;
+				prevFrame = null;
 			}
 			break;
 		case 7:
@@ -211,6 +243,7 @@ public class Player extends B2DSprite{
 				this.setState(0);
 				framesRun = 0;
 				animTime = 0;
+				prevFrame = null;
 			}
 			break;
 		}
@@ -239,10 +272,8 @@ public class Player extends B2DSprite{
 				this.setState(3);
 				this.setFace(false);//CHANGE!!!
 		
-				if(this.getBody().getLinearVelocity().x > -2f){
-			
+				if(this.getBody().getLinearVelocity().x > -2f)
 					this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
-				}
 			}
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -250,10 +281,8 @@ public class Player extends B2DSprite{
 				this.setState(2);
 				this.setFace(true);
 		
-				if(this.getBody().getLinearVelocity().x < 2f){
-			
+				if(this.getBody().getLinearVelocity().x < 2f)			
 					this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
-				}
 			}
 		
 			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -281,9 +310,9 @@ public class Player extends B2DSprite{
 				this.setState(6);
 				
 				if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-					this.getBody().applyLinearImpulse(new Vector2(2f, 0f), this.getPosition(), true);
+					this.getBody().applyLinearImpulse(new Vector2(0.75f, 0f), this.getPosition(), true);
 				else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-					this.getBody().applyLinearImpulse(new Vector2(-2f, 0f), this.getPosition(), true);					
+					this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);					
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.F)){
