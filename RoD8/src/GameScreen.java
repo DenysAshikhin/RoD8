@@ -57,7 +57,7 @@ public class GameScreen implements Screen{
 	private OrthogonalTiledMapRenderer tmr;
 	
 	/** The player. */
-	private Player player;
+	Player player;
 
 	/** The monsters. */
 	private Array<Monster> monsterList = new Array<Monster>();
@@ -124,21 +124,7 @@ public class GameScreen implements Screen{
 	public static final short BIT_MONSTER = 64;
 	
 	/** The contact listener. */
-	private MyContactListener contactListener;	
-
-	Animation<TextureRegion> runRight;
-	Animation<TextureRegion> jumpRight;
-	Animation<TextureRegion> standingRight;
-	Animation<TextureRegion> climbing;
-	Animation<TextureRegion> primaryRight;
-	Animation<TextureRegion> secondaryRight;
-	Animation<TextureRegion> tertiaryRight;
-	Animation<TextureRegion> quaternaryRight;
-
-	Animation<TextureRegion> runRightCrab;
-	Animation<TextureRegion> standingRightCrab;
-	Animation<TextureRegion> primaryRightCrab;
-	Animation<TextureRegion> deathRightCrab;
+	MyContactListener contactListener;
 	
 	private float framesRun;
 	private float animTime;
@@ -188,60 +174,10 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-
 		createMonster();
 		
-		//Temporary loading of textures for commando animations
-		Texture texture = textures.getTexture("commando");
-		TextureRegion[] sprites = new TextureRegion[4];
-		
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
-		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
-
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.07f, sprites[3]);
-		climbing = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[3], sprites[4]});
-
-		sprites = new TextureRegion[8];
-		sprites = TextureRegion.split(texture, 7, 13)[1];
-		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
-	
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
-		
-		sprites = new TextureRegion[15];
-		sprites = TextureRegion.split(texture, 40, 13)[5];
-		quaternaryRight = new Animation<TextureRegion>(0.07f,
-				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
-		
 		spriteBatch = new SpriteBatch();
-		stateTime = 0f;			
-		framesRun = 0;
-		
-		//Temporary loading of textures for crab animations
-		Texture texturecrab = textures.getTexture("crab");
-		TextureRegion[] spritescrab = new TextureRegion[4];
-		
-		spritescrab = TextureRegion.split(texturecrab, 36, 32)[0];
-		standingRightCrab = new Animation<TextureRegion>(0.07f, spritescrab[0]);
-		runRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
-
-		spritescrab = TextureRegion.split(texturecrab, 36, 32)[1];
-		primaryRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
-
-		spritescrab = TextureRegion.split(texturecrab, 42, 32)[2];
-		deathRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
-		
+		stateTime = 0f;
 	}
 	
 	/* (non-Javadoc)
@@ -281,10 +217,12 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//movement update
-		updateMovement();
+		player.updateMovement();
 		
 		//monster movement update
-		monsterMovement();
+		for(Monster m : monsterList){
+			monsterMovement();
+		}
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -295,7 +233,7 @@ public class GameScreen implements Screen{
 		spriteBatch.setProjectionMatrix(cam.combined);
 
 		//Draw player
-		this.drawPlayer();
+		player.drawPlayer();
 		
 		/**
 		if(Math.random() < 0.1){
@@ -322,270 +260,6 @@ public class GameScreen implements Screen{
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);
 		}
-	}
-	
-	/**
-	 * Update player movement.
-	 */
-	private void updateMovement(){
-		
-		if (player.getState() <= 3){
-			
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			
-				if(contactListener.isPlayerOnGround()){		
-			
-					player.getBody().applyForceToCenter(0, 300, true);	
-					player.setState(1);	
-				}
-			}
-		
-			if(Gdx.input.isKeyPressed(Keys.LEFT)){	
-		
-				player.setState(3);
-				player.setFace(false);//CHANGE!!!
-		
-				if(player.getBody().getLinearVelocity().x > -2f){
-			
-					player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
-				}
-			}
-		
-			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-						
-				player.setState(2);
-				player.setFace(true);
-		
-				if(player.getBody().getLinearVelocity().x < 2f){
-			
-					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
-
-				}
-			}
-		
-			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
-			
-				player.setState(0);
-				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
-	
-			}
-	
-			if(contactListener.isPlayerOnGround() == false){
-			
-				player.setState(1);
-				
-			}
-			
-			if(Gdx.input.isKeyPressed(Keys.A)){
-			
-				player.setState(4);
-
-			}
-			
-			if(Gdx.input.isKeyPressed(Keys.S)){
-				
-				player.setState(5);
-
-			}
-			
-			if(Gdx.input.isKeyPressed(Keys.D)){
-				
-				player.setState(6);
-
-			}
-			
-			if(Gdx.input.isKeyPressed(Keys.F)){
-				
-				player.setState(7);
-
-			}
-		}		
-	}
-	
-	/**
-	 * Update monster movement.
-	 */
-	private void monsterMovement(){
-		
-		float range;
-		
-		for(Monster m : monsterList){
-			
-			range = (float) Math.sqrt(Math.pow(m.getPosition().x - m.getPosition().x, 2) + Math.pow(m.getPosition().y - m.getPosition().y, 2));
-			
-			if(range <= DETECTION_RANGE){
-				
-				if (m.getState() <= 3){
-					
-					if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
-					
-						if(contactListener.isMonsterOnGround()){		
-					
-							m.getBody().applyForceToCenter(0, 300, true);	
-							m.setState(1);	
-						}
-					}
-				
-					if(m.getPosition().x > m.getPosition().x){	
-				
-						m.setState(3);
-						m.setFace(false);//CHANGE!!!
-				
-						if(m.getBody().getLinearVelocity().x > -2f){
-					
-							m.getBody().applyLinearImpulse(new Vector2(-1f, 0f), m.getPosition(), true);
-						}
-					}
-				
-					if(m.getPosition().x < m.getPosition().x){
-								
-						m.setState(2);
-						m.setFace(true);
-				
-						if(m.getBody().getLinearVelocity().x < 2f){
-					
-							m.getBody().applyLinearImpulse(new Vector2(1f, 0f), m.getPosition(), true);
-
-						}
-					}
-			
-					if(contactListener.isMonsterOnGround() == false){
-					
-						m.setState(1);
-						
-					}
-					
-					if(range <= CRAB_RANGE){
-						//attack
-					}
-				}
-				
-			}else{
-				
-				m.setState(0);
-				m.getBody().setLinearVelocity(m.getBody().getLinearVelocity().x * 0.9f, m.getBody().getLinearVelocity().y);
-			
-			}
-		}
-		
-	}
-	
-	private void drawPlayer(){
-		
-		spriteBatch.begin();
-		
-		switch(player.getState()){
-		case 0: 		
-			
-			if(player.getFacing()){
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
-			}
-			break;
-		case 1:
-			
-			if(player.getBody().getLinearVelocity().x >= 0){
-			
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
-			}
-			break;
-		case 2:
-			
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			break;
-		case 3:
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
-
-			break;
-		case 4:
-
-			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = primaryRight.getKeyFrame(animTime, true);
-			}
-		
-			if (framesRun <= 5){
-
-				spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				player.setState(0);
-				framesRun = 0;
-				animTime = 0;
-			}
-			break;
-		case 5:
-			
-			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = secondaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 5){
-				
-				spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				player.setState(0);
-				framesRun = 0;
-				animTime = 0;
-			}
-			
-			break;
-		case 6:
-					
-			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <=  9){
-			
-				spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				player.setState(0);
-				framesRun = 0;
-				animTime = 0;
-			}
-			break;
-		case 7:
-
-			
-			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 15){
-				
-				spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 40, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 40, PLAYER_HEIGHT, SCALE, SCALE, 0);
-			}
-			else{
-				
-				player.setState(0);
-				framesRun = 0;
-				animTime = 0;
-			}
-			break;
-		}
-		
-		spriteBatch.end();
 	}
 	
 	/**
@@ -654,7 +328,7 @@ public class GameScreen implements Screen{
 		shape.setAsBox(
 				((CRAB_WIDTH * SCALE) / 2) / PPM, 
 				((CRAB_HEIGHT * SCALE) / 2) / PPM);
-	//	shape.setAs
+		//shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_MONSTER;
 		fdef.filter.maskBits = BIT_RED;
