@@ -121,6 +121,7 @@ public class GameScreen implements Screen{
 	private float tempTime = 0;
 	
 	private float framesRun;
+	private float animTime;
 	private TextureRegion prevFrame = null;
 	
 	/** The crab. */
@@ -393,33 +394,34 @@ public class GameScreen implements Screen{
 			break;
 		case 4:
 
-			if (prevFrame != primaryRight.getKeyFrame(stateTime, true)){
+			if (prevFrame != primaryRight.getKeyFrame(stateTime)){
 				
 				framesRun++;
-				prevFrame = primaryRight.getKeyFrame(stateTime, true);
+				prevFrame = primaryRight.getKeyFrame(stateTime);
 			}
 		
 			if (framesRun <= 5){
 				
-				spriteBatch.draw(primaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(primaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
 				player.setState(0);
 				framesRun = 0;
+				
 			}
 			break;
 		case 5:
 			
-			if (prevFrame != secondaryRight.getKeyFrame(stateTime, true)){
+			if (prevFrame != secondaryRight.getKeyFrame(stateTime, false)){
 				
 				framesRun++;
-				prevFrame = secondaryRight.getKeyFrame(stateTime, true);
+				prevFrame = secondaryRight.getKeyFrame(stateTime, false);
 			}
 
 			if (framesRun <= 5){
 				
-				spriteBatch.draw(secondaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(secondaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
 
 			}
 			else{
@@ -431,15 +433,15 @@ public class GameScreen implements Screen{
 			break;
 		case 6:
 					
-			if (prevFrame != tertiaryRight.getKeyFrame(stateTime, true)){
+			if (prevFrame != tertiaryRight.getKeyFrame(stateTime, false)){
 				
 				framesRun++;
-				prevFrame = tertiaryRight.getKeyFrame(stateTime, true);
+				prevFrame = tertiaryRight.getKeyFrame(stateTime, false);
 			}
 
 			if (framesRun <=  9){
 			
-				spriteBatch.draw(tertiaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(tertiaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
