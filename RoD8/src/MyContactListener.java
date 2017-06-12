@@ -72,6 +72,16 @@ public class MyContactListener implements ContactListener{
 			monsterOnGround++;
 		}
 		
+		if(fa.getUserData().equals("mFoot")){
+			
+			
+		}
+		
+		if(fb.getUserData().equals("mFoot")){
+			
+			
+		}
+		
 		if(fa.getUserData() != null && fa.getUserData().equals("crystal")){
 			
 			bodiesToRemove.add(fa.getBody());

@@ -8,7 +8,7 @@ public class Item {
 	/**
 	 * The Class pItem.
 	 */
-	public static class pItem {
+	private static class pItem {
 		
 		/** The item name. */
 		String itemName;
@@ -47,7 +47,7 @@ public class Item {
 	/**
 	 * The Class aItem.
 	 */
-	public static class aItem {
+	private static class aItem {
 		
 		/** The item name. */
 		String itemName;
@@ -71,7 +71,7 @@ public class Item {
 	/**
 	 * The Class iItem.
 	 */
-	public static class iItem {
+	private static class iItem {
 		
 		/** The item name. */
 		String itemName;
@@ -99,7 +99,7 @@ public class Item {
 	/**
 	 * The Class charStats.
 	 */
-	public static class charStats {
+	private static class charStats {
 		
 		/** The health. */
 		int health = 100;
