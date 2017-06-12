@@ -304,7 +304,9 @@ public class GameScreen implements Screen{
 		*/
 		
 		//Draw monsters
-		this.drawMonsters();
+		for(Monster m : monsterList){
+			m.drawMonsters(spriteBatch);
+		}
 
 		spriteBatch.begin();
 		//Draw crystals
@@ -581,69 +583,6 @@ public class GameScreen implements Screen{
 				animTime = 0;
 			}
 			break;
-		}
-		
-		spriteBatch.end();
-	}
-	
-	/**
-	 * Draw monsters.
-	 */
-	private void drawMonsters(){
-		
-		spriteBatch.begin();
-		
-		for(Monster m : monsterList){
-			switch(m.getState()){
-			case 0: 		
-				
-				if(m.getFacing()){
-					
-					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
-				}
-				else{
-					
-					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
-				}
-				break;
-			case 1:
-				
-				if(m.getBody().getLinearVelocity().x >= 0){
-				
-					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, false), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
-				}
-				else{
-					
-					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, false), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
-				}
-				break;
-			case 2:
-				
-				spriteBatch.draw(runRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
-				break;
-			case 3:
-				spriteBatch.draw(runRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
-
-				break;
-			case 4:
-
-				if (prevFrame != primaryRightCrab.getKeyFrame(stateTime, true)){
-					
-					framesRun++;
-					prevFrame = primaryRightCrab.getKeyFrame(stateTime, true);
-				}
-			
-				if (framesRun <= 5){
-					
-					spriteBatch.draw(primaryRight.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - 10, m.getBody().getPosition().y * 100 - m.height - 5, 0, 0, 18, m.height, SCALE, SCALE, 0);
-				}
-				else{
-					
-					m.setState(0);
-					framesRun = 0;
-				}
-				break;
-			}
 		}
 		
 		spriteBatch.end();
