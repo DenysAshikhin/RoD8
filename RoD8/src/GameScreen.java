@@ -169,7 +169,7 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-		createMonster();
+		//createMonster();
 
 		
 		spriteBatch = new SpriteBatch();
@@ -192,9 +192,10 @@ public class GameScreen implements Screen{
 		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
+		
 		if(player.getState() > 3){
 			
-			animTime += delta;	
+			player.increaseAnimTime(delta);	
 		}
 		
 		world.step(delta, 6, 2);
@@ -216,9 +217,9 @@ public class GameScreen implements Screen{
 		player.updateMovement();
 		
 		//monster movement update
-		for(Monster m : monsterList){
+	/*	for(Monster m : monsterList){
 			m.monsterMovement();
-		}
+		}*/
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -240,9 +241,9 @@ public class GameScreen implements Screen{
 		*/
 		
 		//Draw monsters
-		for(Monster m : monsterList){
+		/*for(Monster m : monsterList){
 			m.drawMonsters(spriteBatch);
-		}
+		}*/
 
 		spriteBatch.begin();
 		//Draw crystals

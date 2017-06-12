@@ -46,9 +46,6 @@ public class MyContactListener implements ContactListener{
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();//foot
 		
-		System.out.println(fa.getUserData());
-		System.out.println(fb.getUserData());
-		
 		if(fa == null || fb == null){
 			return;
 		}
@@ -57,22 +54,18 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
-			System.out.println("player on ground");
 			playerOnGround++;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
-			System.out.println("player on ground");
 			playerOnGround++;
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
-			System.out.println("monster on ground");
 			monsterOnGround++;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
-			System.out.println("monster on ground");
 			monsterOnGround++;
 		}
 		
