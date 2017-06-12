@@ -57,7 +57,7 @@ public class GameScreen implements Screen{
 	private OrthogonalTiledMapRenderer tmr;
 	
 	/** The player. */
-	private Player player;
+	Player player;
 
 	/** The monsters. */
 	private Array<Monster> monsterList = new Array<Monster>();
@@ -118,14 +118,8 @@ public class GameScreen implements Screen{
 	public static final short BIT_MONSTER = 64;
 	
 	/** The contact listener. */
-	public MyContactListener contactListener;	
 
-
-
-	Animation<TextureRegion> runRightCrab;
-	Animation<TextureRegion> standingRightCrab;
-	Animation<TextureRegion> primaryRightCrab;
-	Animation<TextureRegion> deathRightCrab;
+	public MyContactListener contactListener;
 	
 	private float framesRun;
 	private float animTime;
@@ -175,8 +169,11 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-
 		createMonster();
+
+		
+		spriteBatch = new SpriteBatch();
+		stateTime = 0f;
 	}
 	
 	/* (non-Javadoc)
@@ -216,10 +213,12 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//movement update
-		updateMovement();
+		player.updateMovement();
 		
 		//monster movement update
-		monsterMovement();
+		for(Monster m : monsterList){
+			m.monsterMovement();
+		}
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -229,8 +228,10 @@ public class GameScreen implements Screen{
 
 		spriteBatch.setProjectionMatrix(cam.combined);
 
+		//sugar
+		
 		//Draw player
-		this.drawPlayer();
+		player.drawPlayer(spriteBatch, stateTime);
 		
 		/**
 		if(Math.random() < 0.1){
@@ -259,8 +260,6 @@ public class GameScreen implements Screen{
 		}
 	}
 	
-
-	
 	/**
 	 * Creates the player.
 	 */
@@ -277,8 +276,8 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		
 		shape.setAsBox(
-				((PLAYER_WIDTH * SCALE) / 2) / PPM, 
-				((PLAYER_HEIGHT * SCALE) / 2) / PPM);
+				((player.PLAYER_WIDTH * SCALE) / 2) / PPM, 
+				((player.PLAYER_HEIGHT * SCALE) / 2) / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
@@ -287,20 +286,68 @@ public class GameScreen implements Screen{
 		
 		
 		//Create Player
-		player = new Player(body);
+		player = new Player(body, this);
 		player.setState(1);
 		
 		//Create foot sensor
 		shape.setAsBox(
-				(((PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
-				(((PLAYER_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, -(PLAYER_HEIGHT / 2 * SCALE) / PPM),
+				(((player.PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((player.PLAYER_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(player.PLAYER_HEIGHT / 2 * SCALE) / PPM),
 				0);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
 		fdef.filter.maskBits = BIT_RED;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
+	}
+	
+	/**
+	 * Creates monsters.
+	 */
+	private void createMonster(){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//get crystal spawn point
+		Vector2 position = crystals.random().getPosition();
+		
+		//Create Player
+		//bdef.position.set(position);
+		bdef.position.set(player.getPosition());
+		bdef.type = BodyType.DynamicBody;
+		
+		bdef.linearVelocity.set(1f, 0);
+		
+		Body body = world.createBody(bdef);
+		
+		shape.setAsBox(
+				((CRAB_WIDTH * SCALE) / 2) / PPM, 
+				((CRAB_HEIGHT * SCALE) / 2) / PPM);
+		//shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;
+		body.createFixture(fdef).setUserData("monster");
+		
+		
+		//Create Player
+		monsterList.add(new Monster(body));
+		monsterList.peek().setState(1);
+		
+		//Create foot sensor
+		shape.setAsBox(
+				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(CRAB_HEIGHT / 2 * SCALE) / PPM),
+				0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("mfoot");
 	}
 	
 	/**

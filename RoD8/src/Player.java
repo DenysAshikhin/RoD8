@@ -215,7 +215,7 @@ public class Player extends B2DSprite{
 	/**
 	 * Update player movement.
 	 */
-	private void updateMovement(){
+	public void updateMovement(){
 		
 		if (this.getState() <= 3){
 			
