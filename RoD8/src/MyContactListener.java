@@ -22,6 +22,8 @@ public class MyContactListener implements ContactListener{
 	/** The player on ground. */
 	private int playerOnGround;
 	
+	private int monsterOnGround;
+	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
@@ -43,18 +45,31 @@ public class MyContactListener implements ContactListener{
 	
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();//foot
-			
+		
+		System.out.println(fa.getUserData());
+		System.out.println(fb.getUserData());
+		
 		if(fa == null || fb == null) return;
 
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
-			
+			System.out.println("player on ground");
 			playerOnGround++;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
-		
+			System.out.println("player on ground");
 			playerOnGround++;
+		}
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
+			System.out.println("monster on ground");
+			monsterOnGround++;
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
+			System.out.println("monster on ground");
+			monsterOnGround++;
 		}
 		
 		if(fa.getUserData().equals("mFoot")){
@@ -89,7 +104,6 @@ public class MyContactListener implements ContactListener{
 		Fixture fb = contact.getFixtureB();//foot
 		
 		if(fa == null || fb == null) return;
-
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
 			
@@ -99,6 +113,16 @@ public class MyContactListener implements ContactListener{
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 		
 			playerOnGround--;
+		}
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
+			
+			monsterOnGround--;
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
+		
+			monsterOnGround--;
 		}
 		
 	}
@@ -116,6 +140,8 @@ public class MyContactListener implements ContactListener{
 	 * @return true, if is player on ground
 	 */
 	public boolean isPlayerOnGround(){return playerOnGround > 0; }
+	
+	public boolean isMonsterOnGround(){return monsterOnGround > 0; }
 	
 	
 	//Collision detection

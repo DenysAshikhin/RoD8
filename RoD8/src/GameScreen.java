@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -51,12 +53,15 @@ public class GameScreen implements Screen{
 	/** The tile size. */
 	private float tileSize;
 	
-	/** The tmr. */
+	/** The tiled map renderer. */
 	private OrthogonalTiledMapRenderer tmr;
 	
 	/** The player. */
 	private Player player;
-	
+
+	/** The monsters. */
+	private Array<Monster> monsterList = new Array<Monster>();
+
 	/** The crystals. */
 	private Array<Crystal> crystals;
 		
@@ -88,8 +93,16 @@ public class GameScreen implements Screen{
 	/** The Constant PLAYER_HEIGHT. */
 	public static final float PLAYER_HEIGHT = 20f;
 	
+	public static final float CRAB_WIDTH = 40f;
+	
+	public static final float CRAB_HEIGHT = 40f;
+	
+	public static final float CRAB_RANGE = 20f;
+	
+	public static final float DETECTION_RANGE = 200f;
+	
 	/** The Constant SCALE. */
-	public static final float SCALE = 2f;
+	public static final float SCALE = 1f;
 	
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
@@ -107,26 +120,34 @@ public class GameScreen implements Screen{
 	/** The Constant BIT_CRYSTAL. */
 	public static final short BIT_CRYSTAL = 32;
 	
+	/** The Constant BIT_MONSTER. */
+	public static final short BIT_MONSTER = 64;
+	
 	/** The contact listener. */
 	private MyContactListener contactListener;	
 
-	/** The run right. */
 	Animation<TextureRegion> runRight;
+	Animation<TextureRegion> jumpRight;
+	Animation<TextureRegion> standingRight;
+	Animation<TextureRegion> climbing;
+	Animation<TextureRegion> primaryRight;
+	Animation<TextureRegion> secondaryRight;
+	Animation<TextureRegion> tertiaryRight;
+	Animation<TextureRegion> quaternaryRight;
+
+	Animation<TextureRegion> runRightCrab;
+	Animation<TextureRegion> standingRightCrab;
+	Animation<TextureRegion> primaryRightCrab;
+	Animation<TextureRegion> deathRightCrab;
 	
-	/** The jump default. */
-	Animation<TextureRegion> jumpDefault;
-	
-	/** The standing left. */
-	Animation<TextureRegion> standingLeft;
+	private float framesRun;
+	private TextureRegion prevFrame = null;
 	
 	/** The crab. */
 	Texture crab;
 	
 	/** The crystal. */
-	Texture crystal; 
-		
-	/** The game. */
-	SpaceGame game;
+	Texture crystal;
 		
 	
 	/**
@@ -136,8 +157,6 @@ public class GameScreen implements Screen{
 	 */
 	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
-		
-		this.game = game;
 		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
@@ -155,7 +174,7 @@ public class GameScreen implements Screen{
 		
 		//Load textures (temp)
 		textures = new Content();
-		textures.loadTexture("commando_good.png", "commando");
+		textures.loadTexture("commando_final.png", "commando");
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
@@ -168,20 +187,60 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
+
+		createMonster();
 		
-		//Temperory loading of textures for commando animations
+		//Temporary loading of textures for commando animations
 		Texture texture = textures.getTexture("commando");
-		TextureRegion[][] sprites = new TextureRegion[3][8];
+		TextureRegion[] sprites = new TextureRegion[4];
 		
-		sprites[0] = TextureRegion.split(texture, 7, 12)[0];
-		sprites[1] = TextureRegion.split(texture, 7, 12)[1];
-		sprites[2] = TextureRegion.split(texture, 7, 12)[2];
-				
-		standingLeft = new Animation<TextureRegion>(0.07f, sprites[0]);
-		runRight = new Animation<TextureRegion>(0.07f, sprites[1].clone());
-		jumpDefault = new Animation<TextureRegion>(0.07f, sprites[0][2]);
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
+		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
+
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		climbing = new Animation<TextureRegion>(0.07f, sprites[3]);
+		climbing = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[3], sprites[4]});
+
+		sprites = new TextureRegion[8];
+		sprites = TextureRegion.split(texture, 7, 13)[1];
+		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
+	
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 18, 13)[2];
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 33, 13)[3];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[9];
+		sprites = TextureRegion.split(texture, 12, 13)[4];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		
+		sprites = new TextureRegion[15];
+		sprites = TextureRegion.split(texture, 40, 13)[5];
+		quaternaryRight = new Animation<TextureRegion>(0.07f,
+				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		
 		spriteBatch = new SpriteBatch();
-		stateTime = 0f;	
+		stateTime = 0f;			
+		framesRun = 0;
+		
+		//Temporary loading of textures for crab animations
+		Texture texturecrab = textures.getTexture("crab");
+		TextureRegion[] spritescrab = new TextureRegion[4];
+		
+		spritescrab = TextureRegion.split(texturecrab, 36, 32)[0];
+		standingRightCrab = new Animation<TextureRegion>(0.07f, spritescrab[0]);
+		runRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+
+		spritescrab = TextureRegion.split(texturecrab, 36, 32)[1];
+		primaryRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+
+		spritescrab = TextureRegion.split(texturecrab, 42, 32)[2];
+		deathRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+		
 	}
 	
 	/* (non-Javadoc)
@@ -198,7 +257,9 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 				
-		stateTime += Gdx.graphics.getDeltaTime();
+		//stateTime += Gdx.graphics.getDeltaTime();
+		stateTime += delta;
+		
 		world.step(delta, 6, 2);
 		
 		//Remove crystals
@@ -216,6 +277,9 @@ public class GameScreen implements Screen{
 		
 		//movement update
 		updateMovement();
+		
+		//monster movement update
+		monsterMovement();
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -227,6 +291,15 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		this.drawPlayer();
+		
+		/**
+		if(Math.random() < 0.1){
+			createMonster();
+		}
+		*/
+		
+		//Draw monsters
+		this.drawMonsters();
 
 		spriteBatch.begin();
 		//Draw crystals
@@ -245,46 +318,149 @@ public class GameScreen implements Screen{
 	}
 	
 	/**
-	 * Update movement.
+	 * Update player movement.
 	 */
 	private void updateMovement(){
 		
-		if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			if(contactListener.isPlayerOnGround()){
-				
-				player.getBody().applyForceToCenter(0, 300, true);
-				player.setState(1);
-			}
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT)){
-				
-			player.setState(3);
-			player.setFace(true);//CHANGE!!!
-			if(player.getBody().getLinearVelocity().x > -2f){
-				player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
-			}
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-						
-			player.setState(2);
-			player.setFace(false);
-			if(player.getBody().getLinearVelocity().x < 2f){
-					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+		if (player.getState() <= 3){
+			
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			
+				if(contactListener.isPlayerOnGround()){		
+			
+					player.getBody().applyForceToCenter(0, 300, true);	
+					player.setState(1);	
 				}
+			}
+		
+			if(Gdx.input.isKeyPressed(Keys.LEFT)){	
+		
+				player.setState(3);
+				player.setFace(false);//CHANGE!!!
+		
+				if(player.getBody().getLinearVelocity().x > -2f){
+			
+					player.getBody().applyLinearImpulse(new Vector2(-1f, 0f), player.getPosition(), true);
+				}
+			}
+		
+			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
+						
+				player.setState(2);
+				player.setFace(true);
+		
+				if(player.getBody().getLinearVelocity().x < 2f){
+			
+					player.getBody().applyLinearImpulse(new Vector2(1f, 0f), player.getPosition(), true);
+
+				}
+			}
+		
+			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
+			
+				player.setState(0);
+				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
+	
+			}
+	
+			if(contactListener.isPlayerOnGround() == false){
+			
+				player.setState(1);
+				
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.A)){
+			
+				player.setState(4);
+
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.S)){
+				
+				player.setState(5);
+
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.D)){
+				
+				player.setState(6);
+
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.F)){
+				
+				player.setState(7);
+
+			}
+		}		
+	}
+	
+	/**
+	 * Update monster movement.
+	 */
+	private void monsterMovement(){
+		
+		float range;
+		
+		for(Monster m : monsterList){
+			
+			range = (float) Math.sqrt(Math.pow(m.getPosition().x - m.getPosition().x, 2) + Math.pow(m.getPosition().y - m.getPosition().y, 2));
+			
+			if(range <= DETECTION_RANGE){
+				
+				if (m.getState() <= 3){
+					
+					if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
+					
+						if(contactListener.isMonsterOnGround()){		
+					
+							m.getBody().applyForceToCenter(0, 300, true);	
+							m.setState(1);	
+						}
+					}
+				
+					if(m.getPosition().x > m.getPosition().x){	
+				
+						m.setState(3);
+						m.setFace(false);//CHANGE!!!
+				
+						if(m.getBody().getLinearVelocity().x > -2f){
+					
+							m.getBody().applyLinearImpulse(new Vector2(-1f, 0f), m.getPosition(), true);
+						}
+					}
+				
+					if(m.getPosition().x < m.getPosition().x){
+								
+						m.setState(2);
+						m.setFace(true);
+				
+						if(m.getBody().getLinearVelocity().x < 2f){
+					
+							m.getBody().applyLinearImpulse(new Vector2(1f, 0f), m.getPosition(), true);
+
+						}
+					}
+			
+					if(contactListener.isMonsterOnGround() == false){
+					
+						m.setState(1);
+						
+					}
+					
+					if(range <= CRAB_RANGE){
+						//attack
+					}
+				}
+				
+			}else{
+				
+				m.setState(0);
+				m.getBody().setLinearVelocity(m.getBody().getLinearVelocity().x * 0.9f, m.getBody().getLinearVelocity().y);
+			
+			}
 		}
 		
-		if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
-			
-			player.setState(0);
-			player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x * 0.9f, player.getBody().getLinearVelocity().y);
-		}
-
-		if(!contactListener.isPlayerOnGround()){
-			
-			player.setState(1);
-		}
 	}
 	
 	/**
@@ -299,22 +475,22 @@ public class GameScreen implements Screen{
 			
 			if(player.getFacing()){
 				
-				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingLeft.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 			}
 			break;
 		case 1:
 			
 			if(player.getBody().getLinearVelocity().x >= 0){
 			
-				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(jumpDefault.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 			}
 			break;
 		case 2:
@@ -325,6 +501,145 @@ public class GameScreen implements Screen{
 			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 + PLAYER_WIDTH * SCALE/2, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT * SCALE/2, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -SCALE, SCALE, 0);
 
 			break;
+		case 4:
+
+			if (prevFrame != primaryRight.getKeyFrame(stateTime, true)){
+				
+				framesRun++;
+				prevFrame = primaryRight.getKeyFrame(stateTime, true);
+			}
+		
+			if (framesRun <= 5){
+				
+				spriteBatch.draw(primaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
+			}
+			else{
+				
+				player.setState(0);
+				framesRun = 0;
+			}
+			break;
+		case 5:
+			
+			if (prevFrame != secondaryRight.getKeyFrame(stateTime, true)){
+				
+				framesRun++;
+				prevFrame = secondaryRight.getKeyFrame(stateTime, true);
+			}
+
+			if (framesRun <= 5){
+				
+				spriteBatch.draw(secondaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
+
+			}
+			else{
+				
+				player.setState(0);
+				framesRun = 0;
+			}
+			
+			break;
+		case 6:
+					
+			if (prevFrame != tertiaryRight.getKeyFrame(stateTime, true)){
+				
+				framesRun++;
+				prevFrame = tertiaryRight.getKeyFrame(stateTime, true);
+			}
+
+			if (framesRun <=  9){
+			
+				spriteBatch.draw(tertiaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
+			}
+			else{
+				
+				player.setState(0);
+				framesRun = 0;
+			}
+			break;
+		case 7:
+
+			
+			if (prevFrame != quaternaryRight.getKeyFrame(stateTime, true)){
+				
+				framesRun++;
+				prevFrame = quaternaryRight.getKeyFrame(stateTime, true);
+			}
+
+			if (framesRun <= 15){
+				
+				spriteBatch.draw(quaternaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 40, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 40, PLAYER_HEIGHT, SCALE, SCALE, 0);
+			}
+			else{
+				
+				player.setState(0);
+				framesRun = 0;
+			}
+			
+			break;
+		}
+		
+		spriteBatch.end();
+	}
+	
+	/**
+	 * Draw monsters.
+	 */
+	private void drawMonsters(){
+		
+		spriteBatch.begin();
+		
+		for(Monster m : monsterList){
+			switch(m.getState()){
+			case 0: 		
+				
+				if(m.getFacing()){
+					
+					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
+				}
+				else{
+					
+					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
+				}
+				break;
+			case 1:
+				
+				if(m.getBody().getLinearVelocity().x >= 0){
+				
+					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, false), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
+				}
+				else{
+					
+					spriteBatch.draw(standingRightCrab.getKeyFrame(stateTime, false), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
+				}
+				break;
+			case 2:
+				
+				spriteBatch.draw(runRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, SCALE, SCALE, 0);
+				break;
+			case 3:
+				spriteBatch.draw(runRightCrab.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 + m.width * SCALE/2, m.getBody().getPosition().y * 100 - m.height * SCALE/2, 0, 0, m.width, m.height, -SCALE, SCALE, 0);
+
+				break;
+			case 4:
+
+				if (prevFrame != primaryRightCrab.getKeyFrame(stateTime, true)){
+					
+					framesRun++;
+					prevFrame = primaryRightCrab.getKeyFrame(stateTime, true);
+				}
+			
+				if (framesRun <= 5){
+					
+					spriteBatch.draw(primaryRight.getKeyFrame(stateTime, true), m.getBody().getPosition().x * 100 - 10, m.getBody().getPosition().y * 100 - m.height - 5, 0, 0, 18, m.height, SCALE, SCALE, 0);
+				}
+				else{
+					
+					m.setState(0);
+					framesRun = 0;
+				}
+				break;
+			}
 		}
 		
 		spriteBatch.end();
@@ -370,6 +685,54 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_RED;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
+	}
+	
+	/**
+	 * Creates monsters.
+	 */
+	private void createMonster(){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//get crystal spawn point
+		Vector2 position = crystals.random().getPosition();
+		
+		//Create Player
+		//bdef.position.set(position);
+		bdef.position.set(player.getPosition());
+		bdef.type = BodyType.DynamicBody;
+		
+		bdef.linearVelocity.set(1f, 0);
+		
+		Body body = world.createBody(bdef);
+		
+		shape.setAsBox(
+				((CRAB_WIDTH * SCALE) / 2) / PPM, 
+				((CRAB_HEIGHT * SCALE) / 2) / PPM);
+	//	shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;
+		body.createFixture(fdef).setUserData("monster");
+		
+		
+		//Create Player
+		monsterList.add(new Monster(body));
+		monsterList.peek().setState(1);
+		
+		//Create foot sensor
+		shape.setAsBox(
+				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(CRAB_HEIGHT / 2 * SCALE) / PPM),
+				0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("mfoot");
 	}
 	
 	/**
