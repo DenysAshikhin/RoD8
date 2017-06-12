@@ -232,6 +232,8 @@ public class GameScreen implements Screen{
 
 		spriteBatch.setProjectionMatrix(cam.combined);
 
+		//sugar
+		
 		//Draw player
 		player.drawPlayer();
 		
