@@ -49,8 +49,12 @@ public class MyContactListener implements ContactListener{
 		System.out.println(fa.getUserData());
 		System.out.println(fb.getUserData());
 		
-		if(fa == null || fb == null) return;
-
+		if(fa == null || fb == null){
+			return;
+		}
+		else{
+			
+		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
 			System.out.println("player on ground");
@@ -70,16 +74,6 @@ public class MyContactListener implements ContactListener{
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
 			System.out.println("monster on ground");
 			monsterOnGround++;
-		}
-		
-		if(fa.getUserData().equals("mFoot")){
-			
-			
-		}
-		
-		if(fb.getUserData().equals("mFoot")){
-			
-			
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("crystal")){

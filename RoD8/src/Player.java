@@ -13,6 +13,10 @@ public class Player extends B2DSprite{
 	/** The total crystals. */
 	private int totalCrystals;
 	
+	private float animTime;
+	
+	private SpriteBatch spriteBat;
+	
 	/**
 	 * Instantiates a new player.
 	 *
@@ -21,15 +25,8 @@ public class Player extends B2DSprite{
 	public Player(Body body){
 		
 		super(body);
+		animTime = 0;
 
-		Texture texture = GameScreen.textures.getTexture("commando");
-		TextureRegion[][] sprites = new TextureRegion[3][8];
-		
-		sprites[0] = TextureRegion.split(texture, 8, 12)[0];
-		sprites[1] = TextureRegion.split(texture, 8, 12)[1];
-		sprites[2] = TextureRegion.split(texture, 8, 12)[2];
-		
-		setAnimation(sprites, 1/12f);
 	}
 	
 	/**

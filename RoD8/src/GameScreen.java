@@ -257,9 +257,13 @@ public class GameScreen implements Screen{
 	 */
 	@Override
 	public void render(float delta) {
-				
+		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
+		if(player.getState() > 3){
+			
+			animTime += delta;	
+		}
 		
 		world.step(delta, 6, 2);
 		
@@ -464,9 +468,6 @@ public class GameScreen implements Screen{
 		
 	}
 	
-	/**
-	 * Draw player.
-	 */
 	private void drawPlayer(){
 		
 		spriteBatch.begin();
@@ -504,80 +505,81 @@ public class GameScreen implements Screen{
 			break;
 		case 4:
 
-			if (prevFrame != primaryRight.getKeyFrame(stateTime)){
+			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
 				
 				framesRun++;
-				prevFrame = primaryRight.getKeyFrame(stateTime);
+				prevFrame = primaryRight.getKeyFrame(animTime, true);
 			}
 		
 			if (framesRun <= 5){
-				
-				spriteBatch.draw(primaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
+
+				spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 18, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
 				player.setState(0);
 				framesRun = 0;
-				
+				animTime = 0;
 			}
 			break;
 		case 5:
 			
-			if (prevFrame != secondaryRight.getKeyFrame(stateTime, false)){
+			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
 				
 				framesRun++;
-				prevFrame = secondaryRight.getKeyFrame(stateTime, false);
+				prevFrame = secondaryRight.getKeyFrame(animTime, true);
 			}
 
 			if (framesRun <= 5){
 				
-				spriteBatch.draw(secondaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
-
+				spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 10, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 33, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
 				player.setState(0);
 				framesRun = 0;
+				animTime = 0;
 			}
 			
 			break;
 		case 6:
 					
-			if (prevFrame != tertiaryRight.getKeyFrame(stateTime, false)){
+			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
 				
 				framesRun++;
-				prevFrame = tertiaryRight.getKeyFrame(stateTime, false);
+				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
 			}
 
 			if (framesRun <=  9){
 			
-				spriteBatch.draw(tertiaryRight.getKeyFrame(stateTime, false), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 12, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 12, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
 				player.setState(0);
 				framesRun = 0;
+				animTime = 0;
 			}
 			break;
 		case 7:
 
 			
-			if (prevFrame != quaternaryRight.getKeyFrame(stateTime, true)){
+			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
 				
 				framesRun++;
-				prevFrame = quaternaryRight.getKeyFrame(stateTime, true);
+				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
 			}
 
 			if (framesRun <= 15){
 				
-				spriteBatch.draw(quaternaryRight.getKeyFrame(stateTime, true), player.getBody().getPosition().x * 100 - 40, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 40, PLAYER_HEIGHT, SCALE, SCALE, 0);
+				spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), player.getBody().getPosition().x * 100 - 40, player.getBody().getPosition().y * 100 - PLAYER_HEIGHT - 5, 0, 0, 40, PLAYER_HEIGHT, SCALE, SCALE, 0);
 			}
 			else{
 				
 				player.setState(0);
 				framesRun = 0;
+				animTime = 0;
 			}
-			
 			break;
 		}
 		
@@ -795,7 +797,7 @@ public class GameScreen implements Screen{
 				 fdef.friction = 0;
 				 fdef.shape = chainShape;
 				 fdef.filter.categoryBits = bits;
-				 fdef.filter.maskBits = BIT_PLAYER;
+				 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER;
 				 
 				 world.createBody(bdef).createFixture(fdef);
 			 }
