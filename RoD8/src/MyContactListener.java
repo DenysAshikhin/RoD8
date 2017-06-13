@@ -82,16 +82,35 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("bullet")){
 			
 			bodiesToRemove.add(fa.getBody());
-			
-			if(fb.getUserData().equals("monster")){
+			if(((String) fb.getUserData()).contains("monster")){
 				
-				fb.health -= Float.parseFloat(fa.getUserData().substring(sometin.length() - 4, sometin.length()));
+				for(Monster m : GameScreen.monsterList){
+
+					if (m.identifier == Integer.parseInt(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
+						
+						bodiesToRemove.add(fb.getBody());
+						GameScreen.monsterList.removeValue(m, true);
+					}
+				}
 			}
 
 		}
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("bullet")){
 
 			bodiesToRemove.add(fb.getBody());
+			
+			if(((String) fa.getUserData()).contains("monster")){
+				
+				for(Monster m : GameScreen.monsterList){
+
+					if (m.identifier == Integer.parseInt(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
+						
+						bodiesToRemove.add(fa.getBody());
+						GameScreen.monsterList.removeValue(m, true);
+					}
+				}
+			}
+
 		}
 	}
 

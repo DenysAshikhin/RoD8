@@ -151,7 +151,7 @@ public class Player extends B2DSprite{
 				//	shape.setAs
 					fdef.shape = shape;
 					fdef.filter.categoryBits = gameScreen.BIT_BULLET;
-					fdef.filter.maskBits = gameScreen.BIT_PLAYER;
+					fdef.filter.maskBits = gameScreen.BIT_MONSTER;
 					body.createFixture(fdef).setUserData("bullet:1.00");
 					
 				}

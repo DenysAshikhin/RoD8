@@ -29,6 +29,7 @@ public class Monster extends B2DSprite{
 
 	private TextureRegion prevFrame;
 
+	public int identifier;
 	private int framesRun;
 	
 	public float health = 1f;
@@ -40,10 +41,11 @@ public class Monster extends B2DSprite{
 	 *
 	 * @param body the body
 	 */
-	public Monster(Body body, GameScreen gameScreen) {
+	public Monster(Body body, GameScreen gameScreen, int num) {
 		
 		super(body);
 		this.gameScreen = gameScreen;
+		identifier = num;
 		//Temporary loading of textures for crab animations
 		Texture texturecrab = GameScreen.textures.getTexture("crab");
 		TextureRegion[] spritescrab = new TextureRegion[4];
@@ -130,7 +132,6 @@ public class Monster extends B2DSprite{
 		
 		if(range <= DETECTION_RANGE){
 			
-			System.out.println("Got'im");
 			if (this.getState() <= 3){
 				/**
 				if (Gdx.input.isKeyJustPressed(Keys.SPACE)){

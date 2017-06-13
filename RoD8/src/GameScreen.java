@@ -57,10 +57,10 @@ public class GameScreen implements Screen{
 	private OrthogonalTiledMapRenderer tmr;
 	
 	/** The player. */
-	Player player;
+	public Player player;
 
 	/** The monsters. */
-	private Array<Monster> monsterList = new Array<Monster>();
+	public static Array<Monster> monsterList = new Array<Monster>();
 
 	/** The crystals. */
 	private Array<Crystal> crystals;
@@ -222,8 +222,10 @@ public class GameScreen implements Screen{
 		
 		//monster movement update
 		for(Monster m : monsterList){
+			System.out.println("Entered list");
 			m.monsterMovement();
 		}
+		System.out.println("Left list");
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -330,12 +332,12 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_MONSTER;
-		fdef.filter.maskBits = BIT_RED;
-		body.createFixture(fdef).setUserData("monster");
+		fdef.filter.maskBits = BIT_RED | BIT_BULLET;
+		body.createFixture(fdef).setUserData("monster:" + monsterNum);
 		
 		
 		//Create Monster
-		monsterList.add(new Monster(body, this));
+		monsterList.add(new Monster(body, this, monsterNum));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
@@ -354,7 +356,7 @@ public class GameScreen implements Screen{
 		shape.setAsBox(
 				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 4587) / PPM),
+				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_MONSTER;
