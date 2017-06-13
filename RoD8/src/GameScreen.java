@@ -126,6 +126,7 @@ public class GameScreen implements Screen{
 	private float framesRun;
 	private float animTime;
 	private TextureRegion prevFrame = null;
+	private int monsterNum;
 	
 	/** The crab. */
 	Texture crab;
@@ -173,7 +174,7 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 
-		
+		monsterNum = 0;
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -237,10 +238,9 @@ public class GameScreen implements Screen{
 		player.drawPlayer(spriteBatch, stateTime);
 		
 		
-		if(Math.random() < 0.1){
+		if(Math.random() < 0.01){
 			createMonster();
 		}
-		
 		
 		
 		for(Monster m : monsterList){
