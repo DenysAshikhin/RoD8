@@ -171,7 +171,7 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-		//createMonster();
+		createMonster();
 
 		
 		spriteBatch = new SpriteBatch();
@@ -219,9 +219,9 @@ public class GameScreen implements Screen{
 		player.updateMovement();
 		
 		//monster movement update
-	/*	for(Monster m : monsterList){
+		for(Monster m : monsterList){
 			m.monsterMovement();
-		}*/
+		}
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -236,16 +236,16 @@ public class GameScreen implements Screen{
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
 		
-		/**
+		
 		if(Math.random() < 0.1){
 			createMonster();
 		}
-		*/
 		
-		//Draw monsters
-		/*for(Monster m : monsterList){
+		
+		
+		for(Monster m : monsterList){
 			m.drawMonsters(spriteBatch);
-		}*/
+		}
 
 		spriteBatch.begin();
 		//Draw crystals
@@ -287,9 +287,9 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL | BIT_BULLET;
 		body.createFixture(fdef).setUserData("player");
 		
-		
 		//Create Player
 		player = new Player(body, this);
+
 		player.setState(1);
 		
 		//Create foot sensor
@@ -337,7 +337,7 @@ public class GameScreen implements Screen{
 		
 		
 		//Create Player
-		monsterList.add(new Monster(body));
+		monsterList.add(new Monster(body, this));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor

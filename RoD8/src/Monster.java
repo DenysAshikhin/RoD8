@@ -38,10 +38,10 @@ public class Monster extends B2DSprite{
 	 *
 	 * @param body the body
 	 */
-	public Monster(Body body) {
+	public Monster(Body body, GameScreen gameScreen) {
 		
 		super(body);
-
+		this.gameScreen = gameScreen;
 		//Temporary loading of textures for crab animations
 		Texture texturecrab = GameScreen.textures.getTexture("crab");
 		TextureRegion[] spritescrab = new TextureRegion[4];
@@ -124,7 +124,6 @@ public class Monster extends B2DSprite{
 	public void monsterMovement(){
 		
 		float range;
-		
 		range = (float) Math.sqrt(Math.pow(this.getPosition().x - gameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - gameScreen.player.getPosition().y, 2));
 		
 		if(range <= DETECTION_RANGE){
