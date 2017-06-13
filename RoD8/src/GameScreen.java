@@ -317,12 +317,9 @@ public class GameScreen implements Screen{
 		//get crystal spawn point
 		Vector2 position = crystals.random().getPosition();
 		
-		//Create Player
-		//bdef.position.set(position);
-		bdef.position.set(player.getPosition());
+		//Create Monster
+		bdef.position.set(position);
 		bdef.type = BodyType.DynamicBody;
-		
-		bdef.linearVelocity.set(1f, 0);
 		
 		Body body = world.createBody(bdef);
 		
@@ -336,7 +333,7 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("monster");
 		
 		
-		//Create Player
+		//Create Monster
 		monsterList.add(new Monster(body, this));
 		monsterList.peek().setState(1);
 		
@@ -351,6 +348,18 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_RED;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("mfoot");
+		
+		//Create jump sensor
+		shape.setAsBox(
+				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 4587) / PPM),
+				0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("mjump");
 	}
 	
 	/**

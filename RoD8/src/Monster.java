@@ -134,7 +134,7 @@ public class Monster extends B2DSprite{
 				
 					if(gameScreen.contactListener.isMonsterOnGround()){		
 				
-						this.getBody().applyForceToCenter(0, 300, true);	
+						this.getBody().applyForceToCenter(0, jumpStrength, true);	
 						this.setState(1);	
 					}
 				}
