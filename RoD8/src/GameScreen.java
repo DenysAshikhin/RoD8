@@ -175,6 +175,7 @@ public class GameScreen implements Screen{
 		createMonster();
 
 		monsterNum = 0;
+		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
