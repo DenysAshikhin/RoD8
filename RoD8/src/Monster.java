@@ -31,6 +31,8 @@ public class Monster extends B2DSprite{
 
 	private int framesRun;
 	
+	public float health = 1f;
+	
 	GameScreen gameScreen;
 	
 	/**
@@ -128,6 +130,7 @@ public class Monster extends B2DSprite{
 		
 		if(range <= DETECTION_RANGE){
 			
+			System.out.println("Got'im");
 			if (this.getState() <= 3){
 				
 				if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
