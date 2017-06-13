@@ -132,16 +132,16 @@ public class Monster extends B2DSprite{
 			
 			System.out.println("Got'im");
 			if (this.getState() <= 3){
-				
+				/**
 				if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 				
 					if(gameScreen.contactListener.isMonsterOnGround()){		
 				
-						this.getBody().applyForceToCenter(0, jumpStrength, true);	
+						this.getBody().applyForceToCenter(0, 300, true);	
 						this.setState(1);	
 					}
 				}
-			
+				*/
 				if(this.getPosition().x > this.getPosition().x){	
 			
 					this.setState(3);
