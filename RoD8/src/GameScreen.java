@@ -57,7 +57,7 @@ public class GameScreen implements Screen{
 	private OrthogonalTiledMapRenderer tmr;
 	
 	/** The player. */
-	public Player player;
+	public static Player player;
 
 	/** The monsters. */
 	public static Array<Monster> monsterList = new Array<Monster>();
@@ -240,11 +240,11 @@ public class GameScreen implements Screen{
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
 		
-		
+		/**
 		if(Math.random() < 0.01){
 			createMonster();
 		}
-		
+		*/
 		
 		for(Monster m : monsterList){
 			m.drawMonsters(spriteBatch);
@@ -354,7 +354,7 @@ public class GameScreen implements Screen{
 		
 		//Create jump sensor
 		shape.setAsBox(
-				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
 				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
@@ -363,6 +363,18 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_RED;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("mjump");
+		
+		//Create wall sensor
+		shape.setAsBox(
+				(((CRAB_WIDTH / 7) / 2) * SCALE) / PPM, 
+				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM, 
+				new Vector2((int) (CRAB_WIDTH / 2 * SCALE) * SCALE / PPM, 0),
+				0);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_MONSTER;
+		fdef.filter.maskBits = BIT_RED;	
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("mwall");
 	}
 	
 	/**

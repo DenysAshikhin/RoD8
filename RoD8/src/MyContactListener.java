@@ -24,6 +24,8 @@ public class MyContactListener implements ContactListener{
 	
 	private int monsterOnGround;
 	
+	private int monsterOnWall;
+	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
@@ -67,6 +69,14 @@ public class MyContactListener implements ContactListener{
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
 			monsterOnGround++;
+		}
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("mwall")){
+			monsterOnWall++;
+		}
+
+		if(fb.getUserData() != null && fb.getUserData().equals("mwall")){
+			monsterOnWall++;
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("crystal")){
@@ -163,7 +173,8 @@ public class MyContactListener implements ContactListener{
 	public boolean isPlayerOnGround(){return playerOnGround > 0; }
 	
 	public boolean isMonsterOnGround(){return monsterOnGround > 0; }
-	
+
+	public boolean isMonsterOnWall(){return monsterOnWall > 0; }
 	
 	//Collision detection
 	//preSolve

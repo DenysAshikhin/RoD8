@@ -133,16 +133,15 @@ public class Monster extends B2DSprite{
 		if(range <= DETECTION_RANGE){
 			
 			if (this.getState() <= 3){
-				/**
-				if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 				
-					if(gameScreen.contactListener.isMonsterOnGround()){		
+				if ((this.getState() == 2 || this.getState() == 3) && this.getBody().getLinearVelocity().x == 0){
 				
-						this.getBody().applyForceToCenter(0, 300, true);	
-						this.setState(1);	
+					if(gameScreen.contactListener.isMonsterOnGround() && gameScreen.contactListener.isMonsterOnWall()){		
+				
+						this.getBody().applyForceToCenter(0, 300, true);
 					}
 				}
-				*/
+				
 				if(this.getPosition().x > this.getPosition().x){	
 			
 					this.setState(3);
@@ -180,8 +179,8 @@ public class Monster extends B2DSprite{
 		}else{
 			
 			this.setState(0);
-			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
-		
+			//this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
+			this.getBody().setLinearVelocity(1f, 0f);
 		}
 		
 	}
