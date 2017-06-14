@@ -14,7 +14,7 @@ public class Monster extends B2DSprite{
 
 	private static final float DETECTION_RANGE = 200f;
 
-	private static final float CRAB_RANGE = 20f;
+	private static final float CRAB_RANGE = 28f;
 
 	/** The num crystals. */
 	private int numCrystals;
@@ -50,11 +50,11 @@ public class Monster extends B2DSprite{
 		Texture texturecrab = GameScreen.textures.getTexture("crab");
 		TextureRegion[] spritescrab = new TextureRegion[4];
 		
-		spritescrab = TextureRegion.split(texturecrab, 36, 32)[0];
+		spritescrab = TextureRegion.split(texturecrab, 37, 32)[0];
 		standingRightCrab = new Animation<TextureRegion>(0.07f, spritescrab[0]);
 		runRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
 
-		spritescrab = TextureRegion.split(texturecrab, 36, 32)[1];
+		spritescrab = TextureRegion.split(texturecrab, 37, 32)[1];
 		primaryRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
 
 		spritescrab = TextureRegion.split(texturecrab, 42, 32)[2];
@@ -129,55 +129,69 @@ public class Monster extends B2DSprite{
 		
 		float range;
 		range = (float) Math.sqrt(Math.pow(this.getPosition().x - gameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - gameScreen.player.getPosition().y, 2));
+		System.out.println(range);
 		
 		if(range <= DETECTION_RANGE){
-			
+			System.out.println("range");
+			System.out.println(this.getState());
 			if (this.getState() <= 3){
+				System.out.println("sttate");
 				
-				if ((this.getState() == 2 || this.getState() == 3) && this.getBody().getLinearVelocity().x == 0){
-				
-					if(gameScreen.contactListener.isMonsterOnGround() && gameScreen.contactListener.isMonsterOnWall()){		
-				
-						this.getBody().applyForceToCenter(0, 300, true);
-					}
-				}
-				
-				if(this.getPosition().x > this.getPosition().x){	
-			
-					this.setState(3);
-					this.setFace(false);//CHANGE!!!
-			
-					if(this.getBody().getLinearVelocity().x > -2f){
-				
-						this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
-					}
-				}
-			
-				if(this.getPosition().x < this.getPosition().x){
-							
-					this.setState(2);
-					this.setFace(true);
-			
-					if(this.getBody().getLinearVelocity().x < 2f){
-				
-						this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
-
-					}
-				}
-		
-				if(gameScreen.contactListener.isMonsterOnGround() == false){
-				
-					this.setState(1);
-					
-				}
-				
-				if(range <= CRAB_RANGE){
+				if(range <= CRAB_RANGE/gameScreen.PPM){
+					this.setState(4);
+					System.out.println("attack");
 					//attack
+				}else{
+					if ((this.getState() == 2 || this.getState() == 3) && this.getBody().getLinearVelocity().x == 0){
+						System.out.println("wall");
+						if(gameScreen.contactListener.isMonsterOnGround() && gameScreen.contactListener.isMonsterOnWall()){		
+					
+							this.getBody().applyForceToCenter(0, 30, true);
+						}
+					}
+					
+					if(this.getPosition().x > gameScreen.player.getPosition().x){	
+						System.out.println("goleft");
+				
+						this.setState(3);
+						this.setFace(false);//CHANGE!!!
+				
+						if(this.getBody().getLinearVelocity().x > -1f){
+					
+							this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
+						}
+					}
+				
+					if(this.getPosition().x < gameScreen.player.getPosition().x){
+						System.out.println("goright");
+								
+						this.setState(2);
+						this.setFace(true);
+				
+						if(this.getBody().getLinearVelocity().x < 1f){
+					
+							this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
+	
+						}
+					}
+			
+					if(gameScreen.contactListener.isMonsterOnGround() == false){
+					
+						this.setState(1);
+						
+					}
+				}
+			}else{
+				this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.8f, this.getBody().getLinearVelocity().y);
+				
+				if(range > CRAB_RANGE/gameScreen.PPM){
+					System.out.println("exit attack");
+					this.setState(1);
 				}
 			}
 			
 		}else{
-			
+			System.out.println("range out");
 			this.setState(0);
 			//this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
 			this.getBody().setLinearVelocity(1f, 0f);

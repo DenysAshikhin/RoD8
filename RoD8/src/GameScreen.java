@@ -222,10 +222,8 @@ public class GameScreen implements Screen{
 		
 		//monster movement update
 		for(Monster m : monsterList){
-			System.out.println("Entered list");
 			m.monsterMovement();
 		}
-		System.out.println("Left list");
 
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -366,10 +364,8 @@ public class GameScreen implements Screen{
 		
 		//Create wall sensor
 		shape.setAsBox(
-				(((CRAB_WIDTH / 7) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM, 
-				new Vector2((int) (CRAB_WIDTH / 2 * SCALE) * SCALE / PPM, 0),
-				0);
+				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
+				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_MONSTER;
 		fdef.filter.maskBits = BIT_RED;	
