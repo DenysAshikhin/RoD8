@@ -342,7 +342,7 @@ public class GameScreen implements Screen{
 		bdef.bullet = true;
 		Body body = world.createBody(bdef);
 		body.setGravityScale(0);
-		
+		System.out.println("LOL");
 		shape.setAsBox(1 / PPM, 1 / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
