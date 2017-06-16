@@ -157,6 +157,10 @@ public class Player extends B2DSprite{
 			
 			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
 				
+				if(framesRun == 1){
+					
+					gameScreen.createBullet("ray:1.00");
+				}
 				framesRun++;
 				prevFrame = secondaryRight.getKeyFrame(animTime, true);
 			}
@@ -205,6 +209,10 @@ public class Player extends B2DSprite{
 			
 			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
 				
+				if(framesRun == 1 || framesRun == 3 || framesRun == 5 || framesRun == 7 || framesRun == 9 || framesRun == 11){
+					
+					gameScreen.createBullet("bullet:1.00");
+				}
 				framesRun++;
 				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
 			}
@@ -304,7 +312,6 @@ public class Player extends B2DSprite{
 		
 	}
 	
-	//public void resetAnimTime(){animTime = 0;}
 	public void increaseAnimTime(float value){animTime += value;}
 	
 	

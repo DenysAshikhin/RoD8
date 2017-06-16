@@ -1,5 +1,6 @@
 import java.util.HashSet;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -85,6 +86,47 @@ public class MyContactListener implements ContactListener{
 			
 			//bodiesToRemove.add(fb.getBody());
 		}
+		
+		
+		if(fa.getUserData() != null && ((String)fa.getUserData()).contains("ray")){
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
+				bodyToRemove.add(fa.getBody());
+			
+			if(fb.getUserData() != null && ((String)fb.getUserData()).contains("monster")){
+
+				for(Monster m : GameScreen.monsterList){
+
+					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
+
+						if((fa.getBody().getLinearVelocity().x) < 0)
+							fb.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fb.getBody().getPosition(), true);
+						if((fa.getBody().getLinearVelocity().x) > 0)
+							fb.getBody().applyLinearImpulse(new Vector2(4f, 0f), fb.getBody().getPosition(), true);
+					}	
+				}	
+			}
+		}
+		
+		if(fb.getUserData() != null && ((String)fb.getUserData()).contains("ray")){
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
+				bodyToRemove.add(fb.getBody());
+			if(fa.getUserData() != null && ((String)fa.getUserData()).contains("monster")){
+				
+				for(Monster m : GameScreen.monsterList){
+
+					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
+
+						if ((fb.getBody().getLinearVelocity().x) <0)
+							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
+						if((fb.getBody().getLinearVelocity().x) > 0)
+							fa.getBody().applyLinearImpulse(new Vector2(4f, 0f), fa.getBody().getPosition(), true);					
+					}
+				}	
+			}		
+		}
+		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("bullet")){
 	
 			bodyToRemove.add(fa.getBody());

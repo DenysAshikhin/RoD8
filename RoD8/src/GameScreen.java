@@ -330,7 +330,15 @@ public class GameScreen implements Screen{
 		//y set at X 100
 		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.DynamicBody;
-		bdef.linearVelocity.set(0.5f, 0);
+		
+		if(player.getFacing()){
+			
+			bdef.linearVelocity.set(10f, 0);
+		}
+		else{
+			
+			bdef.linearVelocity.set(-10f, 0);
+		}
 		bdef.bullet = true;
 		Body body = world.createBody(bdef);
 		body.setGravityScale(0);
@@ -340,6 +348,9 @@ public class GameScreen implements Screen{
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_BULLET;
 		fdef.filter.maskBits = BIT_RED | BIT_MONSTER;
+		if(identifier.contains("ray")){
+			fdef.isSensor = true; 
+		}
 		body.createFixture(fdef).setUserData(identifier);
 	}
 	/**
@@ -472,8 +483,9 @@ public class GameScreen implements Screen{
 				 fdef.shape = chainShape;
 				 fdef.filter.categoryBits = bits;
 				 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
-				 
-				 world.createBody(bdef).createFixture(fdef);
+
+				 world.createBody(bdef).createFixture(fdef).setUserData("ground");
+				 /**Have the ground message be a variable passed in depending on what tile is being imported*/
 			 }
 		 }
 	}

@@ -155,9 +155,9 @@ public class Monster extends B2DSprite{
 						this.setState(3);
 						this.setFace(false);//CHANGE!!!
 				
-						if(this.getBody().getLinearVelocity().x > -1f){
+						if(this.getBody().getLinearVelocity().x > -0.7f){
 					
-							this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
+							this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
 						}
 					}
 				
@@ -167,10 +167,9 @@ public class Monster extends B2DSprite{
 						this.setState(2);
 						this.setFace(true);
 				
-						if(this.getBody().getLinearVelocity().x < 1f){
+						if(this.getBody().getLinearVelocity().x < 0.7f){
 					
-							this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
-	
+							this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
 						}
 					}
 			
