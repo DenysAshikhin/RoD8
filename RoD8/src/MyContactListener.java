@@ -96,9 +96,10 @@ public class MyContactListener implements ContactListener{
 			if(fb.getUserData() != null && ((String)fb.getUserData()).contains("monster")){
 
 				for(Monster m : GameScreen.monsterList){
+					float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
+					if (m.identifier == damage){
 
-					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
-
+						m.health -= damage/10;
 						if((fa.getBody().getLinearVelocity().x) < 0)
 							fb.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fb.getBody().getPosition(), true);
 						if((fa.getBody().getLinearVelocity().x) > 0)
@@ -115,9 +116,10 @@ public class MyContactListener implements ContactListener{
 			if(fa.getUserData() != null && ((String)fa.getUserData()).contains("monster")){
 				
 				for(Monster m : GameScreen.monsterList){
+					float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
+					if (m.identifier == damage){
 
-					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
-
+						m.health -= damage/10;
 						if ((fb.getBody().getLinearVelocity().x) <0)
 							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
 						if((fb.getBody().getLinearVelocity().x) > 0)
@@ -134,8 +136,9 @@ public class MyContactListener implements ContactListener{
 			if(fb.getUserData() != null && ((String) fb.getUserData()).contains("monster")){
 				
 				for(Monster m : GameScreen.monsterList){
+					float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
-					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
+					if (m.identifier == damage){
 						
 						bodyToRemove.add(fb.getBody());
 						m.killed = true;

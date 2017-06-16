@@ -319,7 +319,7 @@ public class GameScreen implements Screen{
 	
 	
 	
-	public void createBullet(String identifier){
+	public void createBullet(String identifier, boolean value){
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
@@ -331,13 +331,13 @@ public class GameScreen implements Screen{
 		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.DynamicBody;
 		
-		if(player.getFacing()){
+		if(value){
 			
-			bdef.linearVelocity.set(10f, 0);
+			bdef.linearVelocity.set(1f, 0);
 		}
 		else{
 			
-			bdef.linearVelocity.set(-10f, 0);
+			bdef.linearVelocity.set(-1f, 0);
 		}
 		bdef.bullet = true;
 		Body body = world.createBody(bdef);

@@ -132,7 +132,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 0 || framesRun == 3){
 					
-					gameScreen.createBullet("bullet:1.00");
+					gameScreen.createBullet("bullet:1.00", this.getFacing());
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
@@ -159,7 +159,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 1){
 					
-					gameScreen.createBullet("ray:1.00");
+					gameScreen.createBullet("ray:1.00", this.getFacing());
 				}
 				framesRun++;
 				prevFrame = secondaryRight.getKeyFrame(animTime, true);
@@ -209,9 +209,13 @@ public class Player extends B2DSprite{
 			
 			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
 				
-				if(framesRun == 1 || framesRun == 3 || framesRun == 5 || framesRun == 7 || framesRun == 9 || framesRun == 11){
+				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
 					
-					gameScreen.createBullet("bullet:1.00");
+					gameScreen.createBullet("bullet:1.00", this.getFacing());
+				}
+				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
+					
+					gameScreen.createBullet("bullet:1.00", !this.getFacing());
 				}
 				framesRun++;
 				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
@@ -223,7 +227,6 @@ public class Player extends B2DSprite{
 					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * gameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * gameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
 				else
 					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * gameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * gameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-
 			}
 			else{
 				
