@@ -92,7 +92,7 @@ public class Player extends B2DSprite{
 	}
 	/**Framesrun needs to be changed depending on the character/class*/
 	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
-		
+			
 		spriteBatch.begin();
 		
 		switch(this.getState()){
@@ -132,28 +132,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 0 || framesRun == 3){
 					
-					BodyDef bdef = new BodyDef();
-					FixtureDef fdef = new FixtureDef();
-					PolygonShape shape = new PolygonShape();
-					
-					//Create Player
-					//x set at X 100
-					//y set at X 100
-					bdef.position.set((this.getBody().getPosition().x * 110) / gameScreen.PPM, (this.getBody().getPosition().y * 100) / gameScreen.PPM);
-					bdef.type = BodyType.KinematicBody;
-					bdef.linearVelocity.set(0.5f, 0);
-					Body body = gameScreen.world.createBody(bdef);
-					
-					
-					shape.setAsBox(
-							1 / gameScreen.PPM, 
-							1 / gameScreen.PPM);
-				//	shape.setAs
-					fdef.shape = shape;
-					fdef.filter.categoryBits = gameScreen.BIT_BULLET;
-					fdef.filter.maskBits = gameScreen.BIT_MONSTER;
-					body.createFixture(fdef).setUserData("bullet:1.00");
-					
+					gameScreen.createBullet("bullet:1.00");
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
@@ -246,9 +225,9 @@ public class Player extends B2DSprite{
 				prevFrame = null;
 			}
 			break;
-		}
+		}	
 		
-		spriteBatch.end();		
+		spriteBatch.end();
 	}
 	
 	/**

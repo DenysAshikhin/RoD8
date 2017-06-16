@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -119,6 +120,8 @@ public class GameScreen implements Screen{
 	
 	public static final short BIT_BULLET = 128;
 	
+	public static final short BIT_MONSTER_SENSOR = 256;
+
 	/** The contact listener. */
 
 	public MyContactListener contactListener;
@@ -127,6 +130,7 @@ public class GameScreen implements Screen{
 	private float animTime;
 	private TextureRegion prevFrame = null;
 	private int monsterNum;
+	public static Array<Monster> removeMobs = new Array<Monster>();
 	
 	/** The crab. */
 	Texture crab;
@@ -168,13 +172,15 @@ public class GameScreen implements Screen{
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
 		
+		monsterNum = 0;
+		monsterList.ordered = false;
+		
 		//Create player, tiles and crystals
 		createPlayer();
 		createTiles();
 		createCrystals();
 		createMonster();
-
-		monsterNum = 0;
+		
 		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
@@ -205,49 +211,41 @@ public class GameScreen implements Screen{
 		world.step(delta, 6, 2);
 		
 		//Remove crystals
-		Array<Body> bodies = contactListener.getBodiesToRemove();
+		//Array<Body> bodies = contactListener.getBodiesToRemove();
+		HashSet<Body> bodies = contactListener.getBodyToRemove();
+		
 		for (Body body : bodies){
-			
-			player.collectCrystal();
-			crystals.removeValue((Crystal) body.getUserData(), true);
-			world.destroyBody(body);
+		
+				world.destroyBody(body);
 		}
 		bodies.clear();
-				
+
+		for(Monster j : removeMobs){
+			
+			monsterList.removeValue(j, true);
+		}
+		removeMobs.clear();
+		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		//movement update
 		player.updateMovement();
 		
-		//monster movement update
-		for(Monster m : monsterList){
-			m.monsterMovement();
-		}
-
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
-			
-		tmr.setView(cam);
-		tmr.render();
-
 		spriteBatch.setProjectionMatrix(cam.combined);
 
-		//sugar
-		
-		//Draw player
-		player.drawPlayer(spriteBatch, stateTime);
-		
-		/**
-		if(Math.random() < 0.01){
-			createMonster();
-		}
-		*/
-		
+				
 		for(Monster m : monsterList){
+			
+			m.monsterMovement();
 			m.drawMonsters(spriteBatch);
 		}
 
+		//Draw player
+		player.drawPlayer(spriteBatch, stateTime);
+		
 		spriteBatch.begin();
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
@@ -256,6 +254,19 @@ public class GameScreen implements Screen{
 		}
 		spriteBatch.end();
 		
+		if (Gdx.input.isKeyJustPressed(Keys.L)){
+			
+			createMonster();
+		}
+					
+		tmr.setView(cam);
+		tmr.render();
+
+		/**
+		if(Math.random() < 0.01){
+			createMonster();
+		}
+		*/
 		if(debug){
 
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
@@ -306,71 +317,99 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("foot");
 	}
 	
-	/**
-	 * Creates monsters.
-	 */
-	private void createMonster(){
+	
+	
+	public void createBullet(String identifier){
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
+		//Create Player
+		//x set at X 100
+		//y set at X 100
+		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
+		bdef.type = BodyType.DynamicBody;
+		bdef.linearVelocity.set(0.5f, 0);
+		bdef.bullet = true;
+		Body body = world.createBody(bdef);
+		body.setGravityScale(0);
+		
+		shape.setAsBox(1 / PPM, 1 / PPM);
+	//	shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_BULLET;
+		fdef.filter.maskBits = BIT_RED | BIT_MONSTER;
+		body.createFixture(fdef).setUserData(identifier);
+	}
+	/**
+	 * Creates monsters.
+	 */
+	private void createMonster(){
+		
+		BodyDef b1def = new BodyDef();
+		FixtureDef f1def = new FixtureDef();
+		PolygonShape shape1 = new PolygonShape();
+		
 		//get crystal spawn point
 		Vector2 position = crystals.random().getPosition();
 		
 		//Create Monster
-		bdef.position.set(position);
-		bdef.type = BodyType.DynamicBody;
+		b1def.position.set(position);
+		b1def.type = BodyType.DynamicBody;
 		
-		Body body = world.createBody(bdef);
+		Body body1 = world.createBody(b1def);
 		
-		shape.setAsBox(
+		shape1.setAsBox(
 				((CRAB_WIDTH * SCALE) / 2) / PPM, 
 				((CRAB_HEIGHT * SCALE) / 2) / PPM);
 		//shape.setAs
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_MONSTER;
-		fdef.filter.maskBits = BIT_RED | BIT_BULLET;
-		body.createFixture(fdef).setUserData("monster:" + monsterNum);
-		
-		
+		f1def.shape = shape1;
+		f1def.filter.categoryBits = BIT_MONSTER;
+		f1def.filter.maskBits = BIT_RED | BIT_BULLET;
+
+		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
+
 		//Create Monster
-		monsterList.add(new Monster(body, this, monsterNum));
+		monsterList.add(new Monster(body1, this, monsterNum));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
-		shape.setAsBox(
+		
+		shape1.setAsBox(
 				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
 				new Vector2(0, -(CRAB_HEIGHT / 2 * SCALE) / PPM),
 				0);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_MONSTER;
-		fdef.filter.maskBits = BIT_RED;	
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("mfoot");
+		f1def.shape = shape1;
+		f1def.filter.categoryBits = BIT_MONSTER;
+		f1def.filter.maskBits = BIT_RED;	
+		f1def.isSensor = true;
+		body1.createFixture(f1def).setUserData("mfoot");
 		
 		//Create jump sensor
-		shape.setAsBox(
+		shape1.setAsBox(
 				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
 				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_MONSTER;
-		fdef.filter.maskBits = BIT_RED;	
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("mjump");
+		f1def.shape = shape1;
+		f1def.filter.categoryBits = BIT_MONSTER;
+		f1def.filter.maskBits = BIT_RED;	
+		f1def.isSensor = true;
+		body1.createFixture(f1def).setUserData("mjump");
 		
 		//Create wall sensor
-		shape.setAsBox(
+		shape1.setAsBox(
 				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_MONSTER;
-		fdef.filter.maskBits = BIT_RED;	
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("mwall");
+		f1def.shape = shape1;
+		f1def.filter.categoryBits = BIT_MONSTER;
+		f1def.filter.maskBits = BIT_RED;	
+		f1def.isSensor = true;
+		body1.createFixture(f1def).setUserData("mwall");
+		
+		monsterNum ++;
 	}
 	
 	/**
@@ -392,6 +431,7 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_BLUE);
 	}
 	
+
 	/**
 	 * Creates the layer.
 	 *
@@ -431,7 +471,7 @@ public class GameScreen implements Screen{
 				 fdef.friction = 0;
 				 fdef.shape = chainShape;
 				 fdef.filter.categoryBits = bits;
-				 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER;
+				 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
 				 
 				 world.createBody(bdef).createFixture(fdef);
 			 }

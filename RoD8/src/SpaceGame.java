@@ -32,7 +32,7 @@ public class SpaceGame extends Game{
 @Override
 	public void create (){
 		
-		//scrollingBackground = new ScrollingBackground();
+		scrollingBackground = new ScrollingBackground();
 		batch = new SpriteBatch();
 		
 		cam = new OrthographicCamera();

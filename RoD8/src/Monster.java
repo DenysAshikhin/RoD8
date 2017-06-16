@@ -29,8 +29,9 @@ public class Monster extends B2DSprite{
 
 	private TextureRegion prevFrame;
 
-	public int identifier;
+	public float identifier;
 	private int framesRun;
+	public boolean killed = false;
 	
 	public float health = 1f;
 	
@@ -41,7 +42,7 @@ public class Monster extends B2DSprite{
 	 *
 	 * @param body the body
 	 */
-	public Monster(Body body, GameScreen gameScreen, int num) {
+	public Monster(Body body, GameScreen gameScreen, float num) {
 		
 		super(body);
 		this.gameScreen = gameScreen;
@@ -65,9 +66,8 @@ public class Monster extends B2DSprite{
 	 * Draw monsters.
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch){
-		
+				
 		spriteBatch.begin();
-		
 		switch(this.getState()){
 		case 0: 		
 			
@@ -118,7 +118,6 @@ public class Monster extends B2DSprite{
 			}
 			break;
 		}
-		
 		spriteBatch.end();
 	}
 	
@@ -129,21 +128,21 @@ public class Monster extends B2DSprite{
 		
 		float range;
 		range = (float) Math.sqrt(Math.pow(this.getPosition().x - gameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - gameScreen.player.getPosition().y, 2));
-		System.out.println(range);
+		//System.out.println(range);
 		
 		if(range <= DETECTION_RANGE){
-			System.out.println("range");
-			System.out.println(this.getState());
+			//System.out.println("range");
+			//System.out.println(this.getState());
 			if (this.getState() <= 3){
-				System.out.println("sttate");
+				//System.out.println("sttate");
 				
 				if(range <= CRAB_RANGE/gameScreen.PPM){
 					this.setState(4);
-					System.out.println("attack");
+					//System.out.println("attack");
 					//attack
 				}else{
 					if ((this.getState() == 2 || this.getState() == 3) && this.getBody().getLinearVelocity().x == 0){
-						System.out.println("wall");
+						//System.out.println("wall");
 						if(gameScreen.contactListener.isMonsterOnGround() && gameScreen.contactListener.isMonsterOnWall()){		
 					
 							this.getBody().applyForceToCenter(0, 30, true);
@@ -151,7 +150,7 @@ public class Monster extends B2DSprite{
 					}
 					
 					if(this.getPosition().x > gameScreen.player.getPosition().x){	
-						System.out.println("goleft");
+						//System.out.println("goleft");
 				
 						this.setState(3);
 						this.setFace(false);//CHANGE!!!
@@ -163,7 +162,7 @@ public class Monster extends B2DSprite{
 					}
 				
 					if(this.getPosition().x < gameScreen.player.getPosition().x){
-						System.out.println("goright");
+						//System.out.println("goright");
 								
 						this.setState(2);
 						this.setFace(true);
@@ -185,13 +184,13 @@ public class Monster extends B2DSprite{
 				this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.8f, this.getBody().getLinearVelocity().y);
 				
 				if(range > CRAB_RANGE/gameScreen.PPM){
-					System.out.println("exit attack");
+					//System.out.println("exit attack");
 					this.setState(1);
 				}
 			}
 			
 		}else{
-			System.out.println("range out");
+			//System.out.println("range out");
 			this.setState(0);
 			//this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
 			this.getBody().setLinearVelocity(1f, 0f);
