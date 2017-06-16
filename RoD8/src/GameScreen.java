@@ -333,11 +333,11 @@ public class GameScreen implements Screen{
 		
 		if(value){
 			
-			bdef.linearVelocity.set(1f, 0);
+			bdef.linearVelocity.set(5f, 0);
 		}
 		else{
 			
-			bdef.linearVelocity.set(-1f, 0);
+			bdef.linearVelocity.set(-5f, 0);
 		}
 		bdef.bullet = true;
 		Body body = world.createBody(bdef);
