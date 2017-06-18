@@ -41,6 +41,7 @@ public class Monster extends B2DSprite{
 	
 	public int onGround;
 	public int onWall;
+	public int canHurdle;
 	
 	private float animTime;
 	
@@ -219,7 +220,7 @@ public class Monster extends B2DSprite{
 						}
 					}else{
 						if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
-							if(onGround > 0){		
+							if(onGround > 0 && canHurdle > 0){		
 						
 								this.getBody().applyForceToCenter(0, 30, true);
 							}

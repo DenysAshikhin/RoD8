@@ -125,6 +125,34 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
+		if(fa.getUserData() != null && fa.getUserData().equals("mjump")){
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
+				
+				for(Monster m : GameScreen.monsterList){
+					
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.canHurdle--;
+					}
+				}
+			}
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("mjump")){
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+				
+				for(Monster m : GameScreen.monsterList){
+					
+					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.canHurdle--;
+					}
+				}
+			}
+		}
+		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
 
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
@@ -303,22 +331,28 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 
-			for(Monster m : GameScreen.monsterList){
-				
-				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
+
+				for(Monster m : GameScreen.monsterList){
 					
-					m.onGround--;
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.onGround--;
+					}
 				}
 			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
-			
-			for(Monster m : GameScreen.monsterList){
-				
-				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+
+				for(Monster m : GameScreen.monsterList){
 					
-					m.onGround--;
+					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.onGround--;
+					}
 				}
 			}
 		}
@@ -345,8 +379,37 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
+		if(fa.getUserData() != null && fa.getUserData().equals("mjump")){
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
+				
+				for(Monster m : GameScreen.monsterList){
+					
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.canHurdle++;
+					}
+				}
+			}
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("mjump")){
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+				
+				for(Monster m : GameScreen.monsterList){
+					
+					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.canHurdle++;
+					}
+				}
+			}
+		}
+		
 	}
 
+	
 	/**
 	 * Gets the bodies to remove.
 	 *
