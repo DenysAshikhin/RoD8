@@ -167,6 +167,8 @@ public class MyContactListener implements ContactListener{
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
 							GameScreen.removeMobs.add(m);	
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}	
@@ -198,6 +200,7 @@ public class MyContactListener implements ContactListener{
 						bodyToRemove.add(fa.getBody());
 						m.killed = true;
 						GameScreen.removeMobs.add(m);	
+						GameScreen.player.money += 100;
 					}
 				}	
 			}		
@@ -221,7 +224,9 @@ public class MyContactListener implements ContactListener{
 							
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
-							GameScreen.removeMobs.add(m);							
+							GameScreen.removeMobs.add(m);
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}
@@ -246,7 +251,9 @@ public class MyContactListener implements ContactListener{
 							
 							bodyToRemove.add(fa.getBody());
 							m.killed = true;
-							GameScreen.removeMobs.add(m);	
+							GameScreen.removeMobs.add(m);
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}

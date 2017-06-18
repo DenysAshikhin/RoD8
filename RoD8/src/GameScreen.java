@@ -313,7 +313,7 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
-		player = new Player(body, this);
+		player = new Player(body, this, 1);
 
 		player.setState(1);
 		
