@@ -15,8 +15,8 @@ public class Monster extends B2DSprite{
 
 	private static final float DETECTION_RANGE = 200f;
 
-	private static final float CRAB_RANGE = 28f;
-	private static final float LEMURIAN_RANGE = 14f;
+	private static final float CRAB_RANGE = 30f;
+	private static final float LEMURIAN_RANGE = 12f;
 
 	/** The num crystals. */
 	private int numCrystals;
@@ -82,13 +82,13 @@ public class Monster extends B2DSprite{
 		sprites = TextureRegion.split(texture, 35, 32)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
-		//sprites = TextureRegion.split(texture, 42, 32)[2];
-		//deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+		sprites = TextureRegion.split(texture, 42, 32)[2];
+		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
 	
 	private void createLemurian(){
-		this.width = 10f;
-		this.height = 10f;
+		this.width = 18f;
+		this.height = 18f;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
@@ -281,7 +281,9 @@ public class Monster extends B2DSprite{
 					this.getBody().applyForceToCenter(10, 0, true);
 				}
 			}
-		}		
+		}else{
+			GameScreen.monsterList.removeValue(this, true);
+		}
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
