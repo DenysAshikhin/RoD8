@@ -16,6 +16,7 @@ public class Monster extends B2DSprite{
 	private static final float DETECTION_RANGE = 200f;
 
 	private static final float CRAB_RANGE = 28f;
+	private static final float LEMURIAN_RANGE = 14f;
 
 	/** The num crystals. */
 	private int numCrystals;
@@ -56,7 +57,7 @@ public class Monster extends B2DSprite{
 		this.gameScreen = gameScreen;
 		this.identifier = num;
 		this.type = type;
-		
+
 		switch(this.type){
 		case 1:
 			createCrab();
@@ -65,10 +66,11 @@ public class Monster extends B2DSprite{
 			createLemurian();
 			break;
 		}
-		
 	}
 	
 	private void createCrab(){
+		this.width = 40f;
+		this.height = 40f;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
 		TextureRegion[] sprites = new TextureRegion[4];
@@ -85,6 +87,8 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createLemurian(){
+		this.width = 10f;
+		this.height = 10f;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
@@ -96,16 +100,16 @@ public class Monster extends B2DSprite{
 		sprites = new TextureRegion[6];
 		sprites = TextureRegion.split(texture, 22, 28)[1];
 		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
-		runright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 
 		sprites = new TextureRegion[2];
 		sprites = TextureRegion.split(texture, 28, 28)[2];
-		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1]});
+		deathright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
 	/**
 	 * Draw monsters.
 	 */	
-	public void drawMonsters(SpriteBatch spriteBatch){
+	public void drawMonsters(SpriteBatch spriteBatch, float stateTime){
 		if(this.getBody().getFixtureList().size != 0){
 			Fixture f = this.getBody().getFixtureList().peek();
 			
@@ -123,38 +127,38 @@ public class Monster extends B2DSprite{
 
 			if(this.getFacing()){
 				
-				spriteBatch.draw(standingright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 1:
 
 			if(this.getFacing()){
 			
-				spriteBatch.draw(standingright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 2:
-
-			spriteBatch.draw(runright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			
+			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 3:
 
-			spriteBatch.draw(runright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 4:
 		case 5:
 			
 			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
 				
-				if(framesRun == 4){
+				if(framesRun == 3){
 					
 					gameScreen.createLocalAttack(this, 5f, this.getFacing());
 				}
@@ -193,7 +197,17 @@ public class Monster extends B2DSprite{
 			if(range <= DETECTION_RANGE){
 				if (this.getState() <= 3){
 					
-					if(range <= CRAB_RANGE/GameScreen.PPM){
+					if(this.type == 1 && range <= CRAB_RANGE/GameScreen.PPM){
+						if(this.getPosition().x < GameScreen.player.getPosition().x){
+
+							this.setFace(true);
+							this.setState(4);
+						}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+
+							this.setFace(false);
+							this.setState(5);
+						}
+					}else if(this.type == 2 && range <= LEMURIAN_RANGE/GameScreen.PPM){
 						if(this.getPosition().x < GameScreen.player.getPosition().x){
 
 							this.setFace(true);
