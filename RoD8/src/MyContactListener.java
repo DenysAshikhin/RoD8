@@ -57,17 +57,23 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
 				playerOnGround++;
-			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
-				playerOnLadder++;
+		
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 			
 			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
 				playerOnGround++;
-			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
-				playerOnLadder++;
+
 		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+			playerOnLadder++;
+		
+		else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+			playerOnLadder++;
+		
+
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 
@@ -275,17 +281,19 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
 				playerOnGround--;
-			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
-				playerOnLadder--;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 		
 			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
 				playerOnGround--;
-			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
-				playerOnLadder--;
 		}
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+			playerOnLadder--;
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+			playerOnLadder--;
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 

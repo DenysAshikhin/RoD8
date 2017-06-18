@@ -84,9 +84,9 @@ public class Player extends B2DSprite{
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
 		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
 
+		sprites = new TextureRegion[2];
 		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.5f, sprites[3]);
-		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[3], sprites[4]});
+		climbing = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[2], sprites[3]});
 
 		sprites = new TextureRegion[8];
 		sprites = TextureRegion.split(texture, 7, 13)[1];
@@ -120,9 +120,10 @@ public class Player extends B2DSprite{
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
 		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
 
+		
+		sprites = new TextureRegion[2];
 		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.5f, sprites[3]);
-		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[3], sprites[4]});
+		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[2], sprites[3]});
 
 		sprites = new TextureRegion[8];
 		sprites = TextureRegion.split(texture, 7, 13)[1];
@@ -321,7 +322,7 @@ public class Player extends B2DSprite{
 			if (Gdx.input.isKeyPressed(Keys.UP) && gameScreen.contactListener.isPlayerOnLadder()){
 				
 				this.setState(0);
-				this.getBody().setLinearVelocity(new Vector2(0f, 0.5f));
+				this.getBody().setLinearVelocity(new Vector2(0f, 1.5f));
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.LEFT)){	
