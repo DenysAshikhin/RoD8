@@ -239,7 +239,10 @@ public class GameScreen implements Screen{
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
 		spriteBatch.setProjectionMatrix(cam.combined);
-
+	
+		tmr.setView(cam);
+		tmr.render();
+		
 		spriteBatch.begin();
 
 		
@@ -270,9 +273,7 @@ public class GameScreen implements Screen{
 			
 			createMonster();
 		}
-					
-		tmr.setView(cam);
-		tmr.render();
+
 
 		/**
 		if(Math.random() < 0.01){
