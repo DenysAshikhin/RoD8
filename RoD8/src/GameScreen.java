@@ -4,6 +4,7 @@ import java.util.HashSet;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -171,11 +172,11 @@ public class GameScreen implements Screen{
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
-		//textures.loadTexture("blank_health.png", "blank");
+		textures.loadTexture("whitepixel.png", "blank");
 		
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
-		//blank = textures.getTexture("blank");
+		blank = textures.getTexture("blank");
 
 		monsterNum = 0;
 		monsterList.ordered = false;
@@ -250,12 +251,13 @@ public class GameScreen implements Screen{
 			}
 			m.monsterMovement();
 			m.drawMonsters(spriteBatch);
-			
+			spriteBatch.setColor(Color.GREEN);
+			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, 24 * m.health, 3);
+			spriteBatch.setColor(Color.WHITE);
 		}
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-		
 		
 		
 		//Draw crystals
