@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -188,8 +187,8 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 		
-		//scoreFont = new BitmapFont(Gdx.files.internal("score.fnt"), Gdx.files.internal("score.png"), false);
 		scoreFont = new BitmapFont();
+		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -262,9 +261,7 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-		GlyphLayout scoreLayout =new GlyphLayout(scoreFont, "Gold: " + player.money);
-		scoreFont.draw(spriteBatch, scoreLayout, player.getPosition().x * PPM, player.getPosition().y * PPM);
-		//scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
+		scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
 		
 		//scoreFont.draw
 		//draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
@@ -401,7 +398,7 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		monsterList.add(new Monster(body1, this, monsterNum));
+		monsterList.add(new Monster(body1, this, monsterNum, 1));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
@@ -443,30 +440,30 @@ public class GameScreen implements Screen{
 	}
 	
 
-	public void createCrabAttack(Monster crab, float damage, boolean value){
+	public void createLocalAttack(Monster m, float damage, boolean value){
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		bdef.position.set((crab.getBody().getPosition().x * 100) / PPM, (crab.getBody().getPosition().y * 100) / PPM);
+		bdef.position.set((m.getBody().getPosition().x * 100) / PPM, (m.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.StaticBody;
 		
 		if(value){
 
-			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2((crab.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		else{
 
-			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2(-(crab.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
 		}
-		Body body = crab.getBody();
+		Body body = m.getBody();
 		body.setGravityScale(0);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_CRAB_ATTACK;
 		fdef.filter.maskBits = BIT_PLAYER;
-		body.createFixture(fdef).setUserData("crabattack:" + damage);
+		body.createFixture(fdef).setUserData("attack:" + damage);
 	}
 	
 	/**
@@ -474,7 +471,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
+		 tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
