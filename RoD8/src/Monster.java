@@ -70,7 +70,7 @@ public class Monster extends B2DSprite{
 	
 	private void createCrab(){
 		
-		Texture texture = GameScreen.textures.getTexture("");
+		Texture texture = GameScreen.textures.getTexture("Monster Crab.png");
 		TextureRegion[] sprites = new TextureRegion[4];
 		
 		sprites = TextureRegion.split(texture, 35, 32)[0];
@@ -86,7 +86,7 @@ public class Monster extends B2DSprite{
 	
 	private void createLemurian(){
 		
-		Texture texture = GameScreen.textures.getTexture("");
+		Texture texture = GameScreen.textures.getTexture("Monster 2 Final.png");
 		TextureRegion[] sprites;
 		
 		sprites = new TextureRegion[3];
