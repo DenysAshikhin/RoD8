@@ -400,8 +400,8 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		//monsterList.add(new Monster(body1, this, monsterNum, (int) (Math.random() * 2) + 1));
-		monsterList.add(new Monster(body1, this, monsterNum, 2));
+		monsterList.add(new Monster(body1, this, monsterNum, (int) (Math.random() * 2) + 1));
+		//monsterList.add(new Monster(body1, this, monsterNum, 2));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
