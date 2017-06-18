@@ -171,11 +171,11 @@ public class GameScreen implements Screen{
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
-		textures.loadTexture("blank_health.png", "blank");
+		//textures.loadTexture("blank_health.png", "blank");
 		
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
-		blank = textures.getTexture("blank");
+		//blank = textures.getTexture("blank");
 
 		monsterNum = 0;
 		monsterList.ordered = false;
@@ -186,7 +186,7 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 		
-		
+		System.out.println("asasd");
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
