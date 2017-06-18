@@ -486,6 +486,7 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_GROUND, "ground");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
 		 createLayer(layer, BIT_LADDER, "ladder");
+		 System.out.println("asd");
 	}
 	
 
