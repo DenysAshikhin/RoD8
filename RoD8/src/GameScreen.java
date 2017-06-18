@@ -187,7 +187,6 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 		
-		System.out.println("asasd");
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -309,7 +308,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -329,8 +328,6 @@ public class GameScreen implements Screen{
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
 	}
-	
-	
 	
 	public void createBullet(String identifier, boolean value){
 		
@@ -420,7 +417,7 @@ public class GameScreen implements Screen{
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_RED;	
+		f1def.filter.maskBits = BIT_GROUND;	
 		f1def.isSensor = true;
 		body1.createFixture(f1def).setUserData("mjump");
 		
@@ -430,7 +427,7 @@ public class GameScreen implements Screen{
 				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_RED;	
+		f1def.filter.maskBits = BIT_GROUND;	
 		f1def.isSensor = true;
 		body1.createFixture(f1def).setUserData("mwall");
 		
@@ -469,18 +466,18 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("tester3.tmx");
+		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
 		 
 		 TiledMapTileLayer layer;
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("air");
-		 createLayer(layer, BIT_AIR);
+		 createLayer(layer, BIT_AIR, "air");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ground");
-		 createLayer(layer, BIT_GROUND);
+		 createLayer(layer, BIT_GROUND, "ground");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
-		 createLayer(layer, BIT_LADDER);
+		 createLayer(layer, BIT_LADDER, "ladder");
 	}
 	
 
@@ -490,11 +487,10 @@ public class GameScreen implements Screen{
 	 * @param layer the layer
 	 * @param bits the bits
 	 */
-	private void createLayer(TiledMapTileLayer layer, short bits){
+	private void createLayer(TiledMapTileLayer layer, short bits, String userData){
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
-		
 		 //Go through all cells in layer
 		 for(int row = 0; row < layer.getHeight(); row++){
 			 
@@ -511,21 +507,24 @@ public class GameScreen implements Screen{
 				 
 				 bdef.type = BodyType.StaticBody;//Episode 5
 				 bdef.position.set((col + 0.5f) * tileSize / PPM, (row + 0.5f) * tileSize / PPM);
+				
+				 if(bits != BIT_AIR){
+					 ChainShape chainShape = new ChainShape();
+					 Vector2[] vertices = new Vector2[4];
+					 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
+					 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
+					 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
+					 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
+					 chainShape.createChain(vertices);
+					 fdef.isSensor = false;
+					 fdef.friction = 0;
+					 fdef.filter.categoryBits = bits;
+					 fdef.shape = chainShape;
+					 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+					 world.createBody(bdef).createFixture(fdef).setUserData(userData);
+				 }
+				 
 
-				 ChainShape chainShape = new ChainShape();
-				 Vector2[] vertices = new Vector2[4];
-				 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
-				 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
-				 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
-				 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
-				 chainShape.createChain(vertices);
-				 fdef.isSensor = false;
-				 fdef.friction = 0;
-				 fdef.shape = chainShape;
-				 fdef.filter.categoryBits = bits;
-				 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
-
-				 world.createBody(bdef).createFixture(fdef).setUserData("ground");
 				 /**Have the ground message be a variable passed in depending on what tile is being imported*/
 			 }
 		 }
@@ -538,11 +537,10 @@ public class GameScreen implements Screen{
 		
 		crystals = new Array<Crystal>();
 		
-		MapLayer layer = tileMap.getLayers().get("crystals");
+		MapLayer layer = tileMap.getLayers().get("spawner");
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
-		
 		
 		for (MapObject mapObject : layer.getObjects()){
 			
