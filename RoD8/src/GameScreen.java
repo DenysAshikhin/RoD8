@@ -471,6 +471,7 @@ public class GameScreen implements Screen{
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
+		 System.out.println(tileSize);
 		 
 		 TiledMapTileLayer layer;
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("air");
@@ -511,12 +512,29 @@ public class GameScreen implements Screen{
 				
 				 if(bits != BIT_AIR){
 					 ChainShape chainShape = new ChainShape();
-					 Vector2[] vertices = new Vector2[4];
-					 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
-					 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
-					 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
-					 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
-					 chainShape.createChain(vertices);
+					 
+					 //if(bits == BIT_GROUND){
+						 
+						 Vector2[] vertices = new Vector2[4];
+						 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
+						 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
+						 vertices[2] = new Vector2(tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
+						 vertices[3] = new Vector2(tileSize / 2 / PPM, -tileSize / 2 / PPM);
+						 chainShape.createChain(vertices);
+					 //}
+					 /*else{
+					
+						 Vector2[] vertices = new Vector2[6];
+						 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
+						 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
+						 vertices[2] = new Vector2(-tileSize / 16 / PPM, -tileSize / 2 / PPM);
+
+						 vertices[3] = new Vector2(tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
+						 vertices[4] = new Vector2(tileSize / 2 / PPM, -tileSize / 2 / PPM);
+						 vertices[5] = new Vector2(tileSize / 20 / PPM, -tileSize / 1 / PPM);
+						 chainShape.createChain(vertices);
+					 }*/
+					
 					 if(bits == BIT_LADDER)
 						 fdef.isSensor = true;
 					 else

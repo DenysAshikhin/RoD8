@@ -25,6 +25,8 @@ public class MyContactListener implements ContactListener{
 	/** The player on ground. */
 	private int playerOnGround;
 	
+	private int playerOnLadder;
+	
 	private int monsterOnWall;
 	
 	/** The bodies to remove. */
@@ -52,11 +54,19 @@ public class MyContactListener implements ContactListener{
 		Fixture fb = contact.getFixtureB();//foot
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
-			playerOnGround++;
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
+				playerOnGround++;
+			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+				playerOnLadder++;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
-			playerOnGround++;
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
+				playerOnGround++;
+			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+				playerOnLadder++;
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
@@ -256,12 +266,18 @@ public class MyContactListener implements ContactListener{
 				
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
 			
-			playerOnGround--;
+			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
+				playerOnGround--;
+			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+				playerOnLadder--;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 		
-			playerOnGround--;
+			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
+				playerOnGround--;
+			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+				playerOnLadder--;
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
@@ -326,6 +342,7 @@ public class MyContactListener implements ContactListener{
 	 */
 	public boolean isPlayerOnGround(){return playerOnGround > 0; }
 	
+	public boolean isPlayerOnLadder(){return playerOnLadder > 0;}
 	//Collision detection
 	//preSolve
 	//Collision handling

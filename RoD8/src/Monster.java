@@ -73,7 +73,6 @@ public class Monster extends B2DSprite{
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch){
 
-
 		Fixture f = this.getBody().getFixtureList().peek();
 		
 		if(((String) f.getUserData()).contains("crabattack")){

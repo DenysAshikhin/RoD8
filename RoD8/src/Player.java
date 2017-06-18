@@ -98,7 +98,11 @@ public class Player extends B2DSprite{
 		//spriteBatch.begin();
 		
 		switch(this.getState()){
-		case 0: 		
+		
+		case 0:
+			
+			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+		case 1: 		
 			
 			if(this.getFacing()){
 				
@@ -109,7 +113,7 @@ public class Player extends B2DSprite{
 				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
-		case 1:
+		case 2:
 			
 			if(this.getBody().getLinearVelocity().x >= 0){
 			
@@ -120,12 +124,12 @@ public class Player extends B2DSprite{
 				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
-		case 2:
-			
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
 		case 3:
-			spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			
+			if(this.getFacing())
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+			else
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
 
 			break;
 		case 4:
@@ -255,10 +259,16 @@ public class Player extends B2DSprite{
 				if(gameScreen.contactListener.isPlayerOnGround()){		
 			
 					this.getBody().applyForceToCenter(0, 300, true);	
-					this.setState(1);	
+					this.setState(2);	
 				}
 			}
 		
+			if (Gdx.input.isKeyPressed(Keys.UP) && gameScreen.contactListener.isPlayerOnLadder()){
+				
+				this.setState(0);
+				this.getBody().setLinearVelocity(new Vector2(0f, 0.5f));
+			}
+			
 			if(Gdx.input.isKeyPressed(Keys.LEFT)){	
 		
 				this.setState(3);
@@ -270,21 +280,21 @@ public class Player extends B2DSprite{
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
 						
-				this.setState(2);
+				this.setState(3);
 				this.setFace(true);
 		
 				if(this.getBody().getLinearVelocity().x < 2f)			
 					this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
 			}
 		
-			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)){
+			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT) && gameScreen.contactListener.isPlayerOnGround() == true){
 			
-				this.setState(0);
+				this.setState(1);
 			}
 	
 			if(gameScreen.contactListener.isPlayerOnGround() == false){
 			
-				this.setState(1);
+				this.setState(2);
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.A)){
