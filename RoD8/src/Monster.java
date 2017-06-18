@@ -81,7 +81,7 @@ public class Monster extends B2DSprite{
 			this.getBody().destroyFixture(f);
 		}
 		
-		spriteBatch.begin();
+		//spriteBatch.begin();
 		switch(this.getState()){
 		case 0: 
 
@@ -143,7 +143,7 @@ public class Monster extends B2DSprite{
 			}
 			break;
 		}
-		spriteBatch.end();
+		//spriteBatch.end();
 	}
 	
 	/**

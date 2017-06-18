@@ -134,6 +134,7 @@ public class GameScreen implements Screen{
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
+	private Texture blank;
 	/** The crab. */
 	Texture crab;
 	
@@ -165,15 +166,17 @@ public class GameScreen implements Screen{
 		
 		//Load textures (temp)
 		textures = new Content();
-		GameScreen.textures.loadTexture("commando_final.png", "commando");
+		textures.loadTexture("commando_final.png", "commando");
 		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
+		textures.loadTexture("blank_health.png", "blank");
 		
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
-		
+		blank = textures.getTexture("blank");
+
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
@@ -237,7 +240,9 @@ public class GameScreen implements Screen{
 		cam.update();
 		spriteBatch.setProjectionMatrix(cam.combined);
 
-				
+		spriteBatch.begin();
+
+		
 		for(Monster m : monsterList){
 			
 			if(m.getState() > 3){
@@ -245,12 +250,14 @@ public class GameScreen implements Screen{
 			}
 			m.monsterMovement();
 			m.drawMonsters(spriteBatch);
+			
 		}
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
 		
-		spriteBatch.begin();
+		
+		
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			

@@ -95,7 +95,7 @@ public class Player extends B2DSprite{
 	/**Framesrun needs to be changed depending on the character/class*/
 	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
 			
-		spriteBatch.begin();
+		//spriteBatch.begin();
 		
 		switch(this.getState()){
 		case 0: 		
@@ -240,7 +240,7 @@ public class Player extends B2DSprite{
 			break;
 		}	
 		
-		spriteBatch.end();
+		//spriteBatch.end();
 	}
 	
 	/**
