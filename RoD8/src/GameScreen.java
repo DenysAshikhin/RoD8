@@ -105,13 +105,13 @@ public class GameScreen implements Screen{
 	public static final short BIT_PLAYER = 2;
 	
 	/** The Constant BIT_RED. */
-	public static final short BIT_RED = 4;
+	public static final short BIT_GROUND = 4;
 	
 	/** The Constant BIT_GREEN. */
-	public static final short BIT_GREEN = 8;
+	public static final short BIT_AIR = 8;
 	
 	/** The Constant BIT_BLUE. */
-	public static final short BIT_BLUE = 16;
+	public static final short BIT_LADDER = 16;
 	
 	/** The Constant BIT_CRYSTAL. */
 	public static final short BIT_CRYSTAL = 32;
@@ -309,7 +309,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -325,7 +325,7 @@ public class GameScreen implements Screen{
 				0);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED;	
+		fdef.filter.maskBits = BIT_GROUND | BIT_LADDER;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
 	}
@@ -359,7 +359,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_BULLET;
-		fdef.filter.maskBits = BIT_RED | BIT_MONSTER;
+		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
 		if(identifier.contains("ray")){
 			fdef.isSensor = true; 
 		}
@@ -391,7 +391,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_RED | BIT_BULLET;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -408,7 +408,7 @@ public class GameScreen implements Screen{
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_RED;	
+		f1def.filter.maskBits = BIT_GROUND;	
 		f1def.isSensor = true;
 		body1.createFixture(f1def).setUserData("mfoot");
 		
@@ -475,12 +475,12 @@ public class GameScreen implements Screen{
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
 		 
 		 TiledMapTileLayer layer;
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("red");
-		 createLayer(layer, BIT_RED);
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("green");
-		 createLayer(layer, BIT_GREEN);
-		 layer = (TiledMapTileLayer) tileMap.getLayers().get("blue");
-		 createLayer(layer, BIT_BLUE);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("air");
+		 createLayer(layer, BIT_AIR);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ground");
+		 createLayer(layer, BIT_GROUND);
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
+		 createLayer(layer, BIT_LADDER);
 	}
 	
 
