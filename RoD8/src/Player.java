@@ -40,7 +40,7 @@ public class Player extends B2DSprite{
 	Animation<TextureRegion> tertiaryRight;
 	Animation<TextureRegion> quaternaryRight;
 	
-	public float health = 1f;
+	public float health = 100f;
 	
 	private int type;
 	private TextureRegion prevFrame = null;

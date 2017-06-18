@@ -125,19 +125,19 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
-		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("crabattack")){
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
 
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
-			
+
 			GameScreen.player.health -= damage;
 
 			((String) fa.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
 		
-		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("crabattack")){
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("attack")){
 
 			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			
+
 			GameScreen.player.health -= damage;
 
 			((String) fb.getUserData()).replaceAll(Float.toString(damage), "0.0");

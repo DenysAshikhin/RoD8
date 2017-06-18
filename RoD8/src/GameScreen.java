@@ -290,12 +290,11 @@ public class GameScreen implements Screen{
 
 		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
 		
-		System.out.println(player.health);
 		spriteBatch.setColor(Color.BLACK);
 		spriteBatch.draw(blank, 100, 50, 300, 10);
 		
 		spriteBatch.setColor(Color.GREEN);
-		spriteBatch.draw(blank, 100, 50, 300 * player.health, 10);
+		spriteBatch.draw(blank, 100, 50, 3 * player.health, 10);
 		spriteBatch.setColor(Color.WHITE);
 
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
