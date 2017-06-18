@@ -187,6 +187,8 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 		
+		scoreFont = new BitmapFont();
+		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -245,7 +247,6 @@ public class GameScreen implements Screen{
 		
 		spriteBatch.begin();
 
-		
 		for(Monster m : monsterList){
 			
 			if(m.getState() > 3){
@@ -260,14 +261,17 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
+		scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
 		
-		
+		//scoreFont.draw
+		//draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
+
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
-		spriteBatch.end();
+		spriteBatch.end();		
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
@@ -467,7 +471,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
+		 tileMap = new TmxMapLoader().load("fist_stage_map.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
