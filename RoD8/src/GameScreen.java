@@ -262,7 +262,7 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-		GlyphLayout scoreLayout =new GlyphLayout(scoreFont, "Gold: " + player.money);
+		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
 		scoreFont.draw(spriteBatch, scoreLayout, player.getPosition().x * PPM, player.getPosition().y * PPM);
 		//scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
 		
@@ -474,7 +474,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
+		 tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
