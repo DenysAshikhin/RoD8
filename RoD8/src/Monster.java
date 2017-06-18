@@ -23,14 +23,16 @@ public class Monster extends B2DSprite{
 	/** The total crystals. */
 	private int totalCrystals;
 
-	private Animation<TextureRegion> runRightCrab;
-	private Animation<TextureRegion> standingRightCrab;
-	private Animation<TextureRegion> primaryRightCrab;
-	private Animation<TextureRegion> deathRightCrab;
+	private Animation<TextureRegion> runright;
+	private Animation<TextureRegion> standingright;
+	private Animation<TextureRegion> primaryright;
+	private Animation<TextureRegion> deathright;
 
 	private TextureRegion prevFrame;
 
 	public float identifier;
+	private int type;
+	
 	private int framesRun;
 	public boolean killed = false;
 	
@@ -48,25 +50,57 @@ public class Monster extends B2DSprite{
 	 *
 	 * @param body the body
 	 */
-	public Monster(Body body, GameScreen gameScreen, float num) {
+	public Monster(Body body, GameScreen gameScreen, float num, int type) {
 		
 		super(body);
 		this.gameScreen = gameScreen;
-		identifier = num;
-		//Temporary loading of textures for crab animations
-		Texture texturecrab = GameScreen.textures.getTexture("crab");
-		TextureRegion[] spritescrab = new TextureRegion[4];
+		this.identifier = num;
+		this.type = type;
 		
-		spritescrab = TextureRegion.split(texturecrab, 35, 32)[0];
-		standingRightCrab = new Animation<TextureRegion>(0.07f, spritescrab[0]);
-		runRightCrab = new Animation<TextureRegion>(0.1f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
-
-		spritescrab = TextureRegion.split(texturecrab, 35, 32)[1];
-		primaryRightCrab = new Animation<TextureRegion>(0.1f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
-
-		spritescrab = TextureRegion.split(texturecrab, 42, 32)[2];
-		deathRightCrab = new Animation<TextureRegion>(0.25f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+		switch(this.type){
+		case 1:
+			createCrab();
+			break;
+		case 2:
+			createLemurian();
+			break;
+		}
 		
+	}
+	
+	private void createCrab(){
+		
+		Texture texture = GameScreen.textures.getTexture("");
+		TextureRegion[] sprites = new TextureRegion[4];
+		
+		sprites = TextureRegion.split(texture, 35, 32)[0];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[0]);
+		runright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+
+		sprites = TextureRegion.split(texture, 35, 32)[1];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+
+		sprites = TextureRegion.split(texture, 42, 32)[2];
+		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+	}
+	
+	private void createLemurian(){
+		
+		Texture texture = GameScreen.textures.getTexture("");
+		TextureRegion[] sprites;
+		
+		sprites = new TextureRegion[3];
+		sprites = TextureRegion.split(texture, 22, 28)[0];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2]});
+
+		sprites = new TextureRegion[6];
+		sprites = TextureRegion.split(texture, 22, 28)[1];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
+		runright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+
+		sprites = new TextureRegion[2];
+		sprites = TextureRegion.split(texture, 28, 28)[2];
+		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
 	/**
 	 * Draw monsters.
@@ -75,64 +109,65 @@ public class Monster extends B2DSprite{
 		if(this.getBody().getFixtureList().size != 0){
 			Fixture f = this.getBody().getFixtureList().peek();
 			
-			if(((String) f.getUserData()).contains("crabattack")){
+			if(((String) f.getUserData()).contains("attack")){
 				
 				this.getBody().destroyFixture(f);
 			}
 		}else{
 			this.setState(-1);
 		}
+		
 		//spriteBatch.begin();
 		switch(this.getState()){
 		case 0: 
 
 			if(this.getFacing()){
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 1:
 
 			if(this.getFacing()){
 			
-				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 2:
 
-			spriteBatch.draw(runRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			spriteBatch.draw(runright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 3:
 
-			spriteBatch.draw(runRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			spriteBatch.draw(runright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 4:
 		case 5:
 			
-			if (prevFrame != primaryRightCrab.getKeyFrame(animTime, true)){
+			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
 				
 				if(framesRun == 4){
 					
-					gameScreen.createCrabAttack(this, 5f, this.getFacing());
+					gameScreen.createLocalAttack(this, 5f, this.getFacing());
 				}
 				framesRun++;
-				prevFrame = primaryRightCrab.getKeyFrame(animTime, true);
+				prevFrame = primaryright.getKeyFrame(animTime, true);
 			}
 			
 			if (framesRun <= 4){
 				
 				if(this.getState() == 4){
-					spriteBatch.draw(primaryRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 				}else{
-					spriteBatch.draw(primaryRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 				}
 				
 			}else{
