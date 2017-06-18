@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 /**
  * The Class Player.
@@ -35,6 +36,11 @@ public class Monster extends B2DSprite{
 	
 	public float health = 1f;
 	
+	public int onGround;
+	public int onWall;
+	
+	private float animTime;
+	
 	GameScreen gameScreen;
 	
 	/**
@@ -51,70 +57,89 @@ public class Monster extends B2DSprite{
 		Texture texturecrab = GameScreen.textures.getTexture("crab");
 		TextureRegion[] spritescrab = new TextureRegion[4];
 		
-		spritescrab = TextureRegion.split(texturecrab, 37, 32)[0];
+		spritescrab = TextureRegion.split(texturecrab, 35, 32)[0];
 		standingRightCrab = new Animation<TextureRegion>(0.07f, spritescrab[0]);
-		runRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+		runRightCrab = new Animation<TextureRegion>(0.1f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
 
-		spritescrab = TextureRegion.split(texturecrab, 37, 32)[1];
-		primaryRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+		spritescrab = TextureRegion.split(texturecrab, 35, 32)[1];
+		primaryRightCrab = new Animation<TextureRegion>(0.1f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
 
 		spritescrab = TextureRegion.split(texturecrab, 42, 32)[2];
-		deathRightCrab = new Animation<TextureRegion>(0.07f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
+		deathRightCrab = new Animation<TextureRegion>(0.25f, new TextureRegion[]{spritescrab[0], spritescrab[1], spritescrab[2], spritescrab[3]});
 		
 	}
 	/**
 	 * Draw monsters.
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch){
-				
+
+
+		Fixture f = this.getBody().getFixtureList().peek();
+		
+		if(((String) f.getUserData()).contains("crabattack")){
+			
+			this.getBody().destroyFixture(f);
+		}
+		
 		spriteBatch.begin();
 		switch(this.getState()){
-		case 0: 		
-			
+		case 0: 
+
 			if(this.getFacing()){
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(gameScreen.stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(gameScreen.stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 1:
+
+			if(this.getFacing()){
 			
-			if(this.getBody().getLinearVelocity().x >= 0){
-			
-				spriteBatch.draw(standingRightCrab.getKeyFrame(gameScreen.stateTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingRightCrab.getKeyFrame(gameScreen.stateTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRightCrab.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 2:
-			
-			spriteBatch.draw(runRightCrab.getKeyFrame(gameScreen.stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+
+			spriteBatch.draw(runRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 3:
-			spriteBatch.draw(runRightCrab.getKeyFrame(gameScreen.stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 
+			spriteBatch.draw(runRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 4:
-
-			if (prevFrame != primaryRightCrab.getKeyFrame(gameScreen.stateTime, true)){
+		case 5:
+			
+			if (prevFrame != primaryRightCrab.getKeyFrame(animTime, true)){
 				
+				if(framesRun == 4){
+					
+					gameScreen.createCrabAttack(this, 5f, this.getFacing());
+				}
 				framesRun++;
-				prevFrame = primaryRightCrab.getKeyFrame(gameScreen.stateTime, true);
+				prevFrame = primaryRightCrab.getKeyFrame(animTime, true);
 			}
-		
-			if (framesRun <= 5){
+			
+			if (framesRun <= 4){
 				
-				spriteBatch.draw(primaryRightCrab.getKeyFrame(gameScreen.stateTime, true), this.getBody().getPosition().x * 100 - 10, this.getBody().getPosition().y * 100 - this.height - 5, 0, 0, 18, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
+				if(this.getState() == 4){
+					spriteBatch.draw(primaryRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				}else{
+					spriteBatch.draw(primaryRightCrab.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				}
+				
+			}else{
 				
 				this.setState(0);
 				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
 			}
 			break;
 		}
@@ -127,76 +152,90 @@ public class Monster extends B2DSprite{
 	public void monsterMovement(){
 		
 		float range;
-		range = (float) Math.sqrt(Math.pow(this.getPosition().x - gameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - gameScreen.player.getPosition().y, 2));
-		//System.out.println(range);
+		range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
 		
 		if(range <= DETECTION_RANGE){
-			//System.out.println("range");
-			//System.out.println(this.getState());
 			if (this.getState() <= 3){
-				//System.out.println("sttate");
 				
-				if(range <= CRAB_RANGE/gameScreen.PPM){
-					this.setState(4);
-					//System.out.println("attack");
-					//attack
+				if(range <= CRAB_RANGE/GameScreen.PPM){
+					if(this.getPosition().x < GameScreen.player.getPosition().x){
+
+						this.setFace(true);
+						this.setState(4);
+					}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+
+						this.setFace(false);
+						this.setState(5);
+					}
 				}else{
-					if ((this.getState() == 2 || this.getState() == 3) && this.getBody().getLinearVelocity().x == 0){
-						//System.out.println("wall");
-						if(gameScreen.contactListener.isMonsterOnGround() && gameScreen.contactListener.isMonsterOnWall()){		
+					if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
+						if(onGround > 0){		
 					
 							this.getBody().applyForceToCenter(0, 30, true);
 						}
 					}
 					
-					if(this.getPosition().x > gameScreen.player.getPosition().x){	
-						//System.out.println("goleft");
-				
-						this.setState(3);
-						this.setFace(false);//CHANGE!!!
-				
-						if(this.getBody().getLinearVelocity().x > -0.7f){
-					
-							this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+					if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+						this.setState(0);
+
+						if(this.getBody().getLinearVelocity().x > 0){
+							this.getBody().applyForceToCenter(-10, 0, true);
 						}
-					}
-				
-					if(this.getPosition().x < gameScreen.player.getPosition().x){
-						//System.out.println("goright");
-								
-						this.setState(2);
-						this.setFace(true);
-				
-						if(this.getBody().getLinearVelocity().x < 0.7f){
+						if(this.getBody().getLinearVelocity().x < 0){
+							this.getBody().applyForceToCenter(10, 0, true);
+						}
+					}else{
+						
+						if(this.getPosition().x > GameScreen.player.getPosition().x){
 					
-							this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+							this.setState(3);
+							this.setFace(false);
+					
+							if(this.getBody().getLinearVelocity().x > -0.7f){
+						
+								this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+							}
+						}
+					
+						if(this.getPosition().x < GameScreen.player.getPosition().x){
+									
+							this.setState(2);
+							this.setFace(true);
+					
+							if(this.getBody().getLinearVelocity().x < 0.7f){
+						
+								this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+							}
 						}
 					}
 			
-					if(gameScreen.contactListener.isMonsterOnGround() == false){
+					if(!(onGround > 0)){
 					
 						this.setState(1);
 						
 					}
 				}
 			}else{
-				this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.8f, this.getBody().getLinearVelocity().y);
+				this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
 				
-				if(range > CRAB_RANGE/gameScreen.PPM){
-					//System.out.println("exit attack");
+				if(range > CRAB_RANGE/GameScreen.PPM){
 					this.setState(1);
 				}
 			}
 			
 		}else{
-			//System.out.println("range out");
-			this.setState(0);
-			//this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
-			this.getBody().setLinearVelocity(1f, 0f);
+			if(this.getBody().getLinearVelocity().x > 0){
+				this.getBody().applyForceToCenter(-10, 0, true);
+			}
+			if(this.getBody().getLinearVelocity().x < 0){
+				this.getBody().applyForceToCenter(10, 0, true);
+			}
 		}
 		
 	}
-
+	
+	public void increaseAnimTime(float value){animTime += value;}
+	
 	/**
 	 * Collect crystal.
 	 */

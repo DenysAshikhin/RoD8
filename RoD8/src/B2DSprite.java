@@ -15,10 +15,10 @@ public class B2DSprite {
 	protected Animation animation;
 	
 	/** The width. */
-	protected float width = 8;
+	protected float width = 36;
 	
 	/** The height. */
-	protected float height = 12;
+	protected float height = 32;
 	
 	/** The state. */
 	private int state;

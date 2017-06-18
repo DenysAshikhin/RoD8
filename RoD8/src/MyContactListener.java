@@ -21,11 +21,9 @@ import com.badlogic.gdx.utils.Array;
  * @see MyContactEvent
  */
 public class MyContactListener implements ContactListener{
-
+	
 	/** The player on ground. */
 	private int playerOnGround;
-	
-	private int monsterOnGround;
 	
 	private int monsterOnWall;
 	
@@ -62,19 +60,65 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
-			monsterOnGround++;
+
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onGround++;
+				}
+			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
-			monsterOnGround++;
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onGround++;
+				}
+			}
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mwall")){
-			monsterOnWall++;
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onWall++;
+				}
+			}
 		}
 
 		if(fb.getUserData() != null && fb.getUserData().equals("mwall")){
-			monsterOnWall++;
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onWall++;
+				}
+			}
+		}
+		
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("crabattack")){
+
+			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
+			
+			GameScreen.player.health -= damage;
+
+			((String) fa.getUserData()).replaceAll(Float.toString(damage), "0.0");
+		}
+		
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("crabattack")){
+
+			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
+			
+			GameScreen.player.health -= damage;
+
+			((String) fb.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("crystal")){
@@ -221,13 +265,47 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
-			
-			monsterOnGround--;
+
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onGround--;
+				}
+			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onGround--;
+				}
+			}
+		}
 		
-			monsterOnGround--;
+		if(fa.getUserData() != null && fa.getUserData().equals("mwall")){
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onWall--;
+				}
+			}
+		}
+
+		if(fb.getUserData() != null && fb.getUserData().equals("mwall")){
+			
+			for(Monster m : GameScreen.monsterList){
+				
+				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					
+					m.onWall--;
+				}
+			}
 		}
 		
 	}
@@ -247,10 +325,6 @@ public class MyContactListener implements ContactListener{
 	 * @return true, if is player on ground
 	 */
 	public boolean isPlayerOnGround(){return playerOnGround > 0; }
-	
-	public boolean isMonsterOnGround(){return monsterOnGround > 0; }
-
-	public boolean isMonsterOnWall(){return monsterOnWall > 0; }
 	
 	//Collision detection
 	//preSolve

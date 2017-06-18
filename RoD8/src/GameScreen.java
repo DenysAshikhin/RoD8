@@ -121,6 +121,8 @@ public class GameScreen implements Screen{
 	public static final short BIT_BULLET = 128;
 	
 	public static final short BIT_MONSTER_SENSOR = 256;
+	
+	public static final short BIT_CRAB_ATTACK = 512;
 
 	/** The contact listener. */
 
@@ -199,7 +201,6 @@ public class GameScreen implements Screen{
 	 */
 	@Override
 	public void render(float delta) {
-		
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
 		
@@ -239,6 +240,9 @@ public class GameScreen implements Screen{
 				
 		for(Monster m : monsterList){
 			
+			if(m.getState() > 3){
+				m.increaseAnimTime(delta);
+			}
 			m.monsterMovement();
 			m.drawMonsters(spriteBatch);
 		}
@@ -291,12 +295,12 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		
 		shape.setAsBox(
-				((player.PLAYER_WIDTH * SCALE) / 2) / PPM, 
-				((player.PLAYER_HEIGHT * SCALE) / 2) / PPM);
+				((Player.PLAYER_WIDTH * SCALE) / 2) / PPM, 
+				((Player.PLAYER_HEIGHT * SCALE) / 2) / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL | BIT_BULLET;
+		fdef.filter.maskBits = BIT_RED | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -306,9 +310,9 @@ public class GameScreen implements Screen{
 		
 		//Create foot sensor
 		shape.setAsBox(
-				(((player.PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
-				(((player.PLAYER_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, -(player.PLAYER_HEIGHT / 2 * SCALE) / PPM),
+				(((Player.PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
+				(((Player.PLAYER_HEIGHT / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(Player.PLAYER_HEIGHT / 2 * SCALE) / PPM),
 				0);
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
@@ -342,7 +346,6 @@ public class GameScreen implements Screen{
 		bdef.bullet = true;
 		Body body = world.createBody(bdef);
 		body.setGravityScale(0);
-		System.out.println("LOL");
 		shape.setAsBox(1 / PPM, 1 / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
@@ -353,6 +356,8 @@ public class GameScreen implements Screen{
 		}
 		body.createFixture(fdef).setUserData(identifier);
 	}
+	
+	
 	/**
 	 * Creates monsters.
 	 */
@@ -400,7 +405,7 @@ public class GameScreen implements Screen{
 		
 		//Create jump sensor
 		shape1.setAsBox(
-				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
+				(((CRAB_WIDTH + 5) / 2) * SCALE) / PPM, 
 				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
 				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
@@ -421,6 +426,33 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("mwall");
 		
 		monsterNum ++;
+	}
+	
+
+	public void createCrabAttack(Monster crab, float damage, boolean value){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		bdef.position.set((crab.getBody().getPosition().x * 100) / PPM, (crab.getBody().getPosition().y * 100) / PPM);
+		bdef.type = BodyType.StaticBody;
+		
+		if(value){
+
+			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2((crab.width / 4) * SCALE / PPM, 0), 0);
+		}
+		else{
+
+			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2(-(crab.width / 4) * SCALE / PPM, 0), 0);
+		}
+		Body body = crab.getBody();
+		body.setGravityScale(0);
+	//	shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_CRAB_ATTACK;
+		fdef.filter.maskBits = BIT_PLAYER;
+		body.createFixture(fdef).setUserData("crabattack:" + damage);
 	}
 	
 	/**

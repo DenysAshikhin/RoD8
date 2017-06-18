@@ -18,6 +18,8 @@ public class DesktopLauncher {
 		config.foregroundFPS = 60;    
 		config.width = SpaceGame.WIDTH * SpaceGame.WIDTH;
 		config.height = SpaceGame.HEIGHT * SpaceGame.WIDTH;
+		//config.width = 1440;
+		//config.height = 900;
 		config.resizable = false;
 		new LwjglApplication(new SpaceGame(), config);
 		
