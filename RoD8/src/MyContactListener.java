@@ -31,7 +31,7 @@ public class MyContactListener implements ContactListener{
 	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
-	private HashSet<Body> bodyToRemove;
+	public HashSet<Body> bodyToRemove;
 	
 	/**
 	 * Instantiates a new my contact listener.

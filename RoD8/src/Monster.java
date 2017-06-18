@@ -72,14 +72,16 @@ public class Monster extends B2DSprite{
 	 * Draw monsters.
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch){
-
-		Fixture f = this.getBody().getFixtureList().peek();
-		
-		if(((String) f.getUserData()).contains("crabattack")){
+		if(this.getBody().getFixtureList().size != 0){
+			Fixture f = this.getBody().getFixtureList().peek();
 			
-			this.getBody().destroyFixture(f);
+			if(((String) f.getUserData()).contains("crabattack")){
+				
+				this.getBody().destroyFixture(f);
+			}
+		}else{
+			this.setState(-1);
 		}
-		
 		//spriteBatch.begin();
 		switch(this.getState()){
 		case 0: 
@@ -149,88 +151,88 @@ public class Monster extends B2DSprite{
 	 * Update monster movement.
 	 */
 	public void monsterMovement(){
-		
-		float range;
-		range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
-		
-		if(range <= DETECTION_RANGE){
-			if (this.getState() <= 3){
-				
-				if(range <= CRAB_RANGE/GameScreen.PPM){
-					if(this.getPosition().x < GameScreen.player.getPosition().x){
-
-						this.setFace(true);
-						this.setState(4);
-					}else if(this.getPosition().x > GameScreen.player.getPosition().x){
-
-						this.setFace(false);
-						this.setState(5);
-					}
-				}else{
-					if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
-						if(onGround > 0){		
+		if(this.getState() != -1){
+			float range;
+			range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
+			
+			if(range <= DETECTION_RANGE){
+				if (this.getState() <= 3){
 					
-							this.getBody().applyForceToCenter(0, 30, true);
-						}
-					}
-					
-					if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
-						this.setState(0);
+					if(range <= CRAB_RANGE/GameScreen.PPM){
+						if(this.getPosition().x < GameScreen.player.getPosition().x){
 
-						if(this.getBody().getLinearVelocity().x > 0){
-							this.getBody().applyForceToCenter(-10, 0, true);
-						}
-						if(this.getBody().getLinearVelocity().x < 0){
-							this.getBody().applyForceToCenter(10, 0, true);
+							this.setFace(true);
+							this.setState(4);
+						}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+
+							this.setFace(false);
+							this.setState(5);
 						}
 					}else{
+						if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
+							if(onGround > 0){		
 						
-						if(this.getPosition().x > GameScreen.player.getPosition().x){
-					
-							this.setState(3);
-							this.setFace(false);
-					
-							if(this.getBody().getLinearVelocity().x > -0.7f){
-						
-								this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+								this.getBody().applyForceToCenter(0, 30, true);
 							}
 						}
-					
-						if(this.getPosition().x < GameScreen.player.getPosition().x){
-									
-							this.setState(2);
-							this.setFace(true);
-					
-							if(this.getBody().getLinearVelocity().x < 0.7f){
 						
-								this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+						if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+							this.setState(0);
+
+							if(this.getBody().getLinearVelocity().x > 0){
+								this.getBody().applyForceToCenter(-10, 0, true);
+							}
+							if(this.getBody().getLinearVelocity().x < 0){
+								this.getBody().applyForceToCenter(10, 0, true);
+							}
+						}else{
+							
+							if(this.getPosition().x > GameScreen.player.getPosition().x){
+						
+								this.setState(3);
+								this.setFace(false);
+						
+								if(this.getBody().getLinearVelocity().x > -0.7f){
+							
+									this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+								}
+							}
+						
+							if(this.getPosition().x < GameScreen.player.getPosition().x){
+										
+								this.setState(2);
+								this.setFace(true);
+						
+								if(this.getBody().getLinearVelocity().x < 0.7f){
+							
+									this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+								}
 							}
 						}
-					}
-			
-					if(!(onGround > 0)){
-					
-						this.setState(1);
-						
-					}
-				}
-			}else{
-				this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
 				
-				if(range > CRAB_RANGE/GameScreen.PPM){
-					this.setState(1);
+						if(!(onGround > 0)){
+						
+							this.setState(1);
+							
+						}
+					}
+				}else{
+					this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
+					
+					if(range > CRAB_RANGE/GameScreen.PPM){
+						this.setState(1);
+					}
+				}
+				
+			}else{
+				if(this.getBody().getLinearVelocity().x > 0){
+					this.getBody().applyForceToCenter(-10, 0, true);
+				}
+				if(this.getBody().getLinearVelocity().x < 0){
+					this.getBody().applyForceToCenter(10, 0, true);
 				}
 			}
-			
-		}else{
-			if(this.getBody().getLinearVelocity().x > 0){
-				this.getBody().applyForceToCenter(-10, 0, true);
-			}
-			if(this.getBody().getLinearVelocity().x < 0){
-				this.getBody().applyForceToCenter(10, 0, true);
-			}
-		}
-		
+		}		
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
