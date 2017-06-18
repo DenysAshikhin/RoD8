@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -93,9 +94,9 @@ public class GameScreen implements Screen{
 	
 	public static final float CRAB_HEIGHT = 40f;
 	
-	public static final float CRAB_RANGE = 20f;
+	public static final float LEMURIAN_WIDTH = 18f;
 	
-	public static final float DETECTION_RANGE = 200f;
+	public static final float LEMURIAN_HEIGHT = 18f;
 	
 	/** The Constant SCALE. */
 	public static final float SCALE = 1f;
@@ -135,6 +136,8 @@ public class GameScreen implements Screen{
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
+	private SpriteBatch hudBatch;
+	
 	private Texture blank;
 	/** The crab. */
 	Texture crab;
@@ -172,6 +175,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
+		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("whitepixel.png", "blank");
 		
 		crab = textures.getTexture("crab");
@@ -185,8 +189,11 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-		createMonster();
 		
+		scoreFont = new BitmapFont();
+		scoreFont.getData().setScale(0.5f);
+		
+		hudBatch = new SpriteBatch();
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -245,14 +252,14 @@ public class GameScreen implements Screen{
 		
 		spriteBatch.begin();
 
-		
 		for(Monster m : monsterList){
 			
 			if(m.getState() > 3){
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
-			m.drawMonsters(spriteBatch);
+			m.drawMonsters(spriteBatch, stateTime);
+			
 			spriteBatch.setColor(Color.GREEN);
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, 24 * m.health, 3);
 			spriteBatch.setColor(Color.WHITE);
@@ -260,21 +267,39 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-		
-		
+
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
-		spriteBatch.end();
+		spriteBatch.end();		
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
 			createMonster();
 		}
 
+		Matrix4 uiMatrix = cam.combined.cpy();
+		uiMatrix.setToOrtho2D(0, 0, 500, 500);
+		spriteBatch.setProjectionMatrix(uiMatrix);
+		spriteBatch.begin();
+		//hudBatch.begin();
+		
+		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
 
+		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
+		
+		spriteBatch.setColor(Color.BLACK);
+		spriteBatch.draw(blank, 100, 50, 300, 10);
+		
+		spriteBatch.setColor(Color.GREEN);
+		spriteBatch.draw(blank, 100, 50, 3 * player.health, 10);
+		spriteBatch.setColor(Color.WHITE);
+
+		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
+		spriteBatch.end();
+		//hudBatch.end();
 		/**
 		if(Math.random() < 0.01){
 			createMonster();
@@ -313,7 +338,7 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
-		player = new Player(body, this);
+		player = new Player(body, this, 1);
 
 		player.setState(1);
 		
@@ -370,6 +395,20 @@ public class GameScreen implements Screen{
 	 */
 	private void createMonster(){
 		
+		int monsterType = (int) (Math.random() * 2) + 1;
+		float width = 0;
+		float height = 0;
+		switch(monsterType){
+		case 1:
+			width = CRAB_WIDTH;
+			height = CRAB_HEIGHT;
+			break;
+		case 2:
+			width = LEMURIAN_WIDTH;
+			height = LEMURIAN_HEIGHT;
+			break;
+		}
+		
 		BodyDef b1def = new BodyDef();
 		FixtureDef f1def = new FixtureDef();
 		PolygonShape shape1 = new PolygonShape();
@@ -384,8 +423,8 @@ public class GameScreen implements Screen{
 		Body body1 = world.createBody(b1def);
 		
 		shape1.setAsBox(
-				((CRAB_WIDTH * SCALE) / 2) / PPM, 
-				((CRAB_HEIGHT * SCALE) / 2) / PPM);
+				((width * SCALE) / 2) / PPM, 
+				((height * SCALE) / 2) / PPM);
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -394,15 +433,16 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		monsterList.add(new Monster(body1, this, monsterNum));
+		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
+		//monsterList.add(new Monster(body1, this, monsterNum, 2));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
 		
 		shape1.setAsBox(
-				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, -(CRAB_HEIGHT / 2 * SCALE) / PPM),
+				(((width - 2) / 2) * SCALE) / PPM, 
+				(((height / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(height / 2 * SCALE) / PPM),
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -412,9 +452,9 @@ public class GameScreen implements Screen{
 		
 		//Create jump sensor
 		shape1.setAsBox(
-				(((CRAB_WIDTH + 5) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
+				(((width + 5) / 2) * SCALE) / PPM, 
+				(((height / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, (int) (-(height / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -424,8 +464,8 @@ public class GameScreen implements Screen{
 		
 		//Create wall sensor
 		shape1.setAsBox(
-				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM);
+				(((width + 2) / 2) * SCALE) / PPM, 
+				(((height - 2) / 2) * SCALE) / PPM);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
 		f1def.filter.maskBits = BIT_GROUND;	
@@ -436,30 +476,30 @@ public class GameScreen implements Screen{
 	}
 	
 
-	public void createCrabAttack(Monster crab, float damage, boolean value){
+	public void createLocalAttack(Monster m, float damage, boolean value){
 		
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		bdef.position.set((crab.getBody().getPosition().x * 100) / PPM, (crab.getBody().getPosition().y * 100) / PPM);
+		bdef.position.set((m.getBody().getPosition().x * 100) / PPM, (m.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.StaticBody;
 		
 		if(value){
 
-			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2((crab.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		else{
 
-			shape.setAsBox((crab.width / 2) / PPM, crab.height / PPM, new Vector2(-(crab.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
 		}
-		Body body = crab.getBody();
+		Body body = m.getBody();
 		body.setGravityScale(0);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_CRAB_ATTACK;
 		fdef.filter.maskBits = BIT_PLAYER;
-		body.createFixture(fdef).setUserData("crabattack:" + damage);
+		body.createFixture(fdef).setUserData("attack:" + damage);
 	}
 	
 	/**
@@ -467,7 +507,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
+		 tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
@@ -479,6 +519,7 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_GROUND, "ground");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
 		 createLayer(layer, BIT_LADDER, "ladder");
+		 System.out.println("asd");
 	}
 	
 
@@ -542,7 +583,17 @@ public class GameScreen implements Screen{
 					 fdef.friction = 0;
 					 fdef.filter.categoryBits = bits;
 					 fdef.shape = chainShape;
-					 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+					 switch(bits){
+					 case BIT_AIR:
+						 break;
+					 case BIT_LADDER:
+						 fdef.filter.maskBits = BIT_PLAYER;
+						 break;
+					 case BIT_GROUND:
+						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+						 break;
+					 }
+				 
 					 world.createBody(bdef).createFixture(fdef).setUserData(userData);
 				 }
 				 

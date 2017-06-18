@@ -57,36 +57,48 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
 				playerOnGround++;
-			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
-				playerOnLadder++;
+		
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 			
 			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
 				playerOnGround++;
-			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
-				playerOnLadder++;
+
 		}
 		
-		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+			playerOnLadder++;
+		
+		else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+			playerOnLadder++;
+		
 
-			for(Monster m : GameScreen.monsterList){
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
 				
-				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+				for(Monster m : GameScreen.monsterList){
 					
-					m.onGround++;
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.onGround++;
+					}
 				}
 			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
-			
-			for(Monster m : GameScreen.monsterList){
-				
-				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+
+				for(Monster m : GameScreen.monsterList){
 					
-					m.onGround++;
+					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+						
+						m.onGround++;
+					}
 				}
 			}
 		}
@@ -113,19 +125,19 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
-		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("crabattack")){
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
 
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
-			
+
 			GameScreen.player.health -= damage;
 
 			((String) fa.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
 		
-		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("crabattack")){
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("attack")){
 
 			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			
+
 			GameScreen.player.health -= damage;
 
 			((String) fb.getUserData()).replaceAll(Float.toString(damage), "0.0");
@@ -167,6 +179,8 @@ public class MyContactListener implements ContactListener{
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
 							GameScreen.removeMobs.add(m);	
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}	
@@ -198,6 +212,7 @@ public class MyContactListener implements ContactListener{
 						bodyToRemove.add(fa.getBody());
 						m.killed = true;
 						GameScreen.removeMobs.add(m);	
+						GameScreen.player.money += 100;
 					}
 				}	
 			}		
@@ -221,7 +236,9 @@ public class MyContactListener implements ContactListener{
 							
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
-							GameScreen.removeMobs.add(m);							
+							GameScreen.removeMobs.add(m);
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}
@@ -246,7 +263,9 @@ public class MyContactListener implements ContactListener{
 							
 							bodyToRemove.add(fa.getBody());
 							m.killed = true;
-							GameScreen.removeMobs.add(m);	
+							GameScreen.removeMobs.add(m);
+							GameScreen.player.money += 100;
+
 						}
 					}
 				}
@@ -268,17 +287,19 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
 				playerOnGround--;
-			else if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
-				playerOnLadder--;
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 		
 			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
 				playerOnGround--;
-			else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
-				playerOnLadder--;
 		}
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+			playerOnLadder--;
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+			playerOnLadder--;
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 
