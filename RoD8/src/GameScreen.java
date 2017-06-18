@@ -298,7 +298,7 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(90 / PPM, 100 / PPM);
+		bdef.position.set(12, 24sss);
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
 		Body body = world.createBody(bdef);
@@ -559,10 +559,13 @@ public class GameScreen implements Screen{
 			fdef.filter.maskBits = BIT_PLAYER;
 			
 			Body body = world.createBody(bdef);
-			body.createFixture(fdef).setUserData("crystal");;
+			body.createFixture(fdef).setUserData("crystal");
 			
 			Crystal c = new Crystal(body);
 			crystals.add(c);
+			
+			//System.out.println(x);
+			//System.out.println(y);
 			
 			body.setUserData(c);
 		}
