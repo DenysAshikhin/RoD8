@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -187,8 +188,8 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createMonster();
 		
+		//scoreFont = new BitmapFont(Gdx.files.internal("score.fnt"), Gdx.files.internal("score.png"), false);
 		scoreFont = new BitmapFont();
-		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -261,7 +262,9 @@ public class GameScreen implements Screen{
 
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-		scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
+		GlyphLayout scoreLayout =new GlyphLayout(scoreFont, "Gold: " + player.money);
+		scoreFont.draw(spriteBatch, scoreLayout, player.getPosition().x * PPM, player.getPosition().y * PPM);
+		//scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
 		
 		//scoreFont.draw
 		//draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
@@ -471,7 +474,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("fist_stage_map.tmx");
+		 tileMap = new TmxMapLoader().load("BestMapNA.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
