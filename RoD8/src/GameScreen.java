@@ -568,7 +568,17 @@ public class GameScreen implements Screen{
 					 fdef.friction = 0;
 					 fdef.filter.categoryBits = bits;
 					 fdef.shape = chainShape;
-					 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+					 switch(bits){
+					 case BIT_AIR:
+						 break;
+					 case BIT_LADDER:
+						 fdef.filter.maskBits = BIT_PLAYER;
+						 break;
+					 case BIT_GROUND:
+						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+						 break;
+					 }
+				 
 					 world.createBody(bdef).createFixture(fdef).setUserData(userData);
 				 }
 				 
