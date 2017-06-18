@@ -93,6 +93,10 @@ public class GameScreen implements Screen{
 	
 	public static final float CRAB_HEIGHT = 40f;
 	
+	public static final float LEMURIAN_WIDTH = 18f;
+	
+	public static final float LEMURIAN_HEIGHT = 18f;
+	
 	/** The Constant SCALE. */
 	public static final float SCALE = 1f;
 	
@@ -376,6 +380,20 @@ public class GameScreen implements Screen{
 	 */
 	private void createMonster(){
 		
+		int monsterType = (int) (Math.random() * 2) + 1;
+		float width = 0;
+		float height = 0;
+		switch(monsterType){
+		case 1:
+			width = CRAB_WIDTH;
+			height = CRAB_HEIGHT;
+			break;
+		case 2:
+			width = LEMURIAN_WIDTH;
+			height = LEMURIAN_HEIGHT;
+			break;
+		}
+		
 		BodyDef b1def = new BodyDef();
 		FixtureDef f1def = new FixtureDef();
 		PolygonShape shape1 = new PolygonShape();
@@ -390,8 +408,8 @@ public class GameScreen implements Screen{
 		Body body1 = world.createBody(b1def);
 		
 		shape1.setAsBox(
-				((CRAB_WIDTH * SCALE) / 2) / PPM, 
-				((CRAB_HEIGHT * SCALE) / 2) / PPM);
+				((width * SCALE) / 2) / PPM, 
+				((height * SCALE) / 2) / PPM);
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -400,16 +418,16 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		monsterList.add(new Monster(body1, this, monsterNum, (int) (Math.random() * 2) + 1));
+		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
 		//monsterList.add(new Monster(body1, this, monsterNum, 2));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
 		
 		shape1.setAsBox(
-				(((CRAB_WIDTH - 2) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, -(CRAB_HEIGHT / 2 * SCALE) / PPM),
+				(((width - 2) / 2) * SCALE) / PPM, 
+				(((height / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, -(height / 2 * SCALE) / PPM),
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -419,9 +437,9 @@ public class GameScreen implements Screen{
 		
 		//Create jump sensor
 		shape1.setAsBox(
-				(((CRAB_WIDTH + 5) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, (int) (-(CRAB_HEIGHT / 2 * SCALE) + 100 * SCALE) / PPM),
+				(((width + 5) / 2) * SCALE) / PPM, 
+				(((height / 7) / 2) * SCALE) / PPM, 
+				new Vector2(0, (int) (-(height / 2 * SCALE) + 100 * SCALE) / PPM),
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -431,8 +449,8 @@ public class GameScreen implements Screen{
 		
 		//Create wall sensor
 		shape1.setAsBox(
-				(((CRAB_WIDTH + 2) / 2) * SCALE) / PPM, 
-				(((CRAB_HEIGHT - 2) / 2) * SCALE) / PPM);
+				(((width + 2) / 2) * SCALE) / PPM, 
+				(((height - 2) / 2) * SCALE) / PPM);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
 		f1def.filter.maskBits = BIT_GROUND;	
