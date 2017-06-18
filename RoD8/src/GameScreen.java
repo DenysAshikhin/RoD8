@@ -298,7 +298,7 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(12, 24sss);
+		bdef.position.set(12, 24);
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
 		Body body = world.createBody(bdef);
@@ -517,7 +517,11 @@ public class GameScreen implements Screen{
 					 vertices[2] = new Vector2(+tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
 					 vertices[3] = new Vector2(tileSize /2 / PPM, -tileSize /2 / PPM);
 					 chainShape.createChain(vertices);
-					 fdef.isSensor = false;
+					 if(bits == BIT_LADDER)
+						 fdef.isSensor = true;
+					 else
+						 fdef.isSensor = false;
+					 
 					 fdef.friction = 0;
 					 fdef.filter.categoryBits = bits;
 					 fdef.shape = chainShape;
