@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -189,6 +188,7 @@ public class GameScreen implements Screen{
 		createMonster();
 		
 		scoreFont = new BitmapFont();
+		scoreFont.getData().setScale(0.5f);
 		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
