@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -135,6 +136,8 @@ public class GameScreen implements Screen{
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
+	private SpriteBatch hudBatch;
+	
 	private Texture blank;
 	/** The crab. */
 	Texture crab;
@@ -190,6 +193,7 @@ public class GameScreen implements Screen{
 		scoreFont = new BitmapFont();
 		scoreFont.getData().setScale(0.5f);
 		
+		hudBatch = new SpriteBatch();
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -264,13 +268,9 @@ public class GameScreen implements Screen{
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
 		
-		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
-		scoreFont.draw(spriteBatch, scoreLayout, player.getPosition().x * PPM, player.getPosition().y * PPM);
-		//scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
-		//scoreFont.draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
+
 		
-		//scoreFont.draw
-		//draw(spriteBatch, "Gold: " + player.money, player.getPosition().x * PPM, player.getPosition().y * PPM);
+		
 
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
@@ -284,7 +284,19 @@ public class GameScreen implements Screen{
 			createMonster();
 		}
 
+		Matrix4 uiMatrix = cam.combined.cpy();
+		uiMatrix.setToOrtho2D(0, 0, 500, 500);
+		spriteBatch.setProjectionMatrix(uiMatrix);
+		spriteBatch.begin();
+		//hudBatch.begin();
+		
+		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
 
+		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
+
+		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
+		spriteBatch.end();
+		//hudBatch.end();
 		/**
 		if(Math.random() < 0.01){
 			createMonster();
