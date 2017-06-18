@@ -94,10 +94,6 @@ public class GameScreen implements Screen{
 	
 	public static final float CRAB_HEIGHT = 40f;
 	
-	public static final float CRAB_RANGE = 20f;
-	
-	public static final float DETECTION_RANGE = 200f;
-	
 	/** The Constant SCALE. */
 	public static final float SCALE = 1f;
 	
@@ -173,7 +169,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
-		textures.loadTexture("Monster 2 Final.png", "crab");
+		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("whitepixel.png", "blank");
 		
 		crab = textures.getTexture("crab");
@@ -187,7 +183,6 @@ public class GameScreen implements Screen{
 		createPlayer();
 		createTiles();
 		createCrystals();
-		createMonster();
 		
 		scoreFont = new BitmapFont();
 		
@@ -255,7 +250,8 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
-			m.drawMonsters(spriteBatch);
+			m.drawMonsters(spriteBatch, stateTime);
+			
 			spriteBatch.setColor(Color.GREEN);
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, 24 * m.health, 3);
 			spriteBatch.setColor(Color.WHITE);
@@ -404,7 +400,8 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		monsterList.add(new Monster(body1, this, monsterNum, 1));
+		//monsterList.add(new Monster(body1, this, monsterNum, (int) (Math.random() * 2) + 1));
+		monsterList.add(new Monster(body1, this, monsterNum, 2));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
