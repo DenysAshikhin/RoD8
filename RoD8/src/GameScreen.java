@@ -471,7 +471,6 @@ public class GameScreen implements Screen{
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
-		 System.out.println(tileSize);
 		 
 		 TiledMapTileLayer layer;
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("air");
