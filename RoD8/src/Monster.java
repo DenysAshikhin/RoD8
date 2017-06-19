@@ -243,12 +243,8 @@ public class Monster extends B2DSprite{
 				if(range <= DETECTION_RANGE){
 					
 					if (this.getState() <= 3){
-						System.out.println("************************");
-						System.out.println(range);
-						System.out.println(attackRange/GameScreen.PPM);
+
 						if(range <= attackRange/GameScreen.PPM){
-							System.out.println("HIT");
-							System.out.println("************************");
 							if(this.getPosition().x < GameScreen.player.getPosition().x){
 
 								this.setFace(true);
