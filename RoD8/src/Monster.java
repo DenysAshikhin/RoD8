@@ -265,7 +265,7 @@ public class Monster extends B2DSprite{
 			float range;
 			range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
 			
-			if(this.health > 0){ 
+			if(this.health > 0){
 				
 				if(range <= DETECTION_RANGE){
 					
@@ -357,6 +357,11 @@ public class Monster extends B2DSprite{
 					}
 				}
 			}else{
+				Array<Fixture> f = this.getBody().getFixtureList();
+				
+				while(f.peek() != null){
+					f.pop();
+				}
 				
 				if(this.getBody().getLinearVelocity().x > 0){
 					
