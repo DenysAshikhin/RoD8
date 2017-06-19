@@ -277,7 +277,7 @@ public class GameScreen implements Screen{
 			chest.drawChest(spriteBatch);
 		}
 		//True = green portal, false = red portal
-		teleporter.drawPortal(spriteBatch, !teleporter.isActivated || teleporter.isFinished);
+		teleporter.drawPortal(spriteBatch, !teleporter.isActivated);
 		
 		spriteBatch.begin();
 		
@@ -315,7 +315,7 @@ public class GameScreen implements Screen{
 			}
 			else if(tempTime <= 0 && monsterList.size == 0){
 				
-					//teleporter.isActivated = false;
+					teleporter.isActivated = false;
 					teleporter.isFinished = true;
 					
 					guiLayout = new GlyphLayout(scoreFont, "Press E to continue...");
