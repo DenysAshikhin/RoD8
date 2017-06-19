@@ -88,17 +88,14 @@ public class GameScreen implements Screen{
 	/** The textures. */
 	public static Content textures;
 	
-	public static final float CRAB_WIDTH = 40f;
-	
-	public static final float CRAB_HEIGHT = 40f;
-	
-	public static final float GIANT_WIDTH = 30f;
-	
-	public static final float GIANT_HEIGHT = 30f;
-	
-	public static final float LEMURIAN_WIDTH = 18f;
-	
-	public static final float LEMURIAN_HEIGHT = 18f;
+	/*
+	 * 0 : null
+	 * 1 : crab
+	 * 2 : lemurian
+	 * 3 : giant
+	 */
+	public static final float[] MONSTER_WIDTH = {0f, 30f, 18f, 30f};
+	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
 	
 	/** The Constant SCALE. */
 	public static final float SCALE = 1f;
@@ -433,24 +430,14 @@ public class GameScreen implements Screen{
 	 * Creates monsters.
 	 */
 	private void createMonster(){
-		
+
 		int monsterType = (int) (Math.random() * 3) + 1;
-		float width = 0;
-		float height = 0;
-		switch(monsterType){
-		case 1:
-			width = CRAB_WIDTH;
-			height = CRAB_HEIGHT;
-			break;
-		case 2:
-			width = LEMURIAN_WIDTH;
-			height = LEMURIAN_HEIGHT;
-			break;
-		case 3:
-			width = GIANT_WIDTH;
-			height = GIANT_HEIGHT;
-			break;
-		}
+		//int monsterType = 1;
+		//int monsterType = 2;
+		//int monsterType = 3;
+		
+		float width = MONSTER_WIDTH[monsterType];
+		float height = MONSTER_HEIGHT[monsterType];
 		
 		BodyDef b1def = new BodyDef();
 		FixtureDef f1def = new FixtureDef();
@@ -477,8 +464,9 @@ public class GameScreen implements Screen{
 
 		//Create Monster
 		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
-		//monsterList.add(new Monster(body1, this, monsterNum, 3));
+		//monsterList.add(new Monster(body1, this, monsterNum, 1));
 		//monsterList.add(new Monster(body1, this, monsterNum, 2));
+		//monsterList.add(new Monster(body1, this, monsterNum, 3));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor
