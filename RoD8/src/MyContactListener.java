@@ -69,10 +69,12 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
 			
 			GameScreen.teleporter.isTouched = true;
+			System.out.println("Touched");
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("portal")){
 			
+			System.out.println("Touched");
 			GameScreen.teleporter.isTouched = true;
 		}
 		

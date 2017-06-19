@@ -8,6 +8,7 @@ public class Teleporter extends B2DSprite{
 
 	public boolean isTouched;
 	public boolean isActivated;
+	public boolean isFinished;
 
 	private GameScreen gameScreen;
 	Body body;
@@ -19,6 +20,7 @@ public class Teleporter extends B2DSprite{
 
 		isTouched = false;
 		isActivated = false;
+		isFinished = false;
 		this.body = body;
 		this.gameScreen = gameScreen;
 		
@@ -36,10 +38,10 @@ public class Teleporter extends B2DSprite{
 		
 		spriteBatch.begin();
 		if(value){
-			spriteBatch.draw(unavailable.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 40, this.getBody().getPosition().y * 100 - 2, 0, 0, 82, 27, 1, 1, 0);
+			spriteBatch.draw(available.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 40, this.getBody().getPosition().y * 100 - 2, 0, 0, 82, 27, 1, 1, 0);
 		}
 		else{
-			spriteBatch.draw(available.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 40, this.getBody().getPosition().y * 100 - 2, 0, 0, 82, 27, 1, 1, 0);
+			spriteBatch.draw(unavailable.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 40, this.getBody().getPosition().y * 100 - 2, 0, 0, 82, 27, 1, 1, 0);
 		}
 		
 		spriteBatch.end();
