@@ -325,8 +325,8 @@ public class GameScreen implements Screen{
 					teleporter.isActive = false;
 					teleporter.isFinished = true;
 					
-					guiLayout = new GlyphLayout(scoreFont, "Press E to continue...");
-					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+					guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
+					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
 			}
 			else{
 				
@@ -400,7 +400,6 @@ public class GameScreen implements Screen{
 		
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
 		spriteBatch.end();
-		//hudBatch.end();
 
 		//spawnTimer += System.currentTimeMillis();
 		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
