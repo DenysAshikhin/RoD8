@@ -27,8 +27,6 @@ public class MyContactListener implements ContactListener{
 	
 	private int playerOnLadder;
 	
-	private int monsterOnWall;
-	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	public HashSet<Body> bodyToRemove;
