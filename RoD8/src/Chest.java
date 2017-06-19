@@ -9,7 +9,6 @@ public class Chest extends B2DSprite{
 	public boolean isOpen;
 	public boolean isTouched;
 	private GameScreen gameScreen;
-	private Texture texture;
 	private Animation<TextureRegion> open;
 	private Animation<TextureRegion> closed;
 	
@@ -19,7 +18,6 @@ public class Chest extends B2DSprite{
 		isOpen = false;
 		isTouched = false;
 		this.gameScreen = gameScreen;
-		//texture = gameScreen.textures.getTexture("chest");
 		
 		Texture texture = GameScreen.textures.getTexture("portal");
 		
@@ -35,11 +33,9 @@ public class Chest extends B2DSprite{
 		
 		spriteBatch.begin();
 		if(isOpen){
-	System.out.println(true);
 			spriteBatch.draw(open.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 10, this.getBody().getPosition().y * 100 - 2, 0, 0, 19, 14, 1, 1, 0);
 		}
 		else{
-			System.out.println(false);
 			spriteBatch.draw(closed.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 10, this.getBody().getPosition().y * 100 - 2, 0, 0, 19, 14, 1, 1, 0);
 		}
 		

@@ -66,6 +66,16 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		
+		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
+			
+			GameScreen.teleporter.isTouched = true;
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("portal")){
+			
+			GameScreen.teleporter.isTouched = true;
+		}
+		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 						
 			for(Chest chest : GameScreen.chests){
@@ -332,6 +342,16 @@ public class MyContactListener implements ContactListener{
 		
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();//foot
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
+			
+			GameScreen.teleporter.isTouched = false;
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("portal")){
+			
+			GameScreen.teleporter.isTouched = false;
+		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			

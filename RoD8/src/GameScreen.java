@@ -127,6 +127,8 @@ public class GameScreen implements Screen{
 	public static final short BIT_MONSTER_SENSOR = 256;
 	
 	public static final short BIT_CRAB_ATTACK = 512;
+	
+	public static final short BIT_PORTAL = 1024;
 
 	/** The contact listener. */
 
@@ -136,7 +138,9 @@ public class GameScreen implements Screen{
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
 	public static HashSet<Chest> chests;
-		
+	
+	public static Teleporter teleporter;
+	
 	private Texture blank;
 	/** The crab. */
 	Texture crab;
@@ -195,6 +199,7 @@ public class GameScreen implements Screen{
 		createTiles();
 		createCrystals();
 		createChests();
+		createPortal();
 		
 		scoreFont = new BitmapFont();
 		scoreFont.getData().setScale(0.5f);
@@ -286,6 +291,7 @@ public class GameScreen implements Screen{
 			
 			chest.drawChest(spriteBatch);
 		}
+		teleporter.drawChest(spriteBatch, (teleporter.isActivated && monsterList.size == 0));
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
@@ -304,6 +310,12 @@ public class GameScreen implements Screen{
 						player.money -= 500;
 					}
 				}
+			}
+			
+			if(teleporter.isTouched){
+				
+				System.out.println("ACTIVATED");
+				teleporter.isActivated = true;
 			}
 		}
 
@@ -633,6 +645,38 @@ public class GameScreen implements Screen{
 			 }
 		 }
 	}
+	
+	private void createPortal(){
+		
+	MapLayer layer = tileMap.getLayers().get("teleporter");
+	
+	BodyDef bdef = new BodyDef();
+	FixtureDef fdef = new FixtureDef();
+	
+	for (MapObject mapObject : layer.getObjects()){
+		
+		bdef.type = BodyType.StaticBody;
+		float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+		float y = mapObject.getProperties().get("y", Float.class)/ PPM;
+
+		bdef.position.set(x,y);
+		PolygonShape squareShape = new PolygonShape();
+		squareShape.setAsBox(45 / PPM, 25 / PPM);
+		
+		fdef.shape = squareShape;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = BIT_PORTAL;
+		fdef.filter.maskBits = BIT_PLAYER;
+		
+		Body body = world.createBody(bdef);
+		body.createFixture(fdef).setUserData("portal");
+		
+		 teleporter = new Teleporter(body, this);
+		
+
+		body.setUserData(teleporter);
+	}
+}
 	
 	private void createChests(){
 				
