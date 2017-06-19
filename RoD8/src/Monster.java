@@ -43,6 +43,7 @@ public class Monster extends B2DSprite{
 	
 	private float jumpStrength;
 	public float jumpHeight;
+	private float attackRange;
 	
 	private int attackFrames;
 	private int deathFrames;
@@ -83,6 +84,7 @@ public class Monster extends B2DSprite{
 		this.width = 40f;
 		this.height = 40f;
 		this.jumpStrength = 0f;
+		this.attackRange = CRAB_RANGE;
 		this.attackFrames = 4;
 		this.deathFrames = 4;
 		
@@ -107,6 +109,7 @@ public class Monster extends B2DSprite{
 		this.width = 18f;
 		this.height = 18f;
 		this.jumpStrength = 2f;
+		this.attackRange = LEMURIAN_RANGE;
 		this.attackFrames = 3;
 		this.deathFrames = 2;
 		
@@ -131,6 +134,7 @@ public class Monster extends B2DSprite{
 		this.width = 30f;
 		this.height = 30f;
 		this.jumpStrength = 0f;
+		this.attackRange = GIANT_RANGE;
 		this.attackFrames = 4;
 		this.deathFrames = 4;
 		
@@ -267,18 +271,7 @@ public class Monster extends B2DSprite{
 					
 					if (this.getState() <= 3){
 						
-						if(this.type == 1 && range <= CRAB_RANGE/GameScreen.PPM){
-							
-							if(this.getPosition().x < GameScreen.player.getPosition().x){
-
-								this.setFace(true);
-								this.setState(4);
-							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
-
-								this.setFace(false);
-								this.setState(5);
-							}
-						}else if(this.type == 2 && range <= LEMURIAN_RANGE/GameScreen.PPM){
+						if(range <= attackRange/GameScreen.PPM){
 							
 							if(this.getPosition().x < GameScreen.player.getPosition().x){
 
@@ -364,6 +357,11 @@ public class Monster extends B2DSprite{
 					}
 				}
 			}else{
+				Array<Fixture> f = this.getBody().getFixtureList();
+				
+				while(f.peek() != null){
+					f.pop();
+				}
 				
 				if(this.getBody().getLinearVelocity().x > 0){
 					
