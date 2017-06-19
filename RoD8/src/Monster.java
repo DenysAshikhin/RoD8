@@ -165,7 +165,7 @@ public class Monster extends B2DSprite{
 				}
 				framesRun++;
 				prevFrame = primaryright.getKeyFrame(animTime, true);
-			}
+			}//cahnge
 			
 			if (framesRun <= 4){
 				
