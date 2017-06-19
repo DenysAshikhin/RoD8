@@ -65,6 +65,29 @@ public class MyContactListener implements ContactListener{
 
 		}
 		
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
+						
+			for(Chest chest : GameScreen.chests){
+				
+				if(chest.getBody() == fa.getBody()){
+					
+					chest.isTouched = true;
+				}
+			}
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
+			
+			for(Chest chest : GameScreen.chests){
+				
+				if(chest.getBody() == fb.getBody()){
+					
+					chest.isTouched = true;
+				}
+			}
+		}
+		
 		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
 			playerOnLadder++;
 		
@@ -308,6 +331,28 @@ public class MyContactListener implements ContactListener{
 		
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();//foot
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
+			
+			for(Chest chest : GameScreen.chests){
+				
+				if(chest.getBody() == fa.getBody()){
+					
+					chest.isTouched = false;
+				}
+			}
+		}
+
+		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
+			
+			for(Chest chest : GameScreen.chests){
+				
+				if(chest.getBody() == fb.getBody()){
+					
+					chest.isTouched = false;
+				}
+			}
+		}
 				
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
 			
