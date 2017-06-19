@@ -142,12 +142,12 @@ public class Monster extends B2DSprite{
 		TextureRegion[] sprites;
 
 		sprites = new TextureRegion[4];
-		sprites = TextureRegion.split(texture, 48, 69)[1];
+		sprites = TextureRegion.split(texture, 48, 69)[0];
 		standingright = new Animation<TextureRegion>(0.07f, sprites[4]);
 		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 		
 		sprites = new TextureRegion[attackFrames];
-		sprites = TextureRegion.split(texture, 80, 69)[0];
+		sprites = TextureRegion.split(texture, 80, 69)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
 		sprites = new TextureRegion[deathFrames];

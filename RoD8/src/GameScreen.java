@@ -175,7 +175,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
-		textures.loadTexture("monster 4.png", "giant");
+		textures.loadTexture("monster4.png", "giant");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
 		
@@ -465,6 +465,7 @@ public class GameScreen implements Screen{
 
 		//Create Monster
 		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
+		//monsterList.add(new Monster(body1, this, monsterNum, 3));
 		//monsterList.add(new Monster(body1, this, monsterNum, 2));
 		monsterList.peek().setState(1);
 		
