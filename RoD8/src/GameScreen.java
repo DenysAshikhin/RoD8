@@ -155,6 +155,9 @@ public class GameScreen implements Screen{
 	Texture crystal;
 		
 	
+	public long portalStart;
+	
+	
 	/**
 	 * Instantiates a new game screen.
 	 *
@@ -206,6 +209,8 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createChests();
 		createPortal();
+		
+		portalStart = 0;
 		
 		scoreFont = new BitmapFont();
 		scoreFont.getData().setScale(0.5f);
@@ -267,8 +272,15 @@ public class GameScreen implements Screen{
 		tmr.setView(cam);
 		tmr.render();
 		
+		for(Chest chest : chests){
+			
+			chest.drawChest(spriteBatch);
+		}
+		//True = green portal, false = red portal
+		teleporter.drawChest(spriteBatch, (!teleporter.isActivated && monsterList.size == 0) || teleporter.isFinished);
+		
 		spriteBatch.begin();
-
+		
 		for(Monster m : monsterList){
 			
 			if(m.getState() > 3){
@@ -290,14 +302,40 @@ public class GameScreen implements Screen{
 			
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
+		
+
+		if (teleporter.isActivated){
+			
+			int tempTime = (int)((5*1000) - (System.currentTimeMillis() - portalStart))/1000;
+			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
+		
+			if(tempTime > 0){
+				
+				scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+			}
+			else if(tempTime <= 0 && monsterList.size == 0){
+				
+					//teleporter.isActivated = false;
+					teleporter.isFinished = true;
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press E to continue...");
+					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+			}
+			else{
+				
+				guiLayout = new GlyphLayout(scoreFont, monsterList.size + " monsters left.");
+				scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+			}
+		}
+		else if(teleporter.isActivated == false && teleporter.isFinished == false){
+			
+			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Press E to begin...");
+			scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+		}
 	
 		spriteBatch.end();		
 	
-		for(Chest chest : chests){
-			
-			chest.drawChest(spriteBatch);
-		}
-		teleporter.drawChest(spriteBatch, (teleporter.isActivated && monsterList.size == 0));
+
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
@@ -320,8 +358,8 @@ public class GameScreen implements Screen{
 			
 			if(teleporter.isTouched){
 				
-				System.out.println("ACTIVATED");
 				teleporter.isActivated = true;
+				portalStart = System.currentTimeMillis();
 			}
 		}
 
@@ -342,6 +380,8 @@ public class GameScreen implements Screen{
 		spriteBatch.draw(blank, 100, 50, 300 * player.health, 10);
 		spriteBatch.setColor(Color.WHITE);
 
+
+		
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
 		spriteBatch.end();
 		//hudBatch.end();
@@ -379,7 +419,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER | BIT_PORTAL;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -671,7 +711,7 @@ public class GameScreen implements Screen{
 		 teleporter = new Teleporter(body, this);
 		
 
-		body.setUserData(teleporter);
+		//body.setUserData(teleporter);
 	}
 }
 	
