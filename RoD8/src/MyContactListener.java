@@ -223,7 +223,6 @@ public class MyContactListener implements ContactListener{
 						if((fa.getBody().getLinearVelocity().x) > 0)
 							fb.getBody().applyLinearImpulse(new Vector2(4f, 0f), fb.getBody().getPosition(), true);
 						
-						/**
 						if(m.health <= 0){
 							
 							bodyToRemove.add(fb.getBody());
@@ -232,7 +231,6 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += 100;
 
 						}
-						*/
 					}
 				}	
 			}
@@ -258,7 +256,6 @@ public class MyContactListener implements ContactListener{
 							fa.getBody().applyLinearImpulse(new Vector2(4f, 0f), fa.getBody().getPosition(), true);					
 					}
 
-					/**
 					if (m.health <= 0){
 						
 						bodyToRemove.add(fa.getBody());
@@ -267,7 +264,6 @@ public class MyContactListener implements ContactListener{
 						GameScreen.player.money += 100;
 					
 					}
-					*/
 				}	
 			}		
 		}
@@ -286,7 +282,6 @@ public class MyContactListener implements ContactListener{
 						
 						m.health -= damage/10;
 						
-						/**
 						if(m.health <= 0){
 							
 							bodyToRemove.add(fb.getBody());
@@ -295,7 +290,6 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += 100;
 
 						}
-						*/
 					}
 				}
 			}
@@ -315,7 +309,6 @@ public class MyContactListener implements ContactListener{
 						
 						m.health -= damage/10;
 						
-						/**
 						if(m.health <= 0){
 							
 							bodyToRemove.add(fa.getBody());
@@ -324,7 +317,6 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += 100;
 
 						}
-						*/
 					}
 				}
 			}

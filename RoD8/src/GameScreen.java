@@ -437,6 +437,7 @@ public class GameScreen implements Screen{
 		case 3:
 			width = GIANT_WIDTH;
 			height = GIANT_HEIGHT;
+			break;
 		}
 		
 		BodyDef b1def = new BodyDef();

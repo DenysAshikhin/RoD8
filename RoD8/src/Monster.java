@@ -169,28 +169,9 @@ public class Monster extends B2DSprite{
 				
 				this.getBody().destroyFixture(f);
 			}
-		}
-		
-		if(this.killed == true){
-
-			if (prevFrame != deathright.getKeyFrame(animTime, false)){
-				
-				framesRun++;
-				prevFrame = deathright.getKeyFrame(animTime, false);
-			}
+		}else{
 			
-			if (framesRun <= deathFrames){
-				
-				if(this.getState() == 6){
-					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-				}else{
-					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
-				}
-				
-			}else{
-
-				this.setState(-1);
-			}
+			this.setState(-1);
 		}
 		
 		//spriteBatch.begin();
@@ -266,9 +247,7 @@ public class Monster extends B2DSprite{
 			
 			float range;
 			range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
-			
-			if(this.health > 0){
-				
+							
 				if(range <= DETECTION_RANGE){
 					
 					if (this.getState() <= 3){
@@ -345,24 +324,6 @@ public class Monster extends B2DSprite{
 							this.setState(1);
 						}
 					}
-					
-				}else{
-					if(this.getFacing()){
-						this.setState(6);
-					}else{
-						this.setState(7);
-					}
-					
-					if(this.getBody().getLinearVelocity().x > 0){
-						
-						this.getBody().applyForceToCenter(-10, 0, true);
-					}
-					
-					if(this.getBody().getLinearVelocity().x < 0){
-						
-						this.getBody().applyForceToCenter(10, 0, true);
-					}
-				}
 			}else{
 				
 				if(this.getBody().getLinearVelocity().x > 0){
