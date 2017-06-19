@@ -314,8 +314,7 @@ public class Player extends B2DSprite{
 			
 				if(gameScreen.contactListener.isPlayerOnGround()){		
 			
-					this.getBody().applyForceToCenter(0, 300, true);
-					
+					this.getBody().applyLinearImpulse(new Vector2(0f, 2f), this.getPosition(), true);
 					
 					this.setState(2);	
 				}

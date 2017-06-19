@@ -465,7 +465,9 @@ public class GameScreen implements Screen{
 		//Create jump sensor
 		shape1.setAsBox(
 				(((width + 5) / 2) * SCALE) / PPM, 
-				(((height / 7) / 2) * SCALE) / PPM);
+				(((height / 7) / 2) * SCALE) / PPM,
+				new Vector2(0, (float) ((((-height / 2)) * SCALE / PPM) + ((monsterList.peek().jumpHeight) - 0.05))),
+				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
 		f1def.filter.maskBits = BIT_GROUND;	
