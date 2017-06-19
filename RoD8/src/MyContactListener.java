@@ -406,7 +406,7 @@ public class MyContactListener implements ContactListener{
 				}
 			}
 		}
-		
+		//change
 	}
 
 	

@@ -225,8 +225,9 @@ public class Monster extends B2DSprite{
 								this.getBody().applyForceToCenter(0, 30, true);
 							}
 						}
+					//change
 						
-						if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+					if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
 							this.setState(0);
 
 							if(this.getBody().getLinearVelocity().x > 0){
