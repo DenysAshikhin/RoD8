@@ -575,7 +575,6 @@ public class GameScreen implements Screen{
 
 	public void createLocalAttack(Monster m, float damage, boolean value){
 		
-		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
