@@ -39,6 +39,8 @@ public class Monster extends B2DSprite{
 	
 	public float health = 1f;
 	
+	private int jumpStrength;
+	
 	public int onGround;
 	public int onWall;
 	public int canHurdle = 1;
@@ -54,7 +56,7 @@ public class Monster extends B2DSprite{
 		this.gameScreen = gameScreen;
 		this.identifier = num;
 		this.type = type;
-
+		
 		switch(this.type){
 		case 1:
 			createCrab();
@@ -68,6 +70,7 @@ public class Monster extends B2DSprite{
 	private void createCrab(){
 		this.width = 40f;
 		this.height = 40f;
+		this.jumpStrength = 30;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
 		TextureRegion[] sprites = new TextureRegion[4];
@@ -86,6 +89,7 @@ public class Monster extends B2DSprite{
 	private void createLemurian(){
 		this.width = 18f;
 		this.height = 18f;
+		this.jumpStrength = 50;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
@@ -161,7 +165,7 @@ public class Monster extends B2DSprite{
 				}
 				framesRun++;
 				prevFrame = primaryright.getKeyFrame(animTime, true);
-			}
+			}//cahnge
 			
 			if (framesRun <= 4){
 				
@@ -218,7 +222,7 @@ public class Monster extends B2DSprite{
 						if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
 							if(onGround > 0 && canHurdle > 0){		
 						
-								this.getBody().applyForceToCenter(0, 30, true);
+								this.getBody().applyForceToCenter(0, jumpStrength, true);
 							}
 						}
 						
