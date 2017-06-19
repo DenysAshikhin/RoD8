@@ -16,10 +16,6 @@ public class Monster extends B2DSprite{
 
 	private static final float DETECTION_RANGE = 200f;
 
-	private static final float CRAB_RANGE = 30f;
-	private static final float LEMURIAN_RANGE = 12f;
-	private static final float GIANT_RANGE = 20f;
-
 	/** The num crystals. */
 	private int numCrystals;
 	
@@ -75,16 +71,17 @@ public class Monster extends B2DSprite{
 			createGiant();
 			break;
 		}
+
+		
+		this.width = GameScreen.MONSTER_WIDTH[type];
+		this.height = GameScreen.MONSTER_HEIGHT[type];
 		
 		this.jumpHeight = (float) (Math.pow(jumpStrength, 2)/(2 * 9.81f));
-		System.out.println(jumpHeight);
+		this.attackRange = this.width / 2;
 	}
 	
 	private void createCrab(){
-		this.width = 40f;
-		this.height = 40f;
 		this.jumpStrength = 0f;
-		this.attackRange = CRAB_RANGE;
 		this.attackFrames = 4;
 		this.deathFrames = 4;
 		
@@ -106,10 +103,7 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createLemurian(){
-		this.width = 18f;
-		this.height = 18f;
 		this.jumpStrength = 2f;
-		this.attackRange = LEMURIAN_RANGE;
 		this.attackFrames = 3;
 		this.deathFrames = 2;
 		
@@ -131,10 +125,7 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createGiant(){
-		this.width = 30f;
-		this.height = 30f;
 		this.jumpStrength = 0f;
-		this.attackRange = GIANT_RANGE;
 		this.attackFrames = 4;
 		this.deathFrames = 2;
 		
@@ -246,14 +237,18 @@ public class Monster extends B2DSprite{
 		if(this.getState() != -1){
 			
 			float range;
-			range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
-							
+			//range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
+			range = Math.abs(this.getPosition().x - GameScreen.player.getPosition().x);
+			
 				if(range <= DETECTION_RANGE){
 					
 					if (this.getState() <= 3){
-						
+						System.out.println("************************");
+						System.out.println(range);
+						System.out.println(attackRange/GameScreen.PPM);
 						if(range <= attackRange/GameScreen.PPM){
-							
+							System.out.println("HIT");
+							System.out.println("************************");
 							if(this.getPosition().x < GameScreen.player.getPosition().x){
 
 								this.setFace(true);
@@ -319,7 +314,7 @@ public class Monster extends B2DSprite{
 						
 						this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
 						
-						if(range > CRAB_RANGE/GameScreen.PPM){
+						if(range > this.attackRange/GameScreen.PPM){
 							
 							this.setState(1);
 						}
