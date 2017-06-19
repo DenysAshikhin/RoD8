@@ -115,7 +115,7 @@ public class GameScreen implements Screen{
 	public static final short BIT_LADDER = 16;
 	
 	/** The Constant BIT_CRYSTAL. */
-	public static final short BIT_CRYSTAL = 32;
+	public static final short BIT_CHEST = 32;
 	
 	/** The Constant BIT_MONSTER. */
 	public static final short BIT_MONSTER = 64;
@@ -136,8 +136,8 @@ public class GameScreen implements Screen{
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
-	private SpriteBatch hudBatch;
-	
+	public HashSet<Chest> chests;
+		
 	private Texture blank;
 	/** The crab. */
 	Texture crab;
@@ -178,6 +178,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
+		
 	               	          
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
@@ -186,15 +187,18 @@ public class GameScreen implements Screen{
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
+		chests = new HashSet<Chest>();
+
+		
 		//Create player, tiles and crystals
 		createPlayer();
 		createTiles();
 		createCrystals();
+		createChests();
 		
 		scoreFont = new BitmapFont();
 		scoreFont.getData().setScale(0.5f);
 		
-		hudBatch = new SpriteBatch();
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
@@ -274,7 +278,13 @@ public class GameScreen implements Screen{
 			
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
+	
 		spriteBatch.end();		
+	
+		for(Chest chest : chests){
+			
+			chest.drawChest(spriteBatch);
+		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
@@ -335,7 +345,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CRYSTAL | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -602,6 +612,39 @@ public class GameScreen implements Screen{
 		 }
 	}
 	
+	private void createChests(){
+				
+		MapLayer layer = tileMap.getLayers().get("chest");
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		for (MapObject mapObject : layer.getObjects()){
+			
+			bdef.type = BodyType.StaticBody;
+			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
+
+			bdef.position.set(x,y);
+			PolygonShape squareShape = new PolygonShape();
+			squareShape.setAsBox(15 / PPM, 10 / PPM);
+			
+			fdef.shape = squareShape;
+			fdef.isSensor = true;
+			fdef.filter.categoryBits = BIT_CHEST;
+			fdef.filter.maskBits = BIT_PLAYER;
+			
+			Body body = world.createBody(bdef);
+			body.createFixture(fdef).setUserData("chest");
+			
+			Chest c = new Chest(body, this);
+			System.out.println(c);
+			chests.add(c);
+
+			body.setUserData(c);
+		}
+	}
+	
 	/**
 	 * Creates the crystals.
 	 */
@@ -626,7 +669,7 @@ public class GameScreen implements Screen{
 			
 			fdef.shape = circleShape;
 			fdef.isSensor = true;
-			fdef.filter.categoryBits = BIT_CRYSTAL;
+			fdef.filter.categoryBits = BIT_CHEST;
 			fdef.filter.maskBits = BIT_PLAYER;
 			
 			Body body = world.createBody(bdef);
