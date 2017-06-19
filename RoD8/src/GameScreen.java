@@ -92,6 +92,10 @@ public class GameScreen implements Screen{
 	
 	public static final float CRAB_HEIGHT = 40f;
 	
+	public static final float GIANT_WIDTH = 30f;
+	
+	public static final float GIANT_HEIGHT = 30f;
+	
 	public static final float LEMURIAN_WIDTH = 18f;
 	
 	public static final float LEMURIAN_HEIGHT = 18f;
@@ -418,7 +422,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createMonster(){
 		
-		int monsterType = (int) (Math.random() * 2) + 1;
+		int monsterType = (int) (Math.random() * 3) + 1;
 		float width = 0;
 		float height = 0;
 		switch(monsterType){
@@ -430,6 +434,9 @@ public class GameScreen implements Screen{
 			width = LEMURIAN_WIDTH;
 			height = LEMURIAN_HEIGHT;
 			break;
+		case 3:
+			width = GIANT_WIDTH;
+			height = GIANT_HEIGHT;
 		}
 		
 		BodyDef b1def = new BodyDef();

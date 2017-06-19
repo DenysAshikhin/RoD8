@@ -102,7 +102,7 @@ public class Monster extends B2DSprite{
 
 		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 42, 32)[2];
-		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
 	
 	private void createLemurian(){
@@ -127,7 +127,7 @@ public class Monster extends B2DSprite{
 
 		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 28, 28)[2];
-		deathright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1]});
+		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
 	
 	private void createGiant(){
@@ -136,23 +136,23 @@ public class Monster extends B2DSprite{
 		this.jumpStrength = 0f;
 		this.attackRange = GIANT_RANGE;
 		this.attackFrames = 4;
-		this.deathFrames = 4;
+		this.deathFrames = 2;
 		
 		Texture texture = GameScreen.textures.getTexture("giant");
 		TextureRegion[] sprites;
+
+		sprites = new TextureRegion[4];
+		sprites = TextureRegion.split(texture, 48, 69)[1];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[4]);
+		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 		
 		sprites = new TextureRegion[attackFrames];
-		sprites = TextureRegion.split(texture, 22, 28)[0];
-		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2]});
-
-		sprites = new TextureRegion[6];
-		sprites = TextureRegion.split(texture, 22, 28)[1];
-		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
-		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+		sprites = TextureRegion.split(texture, 80, 69)[0];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
 		sprites = new TextureRegion[deathFrames];
-		sprites = TextureRegion.split(texture, 28, 28)[2];
-		deathright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1]});
+		sprites = TextureRegion.split(texture, 71, 69)[2];
+		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 		}
 	
 	
@@ -169,7 +169,9 @@ public class Monster extends B2DSprite{
 				
 				this.getBody().destroyFixture(f);
 			}
-		}else{
+		}
+		
+		if(this.killed == true){
 
 			if (prevFrame != deathright.getKeyFrame(animTime, false)){
 				
@@ -179,7 +181,7 @@ public class Monster extends B2DSprite{
 			
 			if (framesRun <= deathFrames){
 				
-				if(this.getState() == 4){
+				if(this.getState() == 6){
 					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 				}else{
 					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
@@ -345,6 +347,11 @@ public class Monster extends B2DSprite{
 					}
 					
 				}else{
+					if(this.getFacing()){
+						this.setState(6);
+					}else{
+						this.setState(7);
+					}
 					
 					if(this.getBody().getLinearVelocity().x > 0){
 						
@@ -357,11 +364,6 @@ public class Monster extends B2DSprite{
 					}
 				}
 			}else{
-				Array<Fixture> f = this.getBody().getFixtureList();
-				
-				while(f.peek() != null){
-					f.pop();
-				}
 				
 				if(this.getBody().getLinearVelocity().x > 0){
 					
