@@ -7,7 +7,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Teleporter extends B2DSprite{
 
 	public boolean isTouched;
-	public boolean isActivated;
+	public boolean isActive;
+	public boolean wasActivated;
 	public boolean isFinished;
 
 	private GameScreen gameScreen;
@@ -19,7 +20,8 @@ public class Teleporter extends B2DSprite{
 		super(body);
 
 		isTouched = false;
-		isActivated = false;
+		isActive = false;
+		wasActivated = false;
 		isFinished = false;
 		this.body = body;
 		this.gameScreen = gameScreen;

@@ -147,6 +147,10 @@ public class GameScreen implements Screen{
 	
 	public static Teleporter teleporter;
 	
+	private short difficulty;
+	
+	private long spawnTimer;
+	
 	private Texture blank;
 	/** The crab. */
 	Texture crab;
@@ -217,6 +221,9 @@ public class GameScreen implements Screen{
 		
 		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
+		
+		difficulty = 1;
+		spawnTimer = 0;
 	}
 	
 	/* (non-Javadoc)
@@ -277,7 +284,7 @@ public class GameScreen implements Screen{
 			chest.drawChest(spriteBatch);
 		}
 		//True = green portal, false = red portal
-		teleporter.drawPortal(spriteBatch, !teleporter.isActivated);
+		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
 		
 		spriteBatch.begin();
 		
@@ -304,7 +311,7 @@ public class GameScreen implements Screen{
 		}
 		
 
-		if (teleporter.isActivated){
+		if (teleporter.wasActivated){
 			
 			int tempTime = (int)((5*1000) - (System.currentTimeMillis() - portalStart))/1000;
 			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
@@ -315,7 +322,7 @@ public class GameScreen implements Screen{
 			}
 			else if(tempTime <= 0 && monsterList.size == 0){
 				
-					teleporter.isActivated = false;
+					teleporter.isActive = false;
 					teleporter.isFinished = true;
 					
 					guiLayout = new GlyphLayout(scoreFont, "Press E to continue...");
@@ -323,11 +330,12 @@ public class GameScreen implements Screen{
 			}
 			else{
 				
+				teleporter.isActive = false;
 				guiLayout = new GlyphLayout(scoreFont, monsterList.size + " monsters left.");
 				scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
 			}
 		}
-		else if(teleporter.isActivated == false && teleporter.isFinished == false){
+		else{
 			
 			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Press E to begin...");
 			scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
@@ -358,7 +366,8 @@ public class GameScreen implements Screen{
 			
 			if(teleporter.isTouched){
 				
-				teleporter.isActivated = true;
+				teleporter.isActive = true;
+				teleporter.wasActivated = true;
 				portalStart = System.currentTimeMillis();
 			}
 		}
@@ -385,11 +394,14 @@ public class GameScreen implements Screen{
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
 		spriteBatch.end();
 		//hudBatch.end();
-		/**
-		if(Math.random() < 0.01){
+
+		//spawnTimer += System.currentTimeMillis();
+		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
 			createMonster();
+			spawnTimer = System.currentTimeMillis();
 		}
-		*/
+		
+		
 		if(debug){
 
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
