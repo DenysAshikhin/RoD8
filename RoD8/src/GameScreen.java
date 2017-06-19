@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -130,9 +128,6 @@ public class GameScreen implements Screen{
 
 	public MyContactListener contactListener;
 	
-	private float framesRun;
-	private float animTime;
-	private TextureRegion prevFrame = null;
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
@@ -176,6 +171,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
+		textures.loadTexture("monster 4.png", "giant");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
 		

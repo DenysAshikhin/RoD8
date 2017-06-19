@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * The Class Player.
@@ -17,6 +18,7 @@ public class Monster extends B2DSprite{
 
 	private static final float CRAB_RANGE = 30f;
 	private static final float LEMURIAN_RANGE = 12f;
+	private static final float GIANT_RANGE = 20f;
 
 	/** The num crystals. */
 	private int numCrystals;
@@ -42,6 +44,9 @@ public class Monster extends B2DSprite{
 	private float jumpStrength;
 	public float jumpHeight;
 	
+	private int attackFrames;
+	private int deathFrames;
+	
 	public int onGround;
 	public int onWall;
 	public int canHurdle = 1;
@@ -65,6 +70,9 @@ public class Monster extends B2DSprite{
 		case 2:
 			createLemurian();
 			break;
+		case 3:
+			createGiant();
+			break;
 		}
 		
 		this.jumpHeight = (float) (Math.pow(jumpStrength, 2)/(2 * 9.81f));
@@ -75,17 +83,22 @@ public class Monster extends B2DSprite{
 		this.width = 40f;
 		this.height = 40f;
 		this.jumpStrength = 0f;
+		this.attackFrames = 4;
+		this.deathFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
-		TextureRegion[] sprites = new TextureRegion[4];
+		TextureRegion[] sprites;
 		
+		sprites = new TextureRegion[4];
 		sprites = TextureRegion.split(texture, 35, 32)[0];
 		standingright = new Animation<TextureRegion>(0.07f, sprites[0]);
 		runright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
+		sprites = new TextureRegion[attackFrames];
 		sprites = TextureRegion.split(texture, 35, 32)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
+		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 42, 32)[2];
 		deathright = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
@@ -94,11 +107,13 @@ public class Monster extends B2DSprite{
 		this.width = 18f;
 		this.height = 18f;
 		this.jumpStrength = 2f;
+		this.attackFrames = 3;
+		this.deathFrames = 2;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
 		
-		sprites = new TextureRegion[3];
+		sprites = new TextureRegion[attackFrames];
 		sprites = TextureRegion.split(texture, 22, 28)[0];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2]});
 
@@ -107,15 +122,43 @@ public class Monster extends B2DSprite{
 		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
 		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 
-		sprites = new TextureRegion[2];
+		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 28, 28)[2];
 		deathright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
+	
+	private void createGiant(){
+		this.width = 30f;
+		this.height = 30f;
+		this.jumpStrength = 0f;
+		this.attackFrames = 4;
+		this.deathFrames = 4;
+		
+		Texture texture = GameScreen.textures.getTexture("giant");
+		TextureRegion[] sprites;
+		
+		sprites = new TextureRegion[attackFrames];
+		sprites = TextureRegion.split(texture, 22, 28)[0];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2]});
+
+		sprites = new TextureRegion[6];
+		sprites = TextureRegion.split(texture, 22, 28)[1];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
+		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+
+		sprites = new TextureRegion[deathFrames];
+		sprites = TextureRegion.split(texture, 28, 28)[2];
+		deathright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1]});
+		}
+	
+	
 	/**
 	 * Draw monsters.
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch, float stateTime){
+		
 		if(this.getBody().getFixtureList().size != 0){
+			
 			Fixture f = this.getBody().getFixtureList().peek();
 			
 			if(((String) f.getUserData()).contains("attack")){
@@ -123,7 +166,25 @@ public class Monster extends B2DSprite{
 				this.getBody().destroyFixture(f);
 			}
 		}else{
-			this.setState(-1);
+
+			if (prevFrame != deathright.getKeyFrame(animTime, false)){
+				
+				framesRun++;
+				prevFrame = deathright.getKeyFrame(animTime, false);
+			}
+			
+			if (framesRun <= deathFrames){
+				
+				if(this.getState() == 4){
+					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				}else{
+					spriteBatch.draw(deathright.getKeyFrame(animTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				}
+				
+			}else{
+
+				this.setState(-1);
+			}
 		}
 		
 		//spriteBatch.begin();
@@ -163,7 +224,7 @@ public class Monster extends B2DSprite{
 			
 			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
 				
-				if(framesRun == 3){
+				if(framesRun == (attackFrames - 1)){
 					
 					gameScreen.createLocalAttack(this, 0.5f, this.getFacing());
 				}
@@ -171,7 +232,7 @@ public class Monster extends B2DSprite{
 				prevFrame = primaryright.getKeyFrame(animTime, true);
 			}
 			
-			if (framesRun <= 4){
+			if (framesRun <= attackFrames){
 				
 				if(this.getState() == 4){
 					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
@@ -196,97 +257,127 @@ public class Monster extends B2DSprite{
 	 */
 	public void monsterMovement(){
 		if(this.getState() != -1){
+			
 			float range;
 			range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
 			
-			if(range <= DETECTION_RANGE){
-				if (this.getState() <= 3){
+			if(this.health > 0){
+				
+				if(range <= DETECTION_RANGE){
 					
-					if(this.type == 1 && range <= CRAB_RANGE/GameScreen.PPM){
-						if(this.getPosition().x < GameScreen.player.getPosition().x){
-
-							this.setFace(true);
-							this.setState(4);
-						}else if(this.getPosition().x > GameScreen.player.getPosition().x){
-
-							this.setFace(false);
-							this.setState(5);
-						}
-					}else if(this.type == 2 && range <= LEMURIAN_RANGE/GameScreen.PPM){
-						if(this.getPosition().x < GameScreen.player.getPosition().x){
-
-							this.setFace(true);
-							this.setState(4);
-						}else if(this.getPosition().x > GameScreen.player.getPosition().x){
-
-							this.setFace(false);
-							this.setState(5);
-						}
-					}else{
-						if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
-							if(onGround > 0 && canHurdle > 0){		
+					if (this.getState() <= 3){
 						
-								this.getBody().applyLinearImpulse(new Vector2(0, jumpStrength), this.getPosition(), true);
-							}
-						}
-						
-						if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
-							this.setState(0);
+						if(this.type == 1 && range <= CRAB_RANGE/GameScreen.PPM){
+							
+							if(this.getPosition().x < GameScreen.player.getPosition().x){
 
-							if(this.getBody().getLinearVelocity().x > 0){
-								this.getBody().applyForceToCenter(-10, 0, true);
+								this.setFace(true);
+								this.setState(4);
+							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+
+								this.setFace(false);
+								this.setState(5);
 							}
-							if(this.getBody().getLinearVelocity().x < 0){
-								this.getBody().applyForceToCenter(10, 0, true);
+						}else if(this.type == 2 && range <= LEMURIAN_RANGE/GameScreen.PPM){
+							
+							if(this.getPosition().x < GameScreen.player.getPosition().x){
+
+								this.setFace(true);
+								this.setState(4);
+							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+
+								this.setFace(false);
+								this.setState(5);
 							}
 						}else{
 							
-							if(this.getPosition().x > GameScreen.player.getPosition().x){
-						
-								this.setState(3);
-								this.setFace(false);
-						
-								if(this.getBody().getLinearVelocity().x > -0.7f){
+							if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
+								
+								if(onGround > 0 && canHurdle > 0){		
 							
-									this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+									this.getBody().applyLinearImpulse(new Vector2(0, jumpStrength), this.getPosition(), true);
 								}
 							}
-						
-							if(this.getPosition().x < GameScreen.player.getPosition().x){
-										
-								this.setState(2);
-								this.setFace(true);
-						
-								if(this.getBody().getLinearVelocity().x < 0.7f){
 							
-									this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+							if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+								
+								this.setState(0);
+
+								if(this.getBody().getLinearVelocity().x > 0){
+									
+									this.getBody().applyForceToCenter(-10, 0, true);
 								}
+								if(this.getBody().getLinearVelocity().x < 0){
+									
+									this.getBody().applyForceToCenter(10, 0, true);
+								}
+							}else{
+								
+								if(this.getPosition().x > GameScreen.player.getPosition().x){
+							
+									this.setState(3);
+									this.setFace(false);
+							
+									if(this.getBody().getLinearVelocity().x > -0.7f){
+								
+										this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+									}
+								}
+							
+								if(this.getPosition().x < GameScreen.player.getPosition().x){
+											
+									this.setState(2);
+									this.setFace(true);
+							
+									if(this.getBody().getLinearVelocity().x < 0.7f){
+								
+										this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+									}
+								}
+							}
+					
+							if(!(onGround > 0)){
+							
+								this.setState(1);
 							}
 						}
-				
-						if(!(onGround > 0)){
+					}else{
 						
-							this.setState(1);
+						this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
+						
+						if(range > CRAB_RANGE/GameScreen.PPM){
 							
+							this.setState(1);
 						}
 					}
-				}else{
-					this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
 					
-					if(range > CRAB_RANGE/GameScreen.PPM){
-						this.setState(1);
+				}else{
+					
+					if(this.getBody().getLinearVelocity().x > 0){
+						
+						this.getBody().applyForceToCenter(-10, 0, true);
+					}
+					
+					if(this.getBody().getLinearVelocity().x < 0){
+						
+						this.getBody().applyForceToCenter(10, 0, true);
 					}
 				}
-				
 			}else{
+				
 				if(this.getBody().getLinearVelocity().x > 0){
+					
 					this.getBody().applyForceToCenter(-10, 0, true);
 				}
+				
 				if(this.getBody().getLinearVelocity().x < 0){
+					
 					this.getBody().applyForceToCenter(10, 0, true);
 				}
 			}
+			
 		}else{
+			
 			GameScreen.monsterList.removeValue(this, true);
 		}
 	}
