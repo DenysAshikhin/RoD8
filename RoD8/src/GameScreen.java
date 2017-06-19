@@ -579,9 +579,6 @@ public class GameScreen implements Screen{
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		bdef.position.set((m.getBody().getPosition().x * 100) / PPM, (m.getBody().getPosition().y * 100) / PPM);
-		bdef.type = BodyType.StaticBody;
-		
 		if(value){
 
 			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
@@ -591,7 +588,6 @@ public class GameScreen implements Screen{
 			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		Body body = m.getBody();
-		body.setGravityScale(0);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_ATTACK;
