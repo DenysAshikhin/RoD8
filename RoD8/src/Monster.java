@@ -41,19 +41,15 @@ public class Monster extends B2DSprite{
 	
 	public int onGround;
 	public int onWall;
-	public int canHurdle;
+	public int canHurdle = 1;
 	
 	private float animTime;
 	
 	GameScreen gameScreen;
 	
-	/**
-	 * Instantiates a new player.
-	 *
-	 * @param body the body
-	 */
+	
 	public Monster(Body body, GameScreen gameScreen, float num, int type) {
-		
+	
 		super(body);
 		this.gameScreen = gameScreen;
 		this.identifier = num;
@@ -161,7 +157,7 @@ public class Monster extends B2DSprite{
 				
 				if(framesRun == 3){
 					
-					gameScreen.createLocalAttack(this, 5f, this.getFacing());
+					gameScreen.createLocalAttack(this, 0.5f, this.getFacing());
 				}
 				framesRun++;
 				prevFrame = primaryright.getKeyFrame(animTime, true);
@@ -225,9 +221,8 @@ public class Monster extends B2DSprite{
 								this.getBody().applyForceToCenter(0, 30, true);
 							}
 						}
-					//change
 						
-					if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+						if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
 							this.setState(0);
 
 							if(this.getBody().getLinearVelocity().x > 0){

@@ -157,7 +157,7 @@ public class MyContactListener implements ContactListener{
 
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 
-			GameScreen.player.health -= damage;
+			GameScreen.player.health -= damage / 10;
 
 			((String) fa.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
@@ -166,7 +166,7 @@ public class MyContactListener implements ContactListener{
 
 			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
-			GameScreen.player.health -= damage;
+			GameScreen.player.health -= damage / 10;
 
 			((String) fb.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
@@ -406,7 +406,6 @@ public class MyContactListener implements ContactListener{
 				}
 			}
 		}
-		//change
 	}
 
 	
