@@ -136,7 +136,7 @@ public class GameScreen implements Screen{
 	private int monsterNum;
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
-	public HashSet<Chest> chests;
+	public static HashSet<Chest> chests;
 		
 	private Texture blank;
 	/** The crab. */
@@ -289,6 +289,21 @@ public class GameScreen implements Screen{
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
 			createMonster();
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.E)){
+			
+			if(player.money >= 500){
+				
+				for(Chest chest : chests){
+					
+					if (chest.isTouched && !chest.isOpen){
+						
+						chest.isOpen = true;
+						player.money -= 500;
+					}
+				}
+			}
 		}
 
 		Matrix4 uiMatrix = cam.combined.cpy();
@@ -528,7 +543,6 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_GROUND, "ground");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
 		 createLayer(layer, BIT_LADDER, "ladder");
-		 System.out.println("asd");
 	}
 	
 
@@ -638,7 +652,6 @@ public class GameScreen implements Screen{
 			body.createFixture(fdef).setUserData("chest");
 			
 			Chest c = new Chest(body, this);
-			System.out.println(c);
 			chests.add(c);
 
 			body.setUserData(c);
@@ -676,11 +689,7 @@ public class GameScreen implements Screen{
 			body.createFixture(fdef).setUserData("crystal");
 			
 			Crystal c = new Crystal(body);
-			crystals.add(c);
-			
-			//System.out.println(x);
-			//System.out.println(y);
-			
+			crystals.add(c);			
 			body.setUserData(c);
 		}
 	}
