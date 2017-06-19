@@ -500,9 +500,9 @@ public class GameScreen implements Screen{
 	 */
 	private void createMonster(){
 
-		//int monsterType = (int) (Math.random() * 3) + 1;
+		int monsterType = (int) (Math.random() * 3) + 1;
 		//int monsterType = 1;
-		int monsterType = 2;
+		//int monsterType = 2;
 		//int monsterType = 3;
 		
 		float width = MONSTER_WIDTH[monsterType];
@@ -533,9 +533,6 @@ public class GameScreen implements Screen{
 
 		//Create Monster
 		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
-		//monsterList.add(new Monster(body1, this, monsterNum, 1));
-		//monsterList.add(new Monster(body1, this, monsterNum, 2));
-		//monsterList.add(new Monster(body1, this, monsterNum, 3));
 		monsterList.peek().setState(1);
 		
 		//Create foot sensor

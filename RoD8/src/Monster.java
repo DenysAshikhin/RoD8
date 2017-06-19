@@ -234,17 +234,19 @@ public class Monster extends B2DSprite{
 	 * Update monster movement.
 	 */
 	public void monsterMovement(){
+		/*
+		System.out.println("ground" + onGround);
+		System.out.println("wall" + onWall);
+		System.out.println("jump" + canHurdle);
+		*/
 		
 		if(this.getState() != -1){
-			
-			float range;
-			//range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
-			range = Math.abs(this.getPosition().x - GameScreen.player.getPosition().x);
+			float range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
 			
 				if(range <= DETECTION_RANGE){
 					
 					if (this.getState() <= 3){
-
+						
 						if(range <= attackRange/GameScreen.PPM){
 							if(this.getPosition().x < GameScreen.player.getPosition().x){
 
@@ -317,7 +319,7 @@ public class Monster extends B2DSprite{
 						}
 					}
 			}else{
-				
+				System.out.println("3");
 				if(this.getBody().getLinearVelocity().x > 0){
 					
 					this.getBody().applyForceToCenter(-10, 0, true);
