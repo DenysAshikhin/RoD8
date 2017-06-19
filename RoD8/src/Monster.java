@@ -234,6 +234,7 @@ public class Monster extends B2DSprite{
 	 * Update monster movement.
 	 */
 	public void monsterMovement(){
+		
 		if(this.getState() != -1){
 			
 			float range;

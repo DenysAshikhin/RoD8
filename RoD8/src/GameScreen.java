@@ -107,7 +107,7 @@ public class GameScreen implements Screen{
 	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
 	
 	/** The Constant SCALE. */
-	public static final float SCALE = 1f;
+	public static final float SCALE = 0.7f;
 	
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
@@ -132,7 +132,7 @@ public class GameScreen implements Screen{
 	
 	public static final short BIT_MONSTER_SENSOR = 256;
 	
-	public static final short BIT_CRAB_ATTACK = 512;
+	public static final short BIT_ATTACK = 512;
 	
 	public static final short BIT_PORTAL = 1024;
 
@@ -371,6 +371,13 @@ public class GameScreen implements Screen{
 				portalStart = System.currentTimeMillis();
 			}
 		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.M)){
+			
+			for(Monster m : monsterList){
+				m.getBody().setTransform(player.getPosition(), 0);
+			}
+		}
 
 		Matrix4 uiMatrix = cam.combined.cpy();
 		uiMatrix.setToOrtho2D(0, 0, 500, 500);
@@ -397,10 +404,11 @@ public class GameScreen implements Screen{
 
 		//spawnTimer += System.currentTimeMillis();
 		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
+
 			createMonster();
 			spawnTimer = System.currentTimeMillis();
 		}
-		
+
 		
 		if(debug){
 
@@ -431,7 +439,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_CRAB_ATTACK | BIT_LADDER | BIT_PORTAL;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -492,9 +500,9 @@ public class GameScreen implements Screen{
 	 */
 	private void createMonster(){
 
-		int monsterType = (int) (Math.random() * 3) + 1;
+		//int monsterType = (int) (Math.random() * 3) + 1;
 		//int monsterType = 1;
-		//int monsterType = 2;
+		int monsterType = 2;
 		//int monsterType = 3;
 		
 		float width = MONSTER_WIDTH[monsterType];
@@ -580,18 +588,19 @@ public class GameScreen implements Screen{
 		
 		if(value){
 
-			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		else{
 
-			shape.setAsBox((m.width / 2) / PPM, m.height / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
+			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		Body body = m.getBody();
 		body.setGravityScale(0);
 	//	shape.setAs
 		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_CRAB_ATTACK;
+		fdef.filter.categoryBits = BIT_ATTACK;
 		fdef.filter.maskBits = BIT_PLAYER;
+		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("attack:" + damage);
 	}
 	
