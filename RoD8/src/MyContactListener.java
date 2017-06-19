@@ -69,12 +69,10 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
 			
 			GameScreen.teleporter.isTouched = true;
-			System.out.println("Touched");
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("portal")){
 			
-			System.out.println("Touched");
 			GameScreen.teleporter.isTouched = true;
 		}
 		
@@ -187,7 +185,13 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
-
+			
+			if(fa.getBody().getPosition().x < fb.getBody().getPosition().x){
+				fb.getBody().applyLinearImpulse(new Vector2(1f, 0f), fb.getBody().getPosition(), true);
+			}else{
+				fb.getBody().applyLinearImpulse(new Vector2(-1f, 0f), fb.getBody().getPosition(), true);
+			}
+			
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 
 			GameScreen.player.health -= damage / 10;
@@ -196,7 +200,13 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("attack")){
-
+			
+			if(fb.getBody().getPosition().x < fa.getBody().getPosition().x){
+				fa.getBody().applyLinearImpulse(new Vector2(1f, 0f), fa.getBody().getPosition(), true);
+			}else{
+				fa.getBody().applyLinearImpulse(new Vector2(-1f, 0f), fa.getBody().getPosition(), true);
+			}
+			
 			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
 			GameScreen.player.health -= damage / 10;
