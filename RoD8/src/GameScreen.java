@@ -177,7 +177,8 @@ public class GameScreen implements Screen{
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("whitepixel.png", "blank");
-		
+		textures.loadTexture("chestandteleporter.png", "portal");
+	               	          
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
 		blank = textures.getTexture("blank");
