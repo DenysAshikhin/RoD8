@@ -107,7 +107,7 @@ public class GameScreen implements Screen{
 	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
 	
 	/** The Constant SCALE. */
-	public static final float SCALE = 1f;
+	public static final float SCALE = 0.7f;
 	
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
@@ -385,11 +385,13 @@ public class GameScreen implements Screen{
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
 		spriteBatch.end();
 		//hudBatch.end();
+		
 		/**
 		if(Math.random() < 0.01){
 			createMonster();
 		}
 		*/
+		
 		if(debug){
 
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
