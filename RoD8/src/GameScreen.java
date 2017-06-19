@@ -88,13 +88,22 @@ public class GameScreen implements Screen{
 	/** The textures. */
 	public static Content textures;
 	
-	/*
-	 * 0 : null
-	 * 1 : crab
-	 * 2 : lemurian
+	/**
+	 * Associated Indexes:
+	 * 0 : null;
+	 * 1 : crab;
+	 * 2 : lemurian;
 	 * 3 : giant
 	 */
 	public static final float[] MONSTER_WIDTH = {0f, 30f, 18f, 30f};
+	
+	/**
+	 * Associated Indexes:
+	 * 0 : null;
+	 * 1 : crab;
+	 * 2 : lemurian;
+	 * 3 : giant
+	 */
 	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
 	
 	/** The Constant SCALE. */
