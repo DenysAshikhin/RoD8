@@ -34,7 +34,7 @@ public class Teleporter extends B2DSprite{
 	}
 
 	
-	public void drawChest(SpriteBatch spriteBatch, boolean value){
+	public void drawPortal(SpriteBatch spriteBatch, boolean value){
 		
 		spriteBatch.begin();
 		if(value){

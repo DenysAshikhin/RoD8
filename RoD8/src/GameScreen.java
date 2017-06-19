@@ -268,7 +268,7 @@ public class GameScreen implements Screen{
 			chest.drawChest(spriteBatch);
 		}
 		//True = green portal, false = red portal
-		teleporter.drawChest(spriteBatch, (!teleporter.isActivated && monsterList.size == 0) || teleporter.isFinished);
+		teleporter.drawPortal(spriteBatch, (!teleporter.isActivated && monsterList.size == 0) || teleporter.isFinished);
 		
 		spriteBatch.begin();
 		
