@@ -177,7 +177,8 @@ public class GameScreen implements Screen{
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("whitepixel.png", "blank");
-		
+		textures.loadTexture("chestandteleporter.png", "portal");
+	               	          
 		crab = textures.getTexture("crab");
 		crystal = textures.getTexture("crystal");
 		blank = textures.getTexture("blank");
@@ -294,7 +295,7 @@ public class GameScreen implements Screen{
 		spriteBatch.draw(blank, 100, 50, 300, 10);
 		
 		spriteBatch.setColor(Color.GREEN);
-		spriteBatch.draw(blank, 100, 50, 3 * player.health, 10);
+		spriteBatch.draw(blank, 100, 50, 300 * player.health, 10);
 		spriteBatch.setColor(Color.WHITE);
 
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
@@ -453,9 +454,7 @@ public class GameScreen implements Screen{
 		//Create jump sensor
 		shape1.setAsBox(
 				(((width + 5) / 2) * SCALE) / PPM, 
-				(((height / 7) / 2) * SCALE) / PPM, 
-				new Vector2(0, (int) (-(height / 2 * SCALE) + 100 * SCALE) / PPM),
-				0);
+				(((height / 7) / 2) * SCALE) / PPM);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
 		f1def.filter.maskBits = BIT_GROUND;	
