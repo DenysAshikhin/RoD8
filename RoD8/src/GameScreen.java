@@ -193,8 +193,6 @@ public class GameScreen implements Screen{
 		
 		changing = false;
 
-		
-
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -772,7 +770,7 @@ public class GameScreen implements Screen{
 			
 		case 3:
 			
-			tileMap = new TmxMapLoader().load("testingmap.tmx");
+			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
 			break;
 		}
 		
