@@ -29,8 +29,8 @@ public class Item extends B2DSprite{
 		Texture texture = GameScreen.textures.getTexture("items");
 		TextureRegion[] sprites;
 		
-		this.width = 16f;
-		this.height = 16f;
+		this.width = 32f;
+		this.height = 32f;
 		
 		switch(type){
 		case "root":
@@ -52,7 +52,7 @@ public class Item extends B2DSprite{
 	
 	public void writeItem(SpriteBatch spritebatch, int num){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), num * 32, 50, this.width, this.height);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), num * 32, 100, this.width, this.height);
 	}
 	
 	public void drawItem(SpriteBatch spritebatch){
