@@ -29,8 +29,8 @@ public class Item extends B2DSprite{
 		Texture texture = GameScreen.textures.getTexture("items");
 		TextureRegion[] sprites;
 		
-		this.width = 16f;
-		this.height = 16f;
+		this.width = 32f;
+		this.height = 32f;
 		
 		switch(type){
 		case "root":
@@ -45,17 +45,18 @@ public class Item extends B2DSprite{
 	public void getItem(){
 		switch(itemNum){
 		case 1: //root
-
 			GameScreen.player.increaseMaxHealth(10);
 			break;
 		}
 	}
 	
+	public void writeItem(SpriteBatch spritebatch, int num){
+		
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), num * 32, 100, this.width, this.height);
+	}
+	
 	public void drawItem(SpriteBatch spritebatch){
-		switch(itemNum){
-		case 1: //root
-			spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + this.width * GameScreen.SCALE / 2, this.getPosition().y * 100 - this.height * GameScreen.SCALE / 2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
-		}
+		
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + this.width * GameScreen.SCALE / 2, this.getPosition().y * 100 - this.height * GameScreen.SCALE / 2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 	}
 }
