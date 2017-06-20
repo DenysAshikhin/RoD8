@@ -61,6 +61,7 @@ public class GameScreen implements Screen{
 	public static Array<Item> removeItems = new Array<Item>();
 
 	public static HashSet<Chest> chests;
+	public static HashSet<Launcher> launchers;
 
 	public static Teleporter teleporter;
 
@@ -166,6 +167,8 @@ public class GameScreen implements Screen{
 	private static final short BIT_PORTAL = 512;
 
 	private static final short BIT_ITEM = 1024;
+	
+	private static final short BIT_LAUNCHER = 2048;
 
 	/**
 	 * Instantiates a new game screen.
@@ -193,19 +196,21 @@ public class GameScreen implements Screen{
 		textures = new Content();
 		textures.loadTexture("commando_final.png", "commando");
 		textures.loadTexture("crystal.png", "crystal");
-		//textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("monster4.png", "giant");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
 		textures.loadTexture("Items.png", "items");
+		textures.loadTexture("launcher.png", "launcher");
 		blank = textures.getTexture("blank");
+		
 
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
 		chests = new HashSet<Chest>();
+		launchers = new HashSet<Launcher>();
 
 		
 		//Create player, tiles and crystals
@@ -213,6 +218,7 @@ public class GameScreen implements Screen{
 		createCrystals();
 		createChests();
 		createPortal();
+		createLaunchers();
 		createPlayer();
 		
 		portalStart = 0;
@@ -336,6 +342,11 @@ public class GameScreen implements Screen{
 		for(Chest chest : chests){
 			
 			chest.drawChest(spriteBatch);
+		}
+		
+		for(Launcher launcher : launchers){
+			
+			launcher.drawLauncher(spriteBatch, stateTime);
 		}
 		//True = green portal, false = red portal
 		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
@@ -549,7 +560,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM | BIT_LAUNCHER;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -775,9 +786,38 @@ public class GameScreen implements Screen{
 			body.createFixture(fdef).setUserData("portal");
 			
 			 teleporter = new Teleporter(body);
-			
+		}
+	}
 	
-			//body.setUserData(teleporter);
+	private void createLaunchers(){
+	
+		MapLayer layer = tileMap.getLayers().get("launcher");
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		for (MapObject mapObject : layer.getObjects()){
+			
+			bdef.type = BodyType.StaticBody;
+			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
+
+			bdef.position.set(x,y);
+			PolygonShape squareShape = new PolygonShape();
+			squareShape.setAsBox(14 / PPM, 63 / PPM);
+			
+			fdef.shape = squareShape;
+			fdef.isSensor = true;
+			fdef.filter.categoryBits = BIT_LAUNCHER;
+			fdef.filter.maskBits = BIT_PLAYER;
+			
+			Body body = world.createBody(bdef);
+			body.createFixture(fdef).setUserData("launcher");
+			
+			Launcher c = new Launcher(body);
+			launchers.add(c);
+
+			body.setUserData(c);
 		}
 	}
 	
