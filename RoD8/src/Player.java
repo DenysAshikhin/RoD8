@@ -141,6 +141,10 @@ public class Player extends B2DSprite{
 				if(framesRun == 0 || framesRun == 3){
 					
 					gameScreen.createBullet("bullet:10.00", this.getFacing());
+					
+					if(Math.random() < this.mortarChance){
+						gameScreen.createMortar(20f, this.getFacing());
+					}
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
@@ -546,12 +550,27 @@ public class Player extends B2DSprite{
 	public void increaseAttackSpeed(float increase){
 		this.attackTime -= increase;
 		
-		Texture texture = GameScreen.textures.getTexture("commando");
-		TextureRegion[] sprites = new TextureRegion[4];
+		Texture texture;
+		TextureRegion[] sprites;
+		
+		switch(this.type){
+		case 1:
+			texture = GameScreen.textures.getTexture("commando");
 
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+			sprites = new TextureRegion[5];
+			sprites = TextureRegion.split(texture, 18, 13)[2];
+			primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+			break;
+		case 2:
+			
+			texture = GameScreen.textures.getTexture("sniper");
+
+			sprites = new TextureRegion[5];
+			sprites = TextureRegion.split(texture, 18, 13)[2];
+			primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+			break;
+			
+		}
 	}
 	
 	public void increaseMoveSpeed(float increase){

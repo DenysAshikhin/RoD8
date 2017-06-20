@@ -170,6 +170,10 @@ public class GameScreen implements Screen{
 	private static final short BIT_ITEM = 1024;
 	
 	private static final short BIT_LAUNCHER = 2048;
+	
+	private static final short BIT_MORTAR = 4096;
+
+	private static final short BIT_EXPLOSION = 8192;
 
 	private boolean changing;
 	/**
@@ -203,7 +207,7 @@ public class GameScreen implements Screen{
 		spriteBatch = new SpriteBatch();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener();
+		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);	
 		b2dr = new Box2DDebugRenderer();
 		
@@ -264,23 +268,69 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.setGravityScale(0);
 		shape.setAsBox(1 / PPM, 1 / PPM);
-	//	shape.setAs
+
 		fdef.shape = shape;
 		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_BULLET;
 		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
-		if(identifier.contains("ray")){
-			fdef.isSensor = true; 
-		}
+		
 		body.createFixture(fdef).setUserData(identifier);
 	}
+	
+	public void createMortar(float damage, boolean dir){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
+		bdef.type = BodyType.DynamicBody;
+		
+		if(dir){
+			
+			bdef.linearVelocity.x = 1f;
+		}else{
+			
+			bdef.linearVelocity.x = -1f;
+		}
+		
+		bdef.linearVelocity.y = 3f;
+		
+		bdef.bullet = true;
+		Body body = world.createBody(bdef);
+		shape.setAsBox(3 / PPM, 3 / PPM);
+		fdef.shape = shape;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = BIT_MORTAR;
+		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
+		
+		body.createFixture(fdef).setUserData("mortar:" + damage);
+	}
+	
+	public void createExplosion(float damage, Vector2 position){
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
 
-	public void createLocalAttack(Monster m, float damage, boolean value){
+		bdef.position.set(position);
+		bdef.type = BodyType.StaticBody;
+		
+		shape.setAsBox(30f * SCALE, 30f * SCALE);
+
+		Body body = world.createBody(bdef);
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_EXPLOSION;
+		fdef.filter.maskBits = BIT_MONSTER;
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("explosion:" + damage);
+	}
+
+	public void createLocalAttack(Monster m, float damage, boolean dir){
 		
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		if(value){
+		if(dir){
 	
 			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
 		}
@@ -289,7 +339,7 @@ public class GameScreen implements Screen{
 			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
 		}
 		Body body = m.getBody();
-	//	shape.setAs
+		
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_ATTACK;
 		fdef.filter.maskBits = BIT_PLAYER;
@@ -597,7 +647,7 @@ public class GameScreen implements Screen{
 		world.dispose();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener();
+		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);	
 		
 		difficulty ++;
@@ -699,7 +749,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_LAUNCHER;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -855,7 +905,7 @@ public class GameScreen implements Screen{
 						 fdef.filter.maskBits = BIT_PLAYER;
 						 break;
 					 case BIT_GROUND:
-						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET;
+						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET | BIT_MORTAR;
 						 break;
 					 }
 				 
@@ -983,7 +1033,7 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 4) + 7), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
