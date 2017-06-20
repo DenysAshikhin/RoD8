@@ -193,7 +193,7 @@ public class GameScreen implements Screen{
 		textures = new Content();
 		textures.loadTexture("commando_final.png", "commando");
 		textures.loadTexture("crystal.png", "crystal");
-		textures.loadTexture("hud.png", "hud");
+		//textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("monster4.png", "giant");
