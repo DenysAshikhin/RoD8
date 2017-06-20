@@ -1,5 +1,6 @@
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -14,8 +15,8 @@ public class Item extends B2DSprite{
 	GameScreen gameScreen;
 	
 	int type;
-	
 	int itemNum;
+	int itemCount = 1;
 
 	private Animation<TextureRegion> image;
 	
@@ -59,11 +60,16 @@ public class Item extends B2DSprite{
 	
 	public void writeItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 20, 80, this.width, this.height);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 16, 80, this.width, this.height);
+		
+		if(this.itemCount > 0){
+			
+			gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 16 + 2 * this.width / 3, 88);
+		}
 	}
 	
 	public void drawItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + this.width * GameScreen.SCALE / 2, this.getPosition().y * 100 - this.height * GameScreen.SCALE / 2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + (this.width / GameScreen.PPM) / 2, this.getPosition().y * 100 - (this.height / GameScreen.PPM) / 2, 0, 0, this.width, this.height, 1, 1, 0);
 	}
 }
