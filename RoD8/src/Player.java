@@ -441,18 +441,19 @@ public class Player extends B2DSprite{
 		sprites = TextureRegion.split(texture, 17, 14)[1];
 		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
 	
-		sprites = new TextureRegion[5];
+		sprites = new TextureRegion[6];
 		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		sprites = new TextureRegion[12];
+		sprites = TextureRegion.split(texture, 19, 20)[4];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11]});
 		
 		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		sprites = TextureRegion.split(texture, 87, 18)[6];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
+		//Not Needed
 		sprites = new TextureRegion[15];
 		sprites = TextureRegion.split(texture, 40, 13)[5];
 		quaternaryRight = new Animation<TextureRegion>(0.07f,
