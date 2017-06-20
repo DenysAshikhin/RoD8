@@ -179,8 +179,7 @@ public class GameScreen implements Screen{
 	 */
 	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
-		
-		
+
 		portalStart = 0;
 		
 		scoreFont = new BitmapFont();
@@ -193,6 +192,9 @@ public class GameScreen implements Screen{
 		spawnTimer = 0;
 		
 		changing = false;
+
+		
+
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -234,9 +236,9 @@ public class GameScreen implements Screen{
 		createPortal();
 		createLaunchers();
 		createPlayer();
+		
 		player.money = 1000;
 
-	
 	}
 	
 	public void createBullet(String identifier, boolean value){
@@ -349,6 +351,8 @@ public class GameScreen implements Screen{
 		}
 		transitionItems.clear();
 		
+		//System.out.println(player.getPosition());
+		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -425,6 +429,7 @@ public class GameScreen implements Screen{
 					
 					if(difficulty < 4)
 						changing = true;
+
 			}
 			else{
 				
@@ -569,7 +574,7 @@ public class GameScreen implements Screen{
 	public void dispose() {
 		
 	}
-	
+
 	
 	private void changeLevel(){
 		
@@ -604,10 +609,16 @@ public class GameScreen implements Screen{
 		createChests();
 		createPortal();
 		createLaunchers();
-		//createPlayer();
+		createPlayer();
 		
-		player.getPosition().x = teleporter.getPosition().x;
-		player.getPosition().y = teleporter.getPosition().y + 1;
+		System.out.println("PORTAL X: " + teleporter.getBody().getPosition().x);
+		System.out.println("PORTAL Y: " + teleporter.getBody().getPosition().y);
+
+	
+		player.getBody().setTransform(new Vector2(teleporter.getPosition().x, teleporter.getPosition().y + 1), 0);
+		
+
+
 		
 		//player.getPosition().x = 100;
 		//player.getPosition().y = 100;
@@ -618,7 +629,6 @@ public class GameScreen implements Screen{
 		
 		spawnTimer = 0;
 	}
-	
 
 	/**
 	 * Creates the player.
@@ -631,7 +641,6 @@ public class GameScreen implements Screen{
 		
 		//Create Player
 		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y + 1);
-
 
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
@@ -772,7 +781,6 @@ public class GameScreen implements Screen{
 			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
 			break;
 		}
-
 		
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
@@ -958,6 +966,7 @@ public class GameScreen implements Screen{
 			
 			Chest c = new Chest(body);
 			chests.add(c);
+			
 			
 			c.getBody().setUserData(c);
 			body.setUserData(c);
