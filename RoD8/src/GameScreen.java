@@ -125,6 +125,7 @@ public class GameScreen implements Screen{
 	
 	/** The crystals. */
 	private Array<Crystal> crystals;
+
 		
 	/** The cam. */
 	private OrthographicCamera cam;
@@ -170,6 +171,7 @@ public class GameScreen implements Screen{
 	
 	private static final short BIT_LAUNCHER = 2048;
 
+	private boolean changing;
 	/**
 	 * Instantiates a new game screen.
 	 *
@@ -177,7 +179,22 @@ public class GameScreen implements Screen{
 	 */
 	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
+
+		portalStart = 0;
 		
+		scoreFont = new BitmapFont();
+		scoreFont.getData().setScale(0.5f);
+		
+		spriteBatch = new SpriteBatch();
+		stateTime = 0f;
+		
+		difficulty = 1;
+		spawnTimer = 0;
+		
+		changing = false;
+
+		
+
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -212,9 +229,6 @@ public class GameScreen implements Screen{
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
 		
-
-
-		
 		//Create player, tiles and crystals
 		createTiles();
 		createCrystals();
@@ -223,17 +237,8 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
-		portalStart = 0;
-		
-		scoreFont = new BitmapFont();
-		scoreFont.getData().setScale(0.5f);
-		
-		spriteBatch = new SpriteBatch();
-		stateTime = 0f;
-		
-		difficulty = 1;
-		spawnTimer = 0;
 		player.money = 1000;
+
 	}
 	
 	public void createBullet(String identifier, boolean value){
@@ -298,6 +303,11 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		
+		if(changing){
+			changeLevel();
+			changing = false;
+		}
+		else{
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
 		
@@ -340,6 +350,8 @@ public class GameScreen implements Screen{
 			i.itemNum = itemNum;
 		}
 		transitionItems.clear();
+		
+		//System.out.println(player.getPosition());
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -414,6 +426,10 @@ public class GameScreen implements Screen{
 					
 					guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
 					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
+					
+					if(difficulty < 4)
+						changing = true;
+
 			}
 			else{
 				
@@ -508,6 +524,7 @@ public class GameScreen implements Screen{
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);
 		}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -558,6 +575,61 @@ public class GameScreen implements Screen{
 		
 	}
 
+	
+	private void changeLevel(){
+		
+		teleporter = null;
+	
+		crystals.clear();
+		chests.clear();
+		transitionItems.clear();
+		floatingItemList.clear();
+		removeMobs.clear();
+		monsterList.clear();		
+		chests.clear();
+		launchers.clear();
+
+		monsterNum = 0;
+		monsterList.ordered = false;
+		
+
+		
+		world.dispose();
+		
+		world = new World(new Vector2(0, -9.81f), true);
+		contactListener = new MyContactListener();
+		world.setContactListener(contactListener);	
+		
+		difficulty ++;
+
+		
+		//Create player, tiles and crystals
+		createTiles();
+		createCrystals();
+		createChests();
+		createPortal();
+		createLaunchers();
+		createPlayer();
+		
+		System.out.println("PORTAL X: " + teleporter.getBody().getPosition().x);
+		System.out.println("PORTAL Y: " + teleporter.getBody().getPosition().y);
+
+	
+		player.getBody().setTransform(new Vector2(teleporter.getPosition().x, teleporter.getPosition().y + 1), 0);
+		
+
+
+		
+		//player.getPosition().x = 100;
+		//player.getPosition().y = 100;
+		
+		portalStart = 0;
+				
+		stateTime = 0f;
+		
+		spawnTimer = 0;
+	}
+
 	/**
 	 * Creates the player.
 	 */
@@ -568,7 +640,8 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y);
+		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y + 1);
+
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
 		Body body = world.createBody(bdef);
