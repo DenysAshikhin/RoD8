@@ -224,6 +224,8 @@ public class GameScreen implements Screen{
 		
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
+		
+
 
 		
 		//Create player, tiles and crystals
@@ -233,7 +235,8 @@ public class GameScreen implements Screen{
 		createPortal();
 		createLaunchers();
 		createPlayer();
-		
+		player.money = 1000;
+
 	
 	}
 	
@@ -433,7 +436,7 @@ public class GameScreen implements Screen{
 		}
 	
 		spriteBatch.end();		
-	
+
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
 			createMonster();
@@ -724,7 +727,6 @@ public class GameScreen implements Screen{
 	 * Creates the tiles.
 	 */
 	private void createTiles(){
-		
 		
 		switch(difficulty){
 		
