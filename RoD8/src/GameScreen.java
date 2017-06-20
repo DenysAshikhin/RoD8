@@ -211,6 +211,8 @@ public class GameScreen implements Screen{
 		
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
+		
+
 
 		
 		//Create player, tiles and crystals
@@ -231,6 +233,7 @@ public class GameScreen implements Screen{
 		
 		difficulty = 1;
 		spawnTimer = 0;
+		player.money = 1000;
 	}
 	
 	public void createBullet(String identifier, boolean value){
@@ -426,7 +429,7 @@ public class GameScreen implements Screen{
 		}
 	
 		spriteBatch.end();		
-	
+
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
 			createMonster();
@@ -685,7 +688,27 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("second_stage_map.tmx");
+		switch(difficulty){
+		
+		case 1:
+			System.out.println(1);
+			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
+
+			break;
+			
+		case 2:
+			System.out.println(2);
+			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
+			break;
+			
+		case 3:
+			System.out.println(3);
+
+			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
+			break;
+		}
+		
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
