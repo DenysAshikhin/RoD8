@@ -592,8 +592,6 @@ public class GameScreen implements Screen{
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
-
-		
 		world.dispose();
 		
 		world = new World(new Vector2(0, -9.81f), true);
@@ -602,26 +600,14 @@ public class GameScreen implements Screen{
 		
 		difficulty ++;
 
-		
-		//Create player, tiles and crystals
 		createTiles();
 		createCrystals();
 		createChests();
 		createPortal();
 		createLaunchers();
 		createPlayer();
-		
-		System.out.println("PORTAL X: " + teleporter.getBody().getPosition().x);
-		System.out.println("PORTAL Y: " + teleporter.getBody().getPosition().y);
 
-	
 		player.getBody().setTransform(new Vector2(teleporter.getPosition().x, teleporter.getPosition().y + 1), 0);
-		
-
-
-		
-		//player.getPosition().x = 100;
-		//player.getPosition().y = 100;
 		
 		portalStart = 0;
 				
@@ -766,7 +752,7 @@ public class GameScreen implements Screen{
 		case 1:
 			System.out.println(1);
 			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
-			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 
 			break;
 			
@@ -778,7 +764,7 @@ public class GameScreen implements Screen{
 		case 3:
 			System.out.println(3);
 
-			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("testingmap.tmx");
 			break;
 		}
 		
