@@ -418,8 +418,6 @@ public class GameScreen implements Screen{
 	
 		spriteBatch.end();		
 	
-	
-		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
 			createMonster();
@@ -888,7 +886,8 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);
 
-		//Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
+		//Item i = new Item(body, this, 4, itemNum);
+		
 		Item i = new Item(body, this, ((int) (Math.random() * 2) + 4), itemNum);
 		floatingItemList.add(i);
 		

@@ -231,6 +231,7 @@ public class MyContactListener implements ContactListener{
 			
 			
 			bodyToRemove.add(fa.getBody());
+			((Item)fa.getBody().getUserData()).getItem();
 			GameScreen.transitionItems.add((Item)fa.getBody().getUserData());
 			/*for(Item i : GameScreen.floatingItemList){
 				
@@ -247,6 +248,7 @@ public class MyContactListener implements ContactListener{
 		if(fb.getUserData() != null & ((String) fb.getUserData()).contains("item")){
 			
 			bodyToRemove.add(fb.getBody());
+			((Item)fb.getBody().getUserData()).getItem();
 			GameScreen.transitionItems.add((Item)fb.getBody().getUserData());
 			
 			/*for(Item i : GameScreen.floatingItemList){
