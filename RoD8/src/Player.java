@@ -261,11 +261,13 @@ public class Player extends B2DSprite{
 			
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			
-				if(gameScreen.contactListener.isPlayerOnGround()){		
+				if(this.jumpCount > 0){		
 			
 					this.getBody().applyLinearImpulse(new Vector2(0f, 2.8f), this.getPosition(), true);
 					
-					this.setState(2);	
+					this.setState(2);
+					
+					this.jumpCount -= 1;
 				}
 			}
 		
