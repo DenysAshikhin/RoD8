@@ -55,6 +55,22 @@ public class Item extends B2DSprite{
 			break;
 		case 5: //leech
 			GameScreen.player.increaseHealthLeech(0.1f);
+			break;
+		case 6: //double jump
+			GameScreen.player.increaseJumps(1);
+			break;
+		case 7: //attack speed
+			GameScreen.player.increaseAttackSpeed(0.01f);
+			break;
+		case 8: //goat hoof
+			GameScreen.player.increaseMoveSpeed(0.2f);
+			break;
+		case 9: //boxing glove
+			GameScreen.player.increaseKnockbackChance(0.1f);
+			break;
+		case 10: //mortar
+			GameScreen.player.increaseMortarChance(0.1f);
+			break;
 		}
 	}
 	

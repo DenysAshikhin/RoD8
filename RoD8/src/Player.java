@@ -25,6 +25,18 @@ public class Player extends B2DSprite{
 	public float HealthSteal = 0f;
 
 	public float HealthLeech = 0f;
+	
+	public int totalJumps = 1;
+	
+	public int jumpCount;
+	
+	public float attackTime = 0.07f;
+	
+	public float moveSpeed = 1f;
+	
+	public float knockbackChance = 0f;
+	
+	public float mortarChance = 0f;
 
 	/** The Constant PLAYER_WIDTH. */
 	public static final float PLAYER_WIDTH = 8f;
@@ -54,6 +66,7 @@ public class Player extends B2DSprite{
 	private int type;
 	private TextureRegion prevFrame = null;
 	private GameScreen gameScreen;
+
 	
 	/**
 	 * Instantiates a new player.
@@ -267,7 +280,7 @@ public class Player extends B2DSprite{
 				this.setState(3);
 				this.setFace(false);//CHANGE!!!
 		
-				if(this.getBody().getLinearVelocity().x > -1f)
+				if(this.getBody().getLinearVelocity().x > -moveSpeed)
 					this.getBody().applyLinearImpulse(new Vector2(-0.5f, 0f), this.getPosition(), true);
 			}
 		
@@ -276,7 +289,7 @@ public class Player extends B2DSprite{
 				this.setState(3);
 				this.setFace(true);
 		
-				if(this.getBody().getLinearVelocity().x < 1f)			
+				if(this.getBody().getLinearVelocity().x < moveSpeed)			
 					this.getBody().applyLinearImpulse(new Vector2(0.5f, 0f), this.getPosition(), true);
 			}
 		
@@ -341,6 +354,26 @@ public class Player extends B2DSprite{
 	
 	public void increaseHealthLeech(float increase){
 		this.HealthLeech += increase;
+	}
+	
+	public void increaseJumps(int increase){
+		this.totalJumps += 1;
+	}
+	
+	public void increaseAttackSpeed(float increase){
+		this.attackTime -= increase;
+	}
+	
+	public void increaseMoveSpeed(float increase){
+		this.moveSpeed += increase;
+	}
+	
+	public void increaseKnockbackChance(float increase){
+		this.knockbackChance += increase;
+	}
+	
+	public void increaseMortarChance(float increase){
+		this.mortarChance += increase;
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}

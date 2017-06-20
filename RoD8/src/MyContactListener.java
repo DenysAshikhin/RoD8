@@ -70,16 +70,20 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
 			
-			if(fb.getUserData() != null && fb.getUserData().equals("ground"))
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
+				
 				playerOnGround++;
-		
+				GameScreen.player.jumpCount = GameScreen.player.totalJumps;
+			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("foot")){
 			
-			if(fa.getUserData() != null && fa.getUserData().equals("ground"))
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+				
 				playerOnGround++;
-	
+				GameScreen.player.jumpCount = GameScreen.player.totalJumps;
+			}
 		}
 		
 		
