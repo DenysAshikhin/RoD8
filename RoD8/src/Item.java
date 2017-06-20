@@ -14,6 +14,8 @@ public class Item extends B2DSprite{
 	GameScreen gameScreen;
 	
 	String type;
+	int itemType;
+	
 	int itemNum;
 
 	private Animation<TextureRegion> image;
@@ -34,25 +36,25 @@ public class Item extends B2DSprite{
 		
 		switch(type){
 		case "root":
-			itemNum = 1;
-			sprites = new TextureRegion[1];
+			itemType = 1;
+			sprites = new TextureRegion[10];
 			sprites = TextureRegion.split(texture, 32, 32)[0];
-			image = new Animation<TextureRegion>(0.07f, sprites[0]);
+			image = new Animation<TextureRegion>(0.07f, sprites[itemType]);
 			break;
 		}
 	}
 	
 	public void getItem(){
-		switch(itemNum){
+		switch(itemType){
 		case 1: //root
 			GameScreen.player.increaseMaxHealth(10);
 			break;
 		}
 	}
 	
-	public void writeItem(SpriteBatch spritebatch, int num){
+	public void writeItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), num * 32, 100, this.width, this.height);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 36, 100, this.width, this.height);
 	}
 	
 	public void drawItem(SpriteBatch spritebatch){

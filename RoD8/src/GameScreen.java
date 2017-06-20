@@ -458,7 +458,8 @@ public class GameScreen implements Screen{
 		spriteBatch.setColor(Color.WHITE);
 		
 		for(Item i : itemList){
-			i.writeItem(spriteBatch, itemNum);
+			i.itemNum = itemNum;
+			i.writeItem(spriteBatch);
 		}
 	
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
