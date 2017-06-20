@@ -337,15 +337,15 @@ public class GameScreen implements Screen{
 			
 			chest.drawChest(spriteBatch);
 		}
-		
-		for(Item i : itemList){
-			
-			i.drawItem(spriteBatch);
-		}
 		//True = green portal, false = red portal
 		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
 		
 		spriteBatch.begin();
+		
+		for(Item i : floatingItemList){
+			
+			i.drawItem(spriteBatch);
+		}
 		
 		for(Monster m : monsterList){
 			

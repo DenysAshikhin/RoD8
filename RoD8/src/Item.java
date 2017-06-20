@@ -35,9 +35,9 @@ public class Item extends B2DSprite{
 		switch(type){
 		case "root":
 			itemNum = 1;
-			sprites = new TextureRegion[0];
+			sprites = new TextureRegion[1];
 			sprites = TextureRegion.split(texture, 32, 32)[0];
-			image = new Animation<TextureRegion>(1f, sprites[0]);
+			image = new Animation<TextureRegion>(0.07f, sprites[0]);
 			break;
 		}
 	}
@@ -54,8 +54,7 @@ public class Item extends B2DSprite{
 	public void drawItem(SpriteBatch spritebatch){
 		switch(itemNum){
 		case 1: //root
-			System.out.println("here");
-			spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, true), this.getPosition().x, this.getPosition().y, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + this.width * GameScreen.SCALE / 2, this.getPosition().y * 100 - this.height * GameScreen.SCALE / 2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		}
 	}
