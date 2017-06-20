@@ -83,6 +83,25 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		
+		
+		if(fa.getUserData() != null && fa.getUserData().equals("launcher")){
+			
+			if(fb.getUserData() != null && fb.getUserData().equals("player")){
+				
+				fb.getBody().applyLinearImpulse(new Vector2(0,8.7f), fb.getBody().getPosition(), true);
+			}
+		}
+		
+		if(fb.getUserData() != null && fb.getUserData().equals("launcher")){
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("player")){
+				
+				fa.getBody().applyLinearImpulse(new Vector2(0, 8.7f), fa.getBody().getPosition(), true);
+			}
+		}
+		
+		
+		
 		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
 			
 			GameScreen.teleporter.isTouched = true;
@@ -419,6 +438,8 @@ public class MyContactListener implements ContactListener{
 			
 			GameScreen.teleporter.isTouched = false;
 		}
+
+		
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			
