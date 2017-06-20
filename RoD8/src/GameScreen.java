@@ -705,7 +705,7 @@ public class GameScreen implements Screen{
 		case 3:
 			System.out.println(3);
 
-			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("testingmap.tmx");
 			break;
 		}
 		
