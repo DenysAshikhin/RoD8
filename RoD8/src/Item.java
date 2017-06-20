@@ -76,11 +76,11 @@ public class Item extends B2DSprite{
 	
 	public void writeItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 16, 80, this.width, this.height);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 32, 80, this.width, this.height);
 		
 		if(this.itemCount > 1){
 			
-			gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 16 + 2 * this.width / 3, 88);
+			gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 32 + 2 * this.width / 3, 88);
 		}
 	}
 	
