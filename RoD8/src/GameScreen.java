@@ -115,28 +115,28 @@ public class GameScreen implements Screen{
 	
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
-	public static final short BIT_PLAYER = 2;
+	private static final short BIT_PLAYER = 2;
 	
 	/** The Constant BIT_RED. */
-	public static final short BIT_GROUND = 4;
+	private static final short BIT_GROUND = 4;
 	
 	/** The Constant BIT_GREEN. */
-	public static final short BIT_AIR = 8;
+	private static final short BIT_AIR = 8;
 	
 	/** The Constant BIT_BLUE. */
-	public static final short BIT_LADDER = 16;
+	private static final short BIT_LADDER = 16;
 	
 	/** The Constant BIT_CRYSTAL. */
-	public static final short BIT_CHEST = 32;
+	private static final short BIT_CHEST = 32;
 	
 	/** The Constant BIT_MONSTER. */
-	public static final short BIT_MONSTER = 64;
+	private static final short BIT_MONSTER = 64;
 	
-	public static final short BIT_BULLET = 128;
+	private static final short BIT_BULLET = 128;
 	
-	public static final short BIT_ATTACK = 256;
+	private static final short BIT_ATTACK = 256;
 	
-	public static final short BIT_PORTAL = 512;
+	private static final short BIT_PORTAL = 512;
 
 	private static final short BIT_ITEM = 1024;
 
