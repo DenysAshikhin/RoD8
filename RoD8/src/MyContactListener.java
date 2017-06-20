@@ -184,17 +184,53 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
+		if(fa.getUserData() != null & ((String) fa.getUserData()).contains("item")){
+			
+			for(Item i : GameScreen.floatingItemList){
+				
+				if(i.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
+					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
+					
+					i.getItem();		
+					
+					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
+
+					bodyToRemove.add(i.getBody());
+					GameScreen.removeItems.add(i);
+				}
+			}
+		}
+		
+		if(fb.getUserData() != null & ((String) fb.getUserData()).contains("item")){
+			
+			for(Item i : GameScreen.floatingItemList){
+				
+				if(i.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
+					
+					i.getItem();
+					
+					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
+					
+					bodyToRemove.add(i.getBody());
+					GameScreen.removeItems.add(i);
+				}
+			}
+		}
+	
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
 			
 			if(fa.getBody().getPosition().x < fb.getBody().getPosition().x){
+				
 				fb.getBody().applyLinearImpulse(new Vector2(1f, 0f), fb.getBody().getPosition(), true);
 			}else{
+				
 				fb.getBody().applyLinearImpulse(new Vector2(-1f, 0f), fb.getBody().getPosition(), true);
 			}
 			
 			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 
-			GameScreen.player.health -= damage / 10;
+			GameScreen.player.health -= damage;
 
 			((String) fa.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
@@ -202,14 +238,16 @@ public class MyContactListener implements ContactListener{
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("attack")){
 			
 			if(fb.getBody().getPosition().x < fa.getBody().getPosition().x){
+				
 				fa.getBody().applyLinearImpulse(new Vector2(1f, 0f), fa.getBody().getPosition(), true);
 			}else{
+				
 				fa.getBody().applyLinearImpulse(new Vector2(-1f, 0f), fa.getBody().getPosition(), true);
 			}
 			
 			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
-			GameScreen.player.health -= damage / 10;
+			GameScreen.player.health -= damage;
 
 			((String) fb.getUserData()).replaceAll(Float.toString(damage), "0.0");
 		}
@@ -238,7 +276,7 @@ public class MyContactListener implements ContactListener{
 					
 					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
 
-						m.health -= damage/10;
+						m.health -= damage;
 						
 						if((fa.getBody().getLinearVelocity().x) < 0)
 							fb.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fb.getBody().getPosition(), true);
@@ -270,7 +308,7 @@ public class MyContactListener implements ContactListener{
 					
 					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 
-						m.health -= damage/10;
+						m.health -= damage;
 						
 						if ((fb.getBody().getLinearVelocity().x) <0)
 							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
@@ -302,7 +340,7 @@ public class MyContactListener implements ContactListener{
 					
 					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
 						
-						m.health -= damage/10;
+						m.health -= damage;
 						
 						if(m.health <= 0){
 							
@@ -316,6 +354,7 @@ public class MyContactListener implements ContactListener{
 				}
 			}
 		}
+		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("bullet")){
 
 			bodyToRemove.add(fb.getBody());
@@ -329,7 +368,7 @@ public class MyContactListener implements ContactListener{
 					
 					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 						
-						m.health -= damage/10;
+						m.health -= damage;
 						
 						if(m.health <= 0){
 							

@@ -62,7 +62,11 @@ public class GameScreen implements Screen{
 
 	/** The monsters. */
 	public static Array<Monster> monsterList = new Array<Monster>();
-
+	
+	public static Array<Item> itemList = new Array<Item>();
+	
+	public static Array<Item> floatingItemList = new Array<Item>();
+	
 	/** The crystals. */
 	private Array<Crystal> crystals;
 		
@@ -130,18 +134,21 @@ public class GameScreen implements Screen{
 	
 	public static final short BIT_BULLET = 128;
 	
-	public static final short BIT_MONSTER_SENSOR = 256;
+	public static final short BIT_ATTACK = 256;
 	
-	public static final short BIT_ATTACK = 512;
-	
-	public static final short BIT_PORTAL = 1024;
+	public static final short BIT_PORTAL = 512;
+
+	private static final short BIT_ITEM = 1024;
 
 	/** The contact listener. */
 
 	public MyContactListener contactListener;
 	
 	private int monsterNum;
+	private int itemNum;
+	
 	public static Array<Monster> removeMobs = new Array<Monster>();
+	public static Array<Item> removeItems = new Array<Item>();
 	
 	public static HashSet<Chest> chests;
 	
@@ -160,6 +167,7 @@ public class GameScreen implements Screen{
 		
 	
 	public long portalStart;
+
 	
 	
 	/**
@@ -187,7 +195,6 @@ public class GameScreen implements Screen{
 		//Load textures (temp)
 		textures = new Content();
 		textures.loadTexture("commando_final.png", "commando");
-		textures.loadTexture("bunny.png", "bunny");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("hud.png", "hud");
 		textures.loadTexture("Monster Crab.png", "crab");
@@ -195,6 +202,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("monster4.png", "giant");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
+		textures.loadTexture("Items.png", "items");
 		
 	               	          
 		crab = textures.getTexture("crab");
@@ -266,6 +274,11 @@ public class GameScreen implements Screen{
 		}
 		removeMobs.clear();
 		
+		for(Item i : removeItems){
+			
+			floatingItemList.removeValue(i, true);
+		}
+		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -283,6 +296,11 @@ public class GameScreen implements Screen{
 			
 			chest.drawChest(spriteBatch);
 		}
+		
+		for(Item i : itemList){
+			
+			i.drawItem(spriteBatch);
+		}
 		//True = green portal, false = red portal
 		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
 		
@@ -297,7 +315,7 @@ public class GameScreen implements Screen{
 			m.drawMonsters(spriteBatch, stateTime);
 			
 			spriteBatch.setColor(Color.GREEN);
-			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, 24 * m.health, 3);
+			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 			spriteBatch.setColor(Color.WHITE);
 		}
 
@@ -360,6 +378,7 @@ public class GameScreen implements Screen{
 						
 						chest.isOpen = true;
 						player.money -= 500;
+						createItem(chest);
 					}
 				}
 			}
@@ -386,19 +405,22 @@ public class GameScreen implements Screen{
 		//hudBatch.begin();
 		
 		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
-
 		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
 		
 		spriteBatch.setColor(Color.BLACK);
 		spriteBatch.draw(blank, 100, 50, 300, 10);
 		
 		spriteBatch.setColor(Color.GREEN);
-		spriteBatch.draw(blank, 100, 50, 300 * player.health, 10);
+		spriteBatch.draw(blank, 100, 50, 3 * (100 * (player.health / player.maxHealth)), 10);
 		spriteBatch.setColor(Color.WHITE);
 
-
+		guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
+		scoreFont.draw(spriteBatch, guiLayout, 5, 470);
+		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health);
+		scoreFont.draw(spriteBatch, guiLayout, 5, 460);
+		guiLayout = new GlyphLayout(scoreFont, "Max Health: " + player.maxHealth);
+		scoreFont.draw(spriteBatch, guiLayout, 5, 450);
 		
-		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health * 100 + "%");
 		spriteBatch.end();
 
 		//spawnTimer += System.currentTimeMillis();
@@ -438,7 +460,7 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM;
 		body.createFixture(fdef).setUserData("player");
 		
 		//Create Player
@@ -697,35 +719,35 @@ public class GameScreen implements Screen{
 	
 	private void createPortal(){
 		
-	MapLayer layer = tileMap.getLayers().get("teleporter");
+		MapLayer layer = tileMap.getLayers().get("teleporter");
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		
+		for (MapObject mapObject : layer.getObjects()){
+			
+			bdef.type = BodyType.StaticBody;
+			float x = mapObject.getProperties().get("x", Float.class)/ PPM;
+			float y = mapObject.getProperties().get("y", Float.class)/ PPM;
 	
-	BodyDef bdef = new BodyDef();
-	FixtureDef fdef = new FixtureDef();
+			bdef.position.set(x,y);
+			PolygonShape squareShape = new PolygonShape();
+			squareShape.setAsBox(45 / PPM, 25 / PPM);
+			
+			fdef.shape = squareShape;
+			fdef.isSensor = true;
+			fdef.filter.categoryBits = BIT_PORTAL;
+			fdef.filter.maskBits = BIT_PLAYER;
+			
+			Body body = world.createBody(bdef);
+			body.createFixture(fdef).setUserData("portal");
+			
+			 teleporter = new Teleporter(body, this);
+			
 	
-	for (MapObject mapObject : layer.getObjects()){
-		
-		bdef.type = BodyType.StaticBody;
-		float x = mapObject.getProperties().get("x", Float.class)/ PPM;
-		float y = mapObject.getProperties().get("y", Float.class)/ PPM;
-
-		bdef.position.set(x,y);
-		PolygonShape squareShape = new PolygonShape();
-		squareShape.setAsBox(45 / PPM, 25 / PPM);
-		
-		fdef.shape = squareShape;
-		fdef.isSensor = true;
-		fdef.filter.categoryBits = BIT_PORTAL;
-		fdef.filter.maskBits = BIT_PLAYER;
-		
-		Body body = world.createBody(bdef);
-		body.createFixture(fdef).setUserData("portal");
-		
-		 teleporter = new Teleporter(body, this);
-		
-
-		//body.setUserData(teleporter);
+			//body.setUserData(teleporter);
+		}
 	}
-}
 	
 	private void createChests(){
 				
@@ -757,6 +779,31 @@ public class GameScreen implements Screen{
 
 			body.setUserData(c);
 		}
+	}
+	
+	private void createItem(Chest chest){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		bdef.position.set((chest.getBody().getPosition().x * 100) / PPM, (chest.getBody().getPosition().y * 100) / PPM);
+		bdef.type = BodyType.DynamicBody;
+
+		shape.setAsBox(16 * SCALE / PPM, 16 * SCALE / PPM, new Vector2(0, 8f * SCALE / PPM), 0);
+		fdef.shape = shape;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = BIT_ITEM;
+		fdef.filter.maskBits = BIT_PLAYER;
+		
+		Body body = world.createBody(bdef);
+		body.createFixture(fdef).setUserData("item:" + itemNum);
+		body.setGravityScale(0);
+		
+		Item i = new Item(body, this, "root", itemNum);
+		floatingItemList.add(i);
+		
+		itemNum++;
 	}
 	
 	/**

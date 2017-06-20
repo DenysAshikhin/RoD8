@@ -39,8 +39,9 @@ public class Player extends B2DSprite{
 	Animation<TextureRegion> secondaryRight;
 	Animation<TextureRegion> tertiaryRight;
 	Animation<TextureRegion> quaternaryRight;
-	
-	public float health = 1f;
+
+	public float maxHealth = 100f;
+	public float health = maxHealth;
 	
 	private int type;
 	private TextureRegion prevFrame = null;
@@ -194,7 +195,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 0 || framesRun == 3){
 					
-					gameScreen.createBullet("bullet:1.00", this.getFacing());
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
@@ -221,7 +222,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 1){
 					
-					gameScreen.createBullet("ray:1.00", this.getFacing());
+					gameScreen.createBullet("ray:10.00", this.getFacing());
 				}
 				framesRun++;
 				prevFrame = secondaryRight.getKeyFrame(animTime, true);
@@ -273,11 +274,11 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
 					
-					gameScreen.createBullet("bullet:1.00", this.getFacing());
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
 				}
 				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
 					
-					gameScreen.createBullet("bullet:1.00", !this.getFacing());
+					gameScreen.createBullet("bullet:10.00", !this.getFacing());
 				}
 				framesRun++;
 				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
@@ -331,8 +332,8 @@ public class Player extends B2DSprite{
 				this.setState(3);
 				this.setFace(false);//CHANGE!!!
 		
-				if(this.getBody().getLinearVelocity().x > -2f)
-					this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
+				if(this.getBody().getLinearVelocity().x > -1f)
+					this.getBody().applyLinearImpulse(new Vector2(-0.5f, 0f), this.getPosition(), true);
 			}
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -340,8 +341,8 @@ public class Player extends B2DSprite{
 				this.setState(3);
 				this.setFace(true);
 		
-				if(this.getBody().getLinearVelocity().x < 2f)			
-					this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
+				if(this.getBody().getLinearVelocity().x < 1f)			
+					this.getBody().applyLinearImpulse(new Vector2(0.5f, 0f), this.getPosition(), true);
 			}
 		
 			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT) && gameScreen.contactListener.isPlayerOnGround() == true){
@@ -379,37 +380,18 @@ public class Player extends B2DSprite{
 				this.setState(7);
 			}
 		}
-		if(gameScreen.contactListener.isPlayerOnGround() && this.getState() != 6)	
-			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
 		
+		if(gameScreen.contactListener.isPlayerOnGround() && this.getState() != 6)	
+			
+			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
+	}
+	
+	public void increaseMaxHealth(float increase){
+		float percent = this.health / this.maxHealth;
+		
+		this.maxHealth += increase;
+		this.health = maxHealth * percent;
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
-	
-	
-	/**
-	 * Collect crystal.
-	 */
-	public void collectCrystal(){numCrystals++;}
-	
-	/**
-	 * Gets the num crystals.
-	 *
-	 * @return the num crystals
-	 */
-	public int getNumCrystals(){ return numCrystals; }	
-	
-	/**
-	 * Sets the total crystals.
-	 *
-	 * @param i the new total crystals
-	 */
-	public void setTotalCrystals(int i){totalCrystals = i;}
-	
-	/**
-	 * Gets the total crystals.
-	 *
-	 * @return the total crystals
-	 */
-	public int getTotalCrystals(){return totalCrystals;}
 }

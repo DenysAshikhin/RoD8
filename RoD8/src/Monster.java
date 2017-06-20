@@ -52,7 +52,6 @@ public class Monster extends B2DSprite{
 	
 	GameScreen gameScreen;
 	
-	
 	public Monster(Body body, GameScreen gameScreen, float num, int type) {
 	
 		super(body);
@@ -81,6 +80,7 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createCrab(){
+		this.health = 90f;
 		this.jumpStrength = 0f;
 		this.attackFrames = 4;
 		this.deathFrames = 4;
@@ -103,6 +103,7 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createLemurian(){
+		this.health = 60f;
 		this.jumpStrength = 2f;
 		this.attackFrames = 3;
 		this.deathFrames = 2;
@@ -125,6 +126,7 @@ public class Monster extends B2DSprite{
 	}
 	
 	private void createGiant(){
+		this.health = 120f;
 		this.jumpStrength = 0f;
 		this.attackFrames = 4;
 		this.deathFrames = 2;
@@ -204,7 +206,7 @@ public class Monster extends B2DSprite{
 				
 				if(framesRun == (attackFrames - 1)){
 					
-					gameScreen.createLocalAttack(this, 0.5f, this.getFacing());
+					gameScreen.createLocalAttack(this, 5f, this.getFacing());
 				}
 				framesRun++;
 				prevFrame = primaryright.getKeyFrame(animTime, true);
@@ -286,9 +288,9 @@ public class Monster extends B2DSprite{
 									this.setState(3);
 									this.setFace(false);
 							
-									if(this.getBody().getLinearVelocity().x > -0.7f){
+									if(this.getBody().getLinearVelocity().x > -0.5f){
 								
-										this.getBody().applyLinearImpulse(new Vector2(-0.7f, 0f), this.getPosition(), true);
+										this.getBody().applyLinearImpulse(new Vector2(-0.3f, 0f), this.getPosition(), true);
 									}
 								}
 							
@@ -297,9 +299,9 @@ public class Monster extends B2DSprite{
 									this.setState(2);
 									this.setFace(true);
 							
-									if(this.getBody().getLinearVelocity().x < 0.7f){
+									if(this.getBody().getLinearVelocity().x < 0.5f){
 								
-										this.getBody().applyLinearImpulse(new Vector2(0.7f, 0f), this.getPosition(), true);
+										this.getBody().applyLinearImpulse(new Vector2(0.3f, 0f), this.getPosition(), true);
 									}
 								}
 							}
@@ -338,31 +340,4 @@ public class Monster extends B2DSprite{
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
-	
-	/**
-	 * Collect crystal.
-	 */
-	public void collectCrystal(){numCrystals++;}
-	
-	/**
-	 * Gets the num crystals.
-	 *
-	 * @return the num crystals
-	 */
-	public int getNumCrystals(){ return numCrystals; }	
-	
-	/**
-	 * Sets the total crystals.
-	 *
-	 * @param i the new total crystals
-	 */
-	public void setTotalCrystals(int i){totalCrystals = i;}
-	
-	/**
-	 * Gets the total crystals.
-	 *
-	 * @return the total crystals
-	 */
-	public int getTotalCrystals(){return totalCrystals;}
-
 }
