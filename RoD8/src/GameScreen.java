@@ -197,8 +197,6 @@ public class GameScreen implements Screen{
 		
 		changing = false;
 
-		
-
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -216,6 +214,7 @@ public class GameScreen implements Screen{
 		//Load textures (temp)
 		textures = new Content();
 		textures.loadTexture("commando_final.png", "commando");
+		textures.loadTexture("sniper_final.png", "sniper");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
@@ -241,7 +240,7 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
-		player.money = 1000;
+		player.money = 9999999;
 
 	}
 	
@@ -697,7 +696,7 @@ public class GameScreen implements Screen{
 		//Create Player
 		
 		if(difficulty == 1)
-			player = new Player(body, this, 1);
+			player = new Player(body, this, 2);
 		
 		else
 			player.setBody(body);
@@ -821,7 +820,7 @@ public class GameScreen implements Screen{
 			
 		case 3:
 			
-			tileMap = new TmxMapLoader().load("testingmap.tmx");
+			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
 			break;
 		}
 		

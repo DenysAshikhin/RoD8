@@ -39,10 +39,10 @@ public class Player extends B2DSprite{
 	public float mortarChance = 0f;
 
 	/** The Constant PLAYER_WIDTH. */
-	public static final float PLAYER_WIDTH = 8f;
+	public static float PLAYER_WIDTH = 8f;
 
 	/** The Constant PLAYER_HEIGHT. */
-	public static final float PLAYER_HEIGHT = 20f;
+	public static float PLAYER_HEIGHT = 20f;
 
 	Animation<TextureRegion> runRight;
 
@@ -96,10 +96,7 @@ public class Player extends B2DSprite{
 		framesRun = 0;
 	}
 	
-	/**Framesrun needs to be changed depending on the character/class*/
-	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
-			
-		//spriteBatch.begin();
+	private void drawCommando(SpriteBatch spriteBatch, float stateTime){
 		
 		switch(this.getState()){
 		
@@ -256,6 +253,178 @@ public class Player extends B2DSprite{
 		//spriteBatch.end();
 	}
 	
+	private void drawSniper(SpriteBatch spriteBatch, float stateTime){
+		
+		switch(this.getState()){
+		
+		case 0:
+			
+			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			break;
+		case 1: 		
+			
+			if(this.getFacing()){
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 2:
+			
+			if(this.getBody().getLinearVelocity().x >= 0){
+			
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 3:
+			
+			if(this.getFacing())
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			else
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+
+			break;
+		case 4:
+
+			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 2){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+				}
+				framesRun++;
+				prevFrame = primaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 6){
+
+				if(this.getFacing())
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 5:
+			
+			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1){
+					
+					gameScreen.createBullet("ray:10.00", this.getFacing());
+				}
+				framesRun++;
+				prevFrame = secondaryRight.getKeyFrame(animTime, true);
+			}
+
+			if (framesRun <= 12){
+				
+				if(this.getFacing())
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);				
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			
+			break;
+		case 6:
+					
+			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
+				
+				framesRun++;
+				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
+			}
+
+			if (framesRun <=  6){
+			
+				if(this.getFacing())
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 7:
+			
+			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+				}
+				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
+					
+					gameScreen.createBullet("bullet:10.00", !this.getFacing());
+				}
+				framesRun++;
+				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
+			}
+
+			if (framesRun <= 15){
+				
+				if(this.getFacing())
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		}	
+		
+		//spriteBatch.end();
+	}
+	
+	/**Framesrun needs to be changed depending on the character/class*/
+	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
+			
+		//spriteBatch.begin();
+		
+		switch(this.type){
+		
+		case 1:
+				drawCommando(spriteBatch, stateTime);
+				break;
+		case 2:
+				drawSniper(spriteBatch, stateTime);
+				break;
+		case 3:
+				
+				break;
+		}
+	}
+	
 	/**
 	 * Update player movement.
 	 */
@@ -317,16 +486,28 @@ public class Player extends B2DSprite{
 			if(Gdx.input.isKeyPressed(Keys.S)){
 				
 				this.setState(5);
+				
+				if(this.type == 2){
+					
+					if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
+						this.getBody().applyLinearImpulse(new Vector2(-6f, 0f), this.getPosition(), true);
+					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
+						this.getBody().applyLinearImpulse(new Vector2(6f, 0f), this.getPosition(), true);
+				}
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.D)){
 				
 				this.setState(6);
 				
-				if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-					this.getBody().applyLinearImpulse(new Vector2(0.75f, 0f), this.getPosition(), true);
-				else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-					this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);					
+				if(this.type == 1){
+					
+					if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
+						this.getBody().applyLinearImpulse(new Vector2(0.75f, 0f), this.getPosition(), true);
+					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
+						this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);
+				}
+					
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.F)){
@@ -460,18 +641,19 @@ public class Player extends B2DSprite{
 		sprites = TextureRegion.split(texture, 17, 14)[1];
 		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
 	
-		sprites = new TextureRegion[5];
+		sprites = new TextureRegion[6];
 		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		sprites = new TextureRegion[12];
+		sprites = TextureRegion.split(texture, 19, 20)[4];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11]});
 		
 		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		sprites = TextureRegion.split(texture, 87, 18)[6];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
+		//Not Needed
 		sprites = new TextureRegion[15];
 		sprites = TextureRegion.split(texture, 40, 13)[5];
 		quaternaryRight = new Animation<TextureRegion>(0.07f,
