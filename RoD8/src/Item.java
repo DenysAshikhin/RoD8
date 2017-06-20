@@ -8,12 +8,12 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 public class Item extends B2DSprite{
 	
+	public float identifier;
+
 	GameScreen gameScreen;
 	
 	String type;
 	int itemNum;
-	
-	public float identifier;
 	
 	private TextureRegion image;
 	

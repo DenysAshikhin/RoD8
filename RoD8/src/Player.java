@@ -16,36 +16,39 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
  */
 public class Player extends B2DSprite{
 
-	/** The num crystals. */
-	private int numCrystals;
-	
-	/** The total crystals. */
-	private int totalCrystals;
+	public int money;
+
+	public float maxHealth = 100f;
+
+	public float health = maxHealth;
+
+	/** The Constant PLAYER_WIDTH. */
+	public static final float PLAYER_WIDTH = 8f;
+
+	/** The Constant PLAYER_HEIGHT. */
+	public static final float PLAYER_HEIGHT = 20f;
+
+	Animation<TextureRegion> runRight;
+
+	Animation<TextureRegion> jumpRight;
+
+	Animation<TextureRegion> standingRight;
+
+	Animation<TextureRegion> climbing;
+
+	Animation<TextureRegion> primaryRight;
+
+	Animation<TextureRegion> secondaryRight;
+
+	Animation<TextureRegion> tertiaryRight;
+
+	Animation<TextureRegion> quaternaryRight;
 	
 	private float animTime;
 	private int framesRun;
 	
-	/** The Constant PLAYER_WIDTH. */
-	public static final float PLAYER_WIDTH = 8f;
-	
-	/** The Constant PLAYER_HEIGHT. */
-	public static final float PLAYER_HEIGHT = 20f;
-	
-	Animation<TextureRegion> runRight;
-	Animation<TextureRegion> jumpRight;
-	Animation<TextureRegion> standingRight;
-	Animation<TextureRegion> climbing;
-	Animation<TextureRegion> primaryRight;
-	Animation<TextureRegion> secondaryRight;
-	Animation<TextureRegion> tertiaryRight;
-	Animation<TextureRegion> quaternaryRight;
-
-	public float maxHealth = 100f;
-	public float health = maxHealth;
-	
 	private int type;
 	private TextureRegion prevFrame = null;
-	public int money;
 	private GameScreen gameScreen;
 	
 	/**
@@ -76,78 +79,6 @@ public class Player extends B2DSprite{
 		framesRun = 0;
 	}
 	
-	private void createCommando(){
-		
-		Texture texture = GameScreen.textures.getTexture("commando");
-		TextureRegion[] sprites = new TextureRegion[4];
-		
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
-		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
-
-		sprites = new TextureRegion[2];
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[2], sprites[3]});
-
-		sprites = new TextureRegion[8];
-		sprites = TextureRegion.split(texture, 7, 13)[1];
-		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
-	
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
-		
-		sprites = new TextureRegion[15];
-		sprites = TextureRegion.split(texture, 40, 13)[5];
-		quaternaryRight = new Animation<TextureRegion>(0.07f,
-				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
-		
-	}
-	
-	private void createSniper(){
-		
-		Texture texture = GameScreen.textures.getTexture("sniper");
-		TextureRegion[] sprites = new TextureRegion[4];
-		
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
-		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
-
-		
-		sprites = new TextureRegion[2];
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[2], sprites[3]});
-
-		sprites = new TextureRegion[8];
-		sprites = TextureRegion.split(texture, 7, 13)[1];
-		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
-	
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
-		
-		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
-		
-		sprites = new TextureRegion[15];
-		sprites = TextureRegion.split(texture, 40, 13)[5];
-		quaternaryRight = new Animation<TextureRegion>(0.07f,
-				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
-		
-	}
 	/**Framesrun needs to be changed depending on the character/class*/
 	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
 			
@@ -394,4 +325,77 @@ public class Player extends B2DSprite{
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
+
+	private void createCommando(){
+		
+		Texture texture = GameScreen.textures.getTexture("commando");
+		TextureRegion[] sprites = new TextureRegion[4];
+		
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
+		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
+	
+		sprites = new TextureRegion[2];
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		climbing = new Animation<TextureRegion>(0.25f, new TextureRegion[]{sprites[2], sprites[3]});
+	
+		sprites = new TextureRegion[8];
+		sprites = TextureRegion.split(texture, 7, 13)[1];
+		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
+	
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 18, 13)[2];
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 33, 13)[3];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[9];
+		sprites = TextureRegion.split(texture, 12, 13)[4];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		
+		sprites = new TextureRegion[15];
+		sprites = TextureRegion.split(texture, 40, 13)[5];
+		quaternaryRight = new Animation<TextureRegion>(0.07f,
+				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		
+	}
+
+	private void createSniper(){
+		
+		Texture texture = GameScreen.textures.getTexture("sniper");
+		TextureRegion[] sprites = new TextureRegion[4];
+		
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
+		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
+	
+		
+		sprites = new TextureRegion[2];
+		sprites = TextureRegion.split(texture, 7, 13)[0];
+		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[2], sprites[3]});
+	
+		sprites = new TextureRegion[8];
+		sprites = TextureRegion.split(texture, 7, 13)[1];
+		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
+	
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 18, 13)[2];
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 33, 13)[3];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		
+		sprites = new TextureRegion[9];
+		sprites = TextureRegion.split(texture, 12, 13)[4];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		
+		sprites = new TextureRegion[15];
+		sprites = TextureRegion.split(texture, 40, 13)[5];
+		quaternaryRight = new Animation<TextureRegion>(0.07f,
+				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		
+	}
 }

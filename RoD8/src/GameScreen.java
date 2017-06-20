@@ -36,12 +36,77 @@ import com.badlogic.gdx.utils.Array;
  */
 public class GameScreen implements Screen{
 
+	/** The world. */
+	public World world;
+
+	/** The contact listener. */
+	
+	public MyContactListener contactListener;
+
+	/** The player. */
+	public static Player player;
+
+	/** The monsters. */
+	public static Array<Monster> monsterList = new Array<Monster>();
+
+	public static Array<Item> itemList = new Array<Item>();
+
+	public static Array<Item> floatingItemList = new Array<Item>();
+
+	/** The textures. */
+	public static Content textures;
+
+	public static Array<Monster> removeMobs = new Array<Monster>();
+
+	public static Array<Item> removeItems = new Array<Item>();
+
+	public static HashSet<Chest> chests;
+
+	public static Teleporter teleporter;
+
+	/** The Constant PPM. */
+	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
+
+	/**
+	 * Associated Indexes:
+	 * 0 : null;
+	 * 1 : crab;
+	 * 2 : lemurian;
+	 * 3 : giant
+	 */
+	public static final float[] MONSTER_WIDTH = {0f, 30f, 18f, 30f};
+
+	/**
+	 * Associated Indexes:
+	 * 0 : null;
+	 * 1 : crab;
+	 * 2 : lemurian;
+	 * 3 : giant
+	 */
+	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
+
+	/** The Constant SCALE. */
+	public static final float SCALE = 0.7f;
+
+	/** The state time. */
+	float stateTime;
+
+	//private OrthographicCamera hudCam;
+	
+	/** The score font. */
+	BitmapFont scoreFont;
+
+	/** The health texture. */
+	Texture healthTexture;
+
+	/** The sprite batch. */
+	SpriteBatch spriteBatch;
+
 	/** The debug. */
 	private boolean debug = true;
 		
-	/** The world. */
-	public World world;
-	
+	private long portalStart;
+
 	/** The b 2 dr. */
 	private Box2DDebugRenderer b2dr;
 	
@@ -57,62 +122,24 @@ public class GameScreen implements Screen{
 	/** The tiled map renderer. */
 	private OrthogonalTiledMapRenderer tmr;
 	
-	/** The player. */
-	public static Player player;
-
-	/** The monsters. */
-	public static Array<Monster> monsterList = new Array<Monster>();
-	
-	public static Array<Item> itemList = new Array<Item>();
-	
-	public static Array<Item> floatingItemList = new Array<Item>();
-	
 	/** The crystals. */
 	private Array<Crystal> crystals;
 		
-	/** The state time. */
-	float stateTime;
-	
 	/** The cam. */
 	private OrthographicCamera cam;
+	
+	private int monsterNum;
+
+	private int itemNum;
+
+	private short difficulty;
+
+	private long spawnTimer;
+
+	private Texture blank;
+
 	//private OrthographicCamera hudCam;
 
-	/** The score font. */
-	BitmapFont scoreFont;
-
-	/** The health texture. */
-	Texture healthTexture;
-	
-	/** The sprite batch. */
-	SpriteBatch spriteBatch;
-	
-	/** The Constant PPM. */
-	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
-	
-	/** The textures. */
-	public static Content textures;
-	
-	/**
-	 * Associated Indexes:
-	 * 0 : null;
-	 * 1 : crab;
-	 * 2 : lemurian;
-	 * 3 : giant
-	 */
-	public static final float[] MONSTER_WIDTH = {0f, 30f, 18f, 30f};
-	
-	/**
-	 * Associated Indexes:
-	 * 0 : null;
-	 * 1 : crab;
-	 * 2 : lemurian;
-	 * 3 : giant
-	 */
-	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
-	
-	/** The Constant SCALE. */
-	public static final float SCALE = 0.7f;
-	
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
 	private static final short BIT_PLAYER = 2;
@@ -140,36 +167,6 @@ public class GameScreen implements Screen{
 
 	private static final short BIT_ITEM = 1024;
 
-	/** The contact listener. */
-
-	public MyContactListener contactListener;
-	
-	private int monsterNum;
-	private int itemNum;
-	
-	public static Array<Monster> removeMobs = new Array<Monster>();
-	public static Array<Item> removeItems = new Array<Item>();
-	
-	public static HashSet<Chest> chests;
-	
-	public static Teleporter teleporter;
-	
-	private short difficulty;
-	
-	private long spawnTimer;
-	
-	private Texture blank;
-	/** The crab. */
-	Texture crab;
-	
-	/** The crystal. */
-	Texture crystal;
-		
-	
-	public long portalStart;
-
-	
-	
 	/**
 	 * Instantiates a new game screen.
 	 *
@@ -203,10 +200,6 @@ public class GameScreen implements Screen{
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
 		textures.loadTexture("Items.png", "items");
-		
-	               	          
-		crab = textures.getTexture("crab");
-		crystal = textures.getTexture("crystal");
 		blank = textures.getTexture("blank");
 
 		monsterNum = 0;
@@ -234,12 +227,60 @@ public class GameScreen implements Screen{
 		spawnTimer = 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#show()
-	 */
-	@Override
-	public void show() {
+	public void createBullet(String identifier, boolean value){
+		
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		//Create Player
+		//x set at X 100
+		//y set at X 100
+		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
+		bdef.type = BodyType.DynamicBody;
+		
+		if(value){
+			
+			bdef.linearVelocity.set(5f, 0);
+		}
+		else{
+			
+			bdef.linearVelocity.set(-5f, 0);
+		}
+		bdef.bullet = true;
+		Body body = world.createBody(bdef);
+		body.setGravityScale(0);
+		shape.setAsBox(1 / PPM, 1 / PPM);
+	//	shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_BULLET;
+		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
+		if(identifier.contains("ray")){
+			fdef.isSensor = true; 
+		}
+		body.createFixture(fdef).setUserData(identifier);
+	}
 
+	public void createLocalAttack(Monster m, float damage, boolean value){
+		
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		if(value){
+	
+			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
+		}
+		else{
+	
+			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
+		}
+		Body body = m.getBody();
+	//	shape.setAs
+		fdef.shape = shape;
+		fdef.filter.categoryBits = BIT_ATTACK;
+		fdef.filter.maskBits = BIT_PLAYER;
+		fdef.isSensor = true;
+		body.createFixture(fdef).setUserData("attack:" + damage);
 	}
 
 	/* (non-Javadoc)
@@ -267,7 +308,7 @@ public class GameScreen implements Screen{
 				world.destroyBody(body);
 		}
 		bodies.clear();
-
+	
 		for(Monster j : removeMobs){
 			
 			monsterList.removeValue(j, true);
@@ -318,17 +359,17 @@ public class GameScreen implements Screen{
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 			spriteBatch.setColor(Color.WHITE);
 		}
-
+	
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-
+	
 		//Draw crystals
 		for(int i = 0; i < crystals.size; i++){
 			
 			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
 		}
 		
-
+	
 		if (teleporter.wasActivated){
 			
 			int tempTime = (int)((5*1000) - (System.currentTimeMillis() - portalStart))/1000;
@@ -361,7 +402,7 @@ public class GameScreen implements Screen{
 	
 		spriteBatch.end();		
 	
-
+	
 		
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
@@ -397,7 +438,7 @@ public class GameScreen implements Screen{
 				m.getBody().setTransform(player.getPosition(), 0);
 			}
 		}
-
+	
 		Matrix4 uiMatrix = cam.combined.cpy();
 		uiMatrix.setToOrtho2D(0, 0, 500, 500);
 		spriteBatch.setProjectionMatrix(uiMatrix);
@@ -413,7 +454,7 @@ public class GameScreen implements Screen{
 		spriteBatch.setColor(Color.GREEN);
 		spriteBatch.draw(blank, 100, 50, 3 * (100 * (player.health / player.maxHealth)), 10);
 		spriteBatch.setColor(Color.WHITE);
-
+	
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
 		scoreFont.draw(spriteBatch, guiLayout, 5, 470);
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health);
@@ -422,23 +463,71 @@ public class GameScreen implements Screen{
 		scoreFont.draw(spriteBatch, guiLayout, 5, 450);
 		
 		spriteBatch.end();
-
+	
 		//spawnTimer += System.currentTimeMillis();
 		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
-
+	
 			createMonster();
 			spawnTimer = System.currentTimeMillis();
 		}
-
+	
 		
 		if(debug){
-
+	
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#show()
+	 */
+	@Override
+	public void show() {
 	
+	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resize(int, int)
+	 */
+	@Override
+	public void resize(int width, int height) {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#pause()
+	 */
+	@Override
+	public void pause() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#resume()
+	 */
+	@Override
+	public void resume() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#hide()
+	 */
+	@Override
+	public void hide() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.badlogic.gdx.Screen#dispose()
+	 */
+	@Override
+	public void dispose() {
+		
+	}
+
 	/**
 	 * Creates the player.
 	 */
@@ -480,41 +569,6 @@ public class GameScreen implements Screen{
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
 	}
-	
-	public void createBullet(String identifier, boolean value){
-		
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		
-		//Create Player
-		//x set at X 100
-		//y set at X 100
-		bdef.position.set((player.getBody().getPosition().x * 100) / PPM, (player.getBody().getPosition().y * 100) / PPM);
-		bdef.type = BodyType.DynamicBody;
-		
-		if(value){
-			
-			bdef.linearVelocity.set(5f, 0);
-		}
-		else{
-			
-			bdef.linearVelocity.set(-5f, 0);
-		}
-		bdef.bullet = true;
-		Body body = world.createBody(bdef);
-		body.setGravityScale(0);
-		shape.setAsBox(1 / PPM, 1 / PPM);
-	//	shape.setAs
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_BULLET;
-		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
-		if(identifier.contains("ray")){
-			fdef.isSensor = true; 
-		}
-		body.createFixture(fdef).setUserData(identifier);
-	}
-	
 	
 	/**
 	 * Creates monsters.
@@ -595,28 +649,6 @@ public class GameScreen implements Screen{
 	}
 	
 
-	public void createLocalAttack(Monster m, float damage, boolean value){
-		
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		
-		if(value){
-
-			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
-		}
-		else{
-
-			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
-		}
-		Body body = m.getBody();
-	//	shape.setAs
-		fdef.shape = shape;
-		fdef.filter.categoryBits = BIT_ATTACK;
-		fdef.filter.maskBits = BIT_PLAYER;
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("attack:" + damage);
-	}
-	
 	/**
 	 * Creates the tiles.
 	 */
@@ -774,7 +806,7 @@ public class GameScreen implements Screen{
 			Body body = world.createBody(bdef);
 			body.createFixture(fdef).setUserData("chest");
 			
-			Chest c = new Chest(body, this);
+			Chest c = new Chest(body);
 			chests.add(c);
 
 			body.setUserData(c);
@@ -840,46 +872,6 @@ public class GameScreen implements Screen{
 			crystals.add(c);			
 			body.setUserData(c);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#resize(int, int)
-	 */
-	@Override
-	public void resize(int width, int height) {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#pause()
-	 */
-	@Override
-	public void pause() {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#resume()
-	 */
-	@Override
-	public void resume() {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#hide()
-	 */
-	@Override
-	public void hide() {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.badlogic.gdx.Screen#dispose()
-	 */
-	@Override
-	public void dispose() {
-		
 	}
 }
 

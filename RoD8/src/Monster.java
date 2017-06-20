@@ -14,13 +14,21 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Monster extends B2DSprite{
 
-	private static final float DETECTION_RANGE = 200f;
+	public float identifier;
 
-	/** The num crystals. */
-	private int numCrystals;
-	
-	/** The total crystals. */
-	private int totalCrystals;
+	public boolean killed = false;
+
+	public float health = 1f;
+
+	public float jumpHeight;
+
+	public int onGround;
+
+	public int onWall;
+
+	public int canHurdle = 1;
+
+	GameScreen gameScreen;
 
 	private Animation<TextureRegion> runright;
 	private Animation<TextureRegion> standingright;
@@ -29,29 +37,19 @@ public class Monster extends B2DSprite{
 
 	private TextureRegion prevFrame;
 
-	public float identifier;
 	private int type;
 	
 	private int framesRun;
-	public boolean killed = false;
-	
-	public float health = 1f;
-	
 	private float jumpStrength;
-	public float jumpHeight;
 	private float attackRange;
 	
 	private int attackFrames;
 	private int deathFrames;
 	
-	public int onGround;
-	public int onWall;
-	public int canHurdle = 1;
-	
 	private float animTime;
 	
-	GameScreen gameScreen;
-	
+	private static final float DETECTION_RANGE = 200f;
+
 	public Monster(Body body, GameScreen gameScreen, float num, int type) {
 	
 		super(body);
@@ -79,6 +77,198 @@ public class Monster extends B2DSprite{
 		this.attackRange = this.width / 2;
 	}
 	
+	/**
+	 * Draw monsters.
+	 */	
+	public void drawMonsters(SpriteBatch spriteBatch, float stateTime){
+		
+		if(this.getBody().getFixtureList().size != 0){
+			
+			Fixture f = this.getBody().getFixtureList().peek();
+			
+			if(((String) f.getUserData()).contains("attack")){
+				
+				this.getBody().destroyFixture(f);
+			}
+		}else{
+			
+			this.setState(-1);
+		}
+		
+		//spriteBatch.begin();
+		switch(this.getState()){
+		case 0: 
+	
+			if(this.getFacing()){
+				
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 1:
+	
+			if(this.getFacing()){
+			
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 2:
+			
+			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+			break;
+		case 3:
+	
+			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			break;
+		case 4:
+		case 5:
+			
+			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
+				
+				if(framesRun == (attackFrames - 1)){
+					
+					gameScreen.createLocalAttack(this, 5f, this.getFacing());
+				}
+				framesRun++;
+				prevFrame = primaryright.getKeyFrame(animTime, true);
+			}
+			
+			if (framesRun <= attackFrames){
+				
+				if(this.getState() == 4){
+					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				}else{
+					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				}
+				
+			}else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		}
+		//spriteBatch.end();
+	}
+
+	/**
+	 * Update monster movement.
+	 */
+	public void monsterMovement(){
+		/*
+		System.out.println("ground" + onGround);
+		System.out.println("wall" + onWall);
+		System.out.println("jump" + canHurdle);
+		*/
+		
+		if(this.getState() != -1){
+			float range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
+			
+				if(range <= DETECTION_RANGE){
+					
+					if (this.getState() <= 3){
+						
+						if(range <= attackRange/GameScreen.PPM){
+							if(this.getPosition().x < GameScreen.player.getPosition().x){
+	
+								this.setFace(true);
+								this.setState(4);
+							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
+	
+								this.setFace(false);
+								this.setState(5);
+							}
+						}else{
+							
+							if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
+								
+								if(onGround > 0 && canHurdle > 0){		
+							
+									this.getBody().applyLinearImpulse(new Vector2(0, jumpStrength), this.getPosition(), true);
+								}
+							}
+							
+							if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
+								
+								this.setState(0);
+	
+								if(this.getBody().getLinearVelocity().x > 0){
+									
+									this.getBody().applyForceToCenter(-10, 0, true);
+								}
+								if(this.getBody().getLinearVelocity().x < 0){
+									
+									this.getBody().applyForceToCenter(10, 0, true);
+								}
+							}else{
+								
+								if(this.getPosition().x > GameScreen.player.getPosition().x){
+							
+									this.setState(3);
+									this.setFace(false);
+							
+									if(this.getBody().getLinearVelocity().x > -0.5f){
+								
+										this.getBody().applyLinearImpulse(new Vector2(-0.3f, 0f), this.getPosition(), true);
+									}
+								}
+							
+								if(this.getPosition().x < GameScreen.player.getPosition().x){
+											
+									this.setState(2);
+									this.setFace(true);
+							
+									if(this.getBody().getLinearVelocity().x < 0.5f){
+								
+										this.getBody().applyLinearImpulse(new Vector2(0.3f, 0f), this.getPosition(), true);
+									}
+								}
+							}
+					
+							if(!(onGround > 0)){
+							
+								this.setState(1);
+							}
+						}
+					}else{
+						
+						this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
+						
+						if(range > this.attackRange/GameScreen.PPM){
+							
+							this.setState(1);
+						}
+					}
+			}else{
+				System.out.println("3");
+				if(this.getBody().getLinearVelocity().x > 0){
+					
+					this.getBody().applyForceToCenter(-10, 0, true);
+				}
+				
+				if(this.getBody().getLinearVelocity().x < 0){
+					
+					this.getBody().applyForceToCenter(10, 0, true);
+				}
+			}
+			
+		}else{
+			
+			GameScreen.monsterList.removeValue(this, true);
+		}
+	}
+
+	public void increaseAnimTime(float value){animTime += value;}
+
 	private void createCrab(){
 		this.health = 90f;
 		this.jumpStrength = 0f;
@@ -147,197 +337,4 @@ public class Monster extends B2DSprite{
 		sprites = TextureRegion.split(texture, 71, 69)[2];
 		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 		}
-	
-	
-	/**
-	 * Draw monsters.
-	 */	
-	public void drawMonsters(SpriteBatch spriteBatch, float stateTime){
-		
-		if(this.getBody().getFixtureList().size != 0){
-			
-			Fixture f = this.getBody().getFixtureList().peek();
-			
-			if(((String) f.getUserData()).contains("attack")){
-				
-				this.getBody().destroyFixture(f);
-			}
-		}else{
-			
-			this.setState(-1);
-		}
-		
-		//spriteBatch.begin();
-		switch(this.getState()){
-		case 0: 
-
-			if(this.getFacing()){
-				
-				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(standingright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 1:
-
-			if(this.getFacing()){
-			
-				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(standingright.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 2:
-			
-			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
-		case 3:
-
-			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
-		case 4:
-		case 5:
-			
-			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
-				
-				if(framesRun == (attackFrames - 1)){
-					
-					gameScreen.createLocalAttack(this, 5f, this.getFacing());
-				}
-				framesRun++;
-				prevFrame = primaryright.getKeyFrame(animTime, true);
-			}
-			
-			if (framesRun <= attackFrames){
-				
-				if(this.getState() == 4){
-					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
-				}else{
-					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
-				}
-				
-			}else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		}
-		//spriteBatch.end();
-	}
-	
-	/**
-	 * Update monster movement.
-	 */
-	public void monsterMovement(){
-		/*
-		System.out.println("ground" + onGround);
-		System.out.println("wall" + onWall);
-		System.out.println("jump" + canHurdle);
-		*/
-		
-		if(this.getState() != -1){
-			float range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));
-			
-				if(range <= DETECTION_RANGE){
-					
-					if (this.getState() <= 3){
-						
-						if(range <= attackRange/GameScreen.PPM){
-							if(this.getPosition().x < GameScreen.player.getPosition().x){
-
-								this.setFace(true);
-								this.setState(4);
-							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
-
-								this.setFace(false);
-								this.setState(5);
-							}
-						}else{
-							
-							if ((this.getState() == 2 || this.getState() == 3) && onWall > 0){
-								
-								if(onGround > 0 && canHurdle > 0){		
-							
-									this.getBody().applyLinearImpulse(new Vector2(0, jumpStrength), this.getPosition(), true);
-								}
-							}
-							
-							if(Math.abs(this.getPosition().x - GameScreen.player.getPosition().x) < 0.05){
-								
-								this.setState(0);
-
-								if(this.getBody().getLinearVelocity().x > 0){
-									
-									this.getBody().applyForceToCenter(-10, 0, true);
-								}
-								if(this.getBody().getLinearVelocity().x < 0){
-									
-									this.getBody().applyForceToCenter(10, 0, true);
-								}
-							}else{
-								
-								if(this.getPosition().x > GameScreen.player.getPosition().x){
-							
-									this.setState(3);
-									this.setFace(false);
-							
-									if(this.getBody().getLinearVelocity().x > -0.5f){
-								
-										this.getBody().applyLinearImpulse(new Vector2(-0.3f, 0f), this.getPosition(), true);
-									}
-								}
-							
-								if(this.getPosition().x < GameScreen.player.getPosition().x){
-											
-									this.setState(2);
-									this.setFace(true);
-							
-									if(this.getBody().getLinearVelocity().x < 0.5f){
-								
-										this.getBody().applyLinearImpulse(new Vector2(0.3f, 0f), this.getPosition(), true);
-									}
-								}
-							}
-					
-							if(!(onGround > 0)){
-							
-								this.setState(1);
-							}
-						}
-					}else{
-						
-						this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.5f, this.getBody().getLinearVelocity().y);
-						
-						if(range > this.attackRange/GameScreen.PPM){
-							
-							this.setState(1);
-						}
-					}
-			}else{
-				System.out.println("3");
-				if(this.getBody().getLinearVelocity().x > 0){
-					
-					this.getBody().applyForceToCenter(-10, 0, true);
-				}
-				
-				if(this.getBody().getLinearVelocity().x < 0){
-					
-					this.getBody().applyForceToCenter(10, 0, true);
-				}
-			}
-			
-		}else{
-			
-			GameScreen.monsterList.removeValue(this, true);
-		}
-	}
-	
-	public void increaseAnimTime(float value){animTime += value;}
 }

@@ -11,6 +11,18 @@ public class MainMenu implements Screen{
 	/** The game. */
 	SpaceGame game;
 	
+	/** The exit buttton active. */
+	Texture exitButttonActive;
+
+	/** The exit button inactive. */
+	Texture exitButtonInactive;
+
+	/** The play button active. */
+	Texture playButtonActive;
+
+	/** The play button inactive. */
+	Texture playButtonInactive;
+
 	/** The exit button width. */
 	private static int EXIT_BUTTON_WIDTH = 300;
 	
@@ -28,19 +40,6 @@ public class MainMenu implements Screen{
 	
 	/** The Constant EXIT_BUTTON_Y. */
 	private static final int EXIT_BUTTON_Y = 100;
-	
-	/** The exit buttton active. */
-	Texture exitButttonActive;
-	
-	/** The exit button inactive. */
-	Texture exitButtonInactive;
-	
-	/** The play button active. */
-	Texture playButtonActive;
-	
-	/** The play button inactive. */
-	Texture playButtonInactive;
-	
 	
 	/**
 	 * Instantiates a new main menu.

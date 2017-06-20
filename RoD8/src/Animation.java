@@ -80,21 +80,6 @@ public class Animation {
 	}
 	
 	/**
-	 * Step.
-	 */
-	private void step(){
-		
-		time -= delay;
-		currentFrame++;
-		//System.out.println(currentFrame);
-		if(currentFrame == frames[state].length){
-			
-			currentFrame = 0;
-			timesPlayed++;
-		}
-	}
-	
-	/**
 	 * Gets the frame.
 	 *
 	 * @param state the state
@@ -115,4 +100,19 @@ public class Animation {
 	 * @param state the new state
 	 */
 	public void setState(int state){this.state = state;}
+
+	/**
+	 * Step.
+	 */
+	private void step(){
+		
+		time -= delay;
+		currentFrame++;
+		//System.out.println(currentFrame);
+		if(currentFrame == frames[state].length){
+			
+			currentFrame = 0;
+			timesPlayed++;
+		}
+	}
 }

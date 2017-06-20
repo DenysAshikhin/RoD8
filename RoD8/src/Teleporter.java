@@ -11,12 +11,11 @@ public class Teleporter extends B2DSprite{
 	public boolean wasActivated;
 	public boolean isFinished;
 
-	private GameScreen gameScreen;
 	Body body;
 	private Animation<TextureRegion> available;
 	private Animation<TextureRegion> unavailable;
 	
-	public Teleporter(Body body, GameScreen gameSceen){
+	public Teleporter(Body body){
 		super(body);
 
 		isTouched = false;
@@ -24,7 +23,6 @@ public class Teleporter extends B2DSprite{
 		wasActivated = false;
 		isFinished = false;
 		this.body = body;
-		this.gameScreen = gameScreen;
 		
 		Texture texture = GameScreen.textures.getTexture("portal");
 		

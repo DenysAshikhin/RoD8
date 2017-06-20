@@ -13,24 +13,27 @@ import com.badlogic.gdx.utils.Align;
  */
 public class GameOverScreen implements Screen{
 
+	/** The game over banner. */
+	Texture gameOverBanner;
+
+	/** The score font. */
+	BitmapFont scoreFont;
+
+	/** The game. */
+	SpaceGame game;
+
+	/** The highscore. */
+	int score;
+
+	/** The highscore. */
+	int highscore;
+
 	/** The Constant BANNER_WIDTH. */
 	private static final int BANNER_WIDTH = 350;
 	
 	/** The Constant BANNER_HEIGHT. */
 	private static final int BANNER_HEIGHT = 100;
 	
-	
-	/** The game over banner. */
-	Texture gameOverBanner;
-	
-	/** The score font. */
-	BitmapFont scoreFont;
-	
-	/** The game. */
-	SpaceGame game;
-	
-	/** The highscore. */
-	int score, highscore;
 	
 	/**
 	 * Instantiates a new game over screen.
@@ -167,7 +170,4 @@ public class GameOverScreen implements Screen{
 	public void dispose() {
 		
 	}
-
-
-
 }

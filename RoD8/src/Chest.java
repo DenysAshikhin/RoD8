@@ -8,16 +8,14 @@ public class Chest extends B2DSprite{
 
 	public boolean isOpen;
 	public boolean isTouched;
-	private GameScreen gameScreen;
 	private Animation<TextureRegion> open;
 	private Animation<TextureRegion> closed;
 	
-	public Chest(Body body, GameScreen gameScreen){
+	public Chest(Body body){
 		
 		super(body);
 		isOpen = false;
 		isTouched = false;
-		this.gameScreen = gameScreen;
 		
 		Texture texture = GameScreen.textures.getTexture("portal");
 		
