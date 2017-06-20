@@ -237,7 +237,7 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
-		player.money = 1000;
+		player.money = 9999999;
 
 	}
 	
