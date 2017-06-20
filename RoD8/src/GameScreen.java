@@ -208,11 +208,11 @@ public class GameScreen implements Screen{
 
 		
 		//Create player, tiles and crystals
-		createPlayer();
 		createTiles();
 		createCrystals();
 		createChests();
 		createPortal();
+		createPlayer();
 		
 		portalStart = 0;
 		
@@ -427,7 +427,7 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(12, 24);
+		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y);
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
 		Body body = world.createBody(bdef);
@@ -600,7 +600,7 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
-		 tileMap = new TmxMapLoader().load("first_stage_map.tmx");
+		 tileMap = new TmxMapLoader().load("second_stage_map.tmx");
 		 tmr = new OrthogonalTiledMapRenderer(tileMap);
 
 		 tileSize = (int) tileMap.getProperties().get("tilewidth");
