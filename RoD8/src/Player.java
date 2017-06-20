@@ -421,17 +421,17 @@ public class Player extends B2DSprite{
 		Texture texture = GameScreen.textures.getTexture("sniper");
 		TextureRegion[] sprites = new TextureRegion[4];
 		
-		sprites = TextureRegion.split(texture, 7, 13)[0];
+		sprites = TextureRegion.split(texture, 17, 14)[0];
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
 		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
 	
-		
-		sprites = new TextureRegion[2];
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[2], sprites[3]});
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 12, 12)[0];
+		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[3], sprites[4]});
 	
+		
 		sprites = new TextureRegion[8];
-		sprites = TextureRegion.split(texture, 7, 13)[1];
+		sprites = TextureRegion.split(texture, 17, 14)[1];
 		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
 	
 		sprites = new TextureRegion[5];
@@ -452,4 +452,5 @@ public class Player extends B2DSprite{
 				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
 		
 	}
+
 }
