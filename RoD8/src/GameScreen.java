@@ -324,6 +324,7 @@ public class GameScreen implements Screen{
 		for(Item i : transitionItems){
 			itemNum++;
 			itemList.add(i);
+			i.itemNum = itemNum;
 			floatingItemList.removeValue(i, true);
 		}
 		transitionItems.clear();
@@ -333,6 +334,8 @@ public class GameScreen implements Screen{
 		
 		//movement update
 		player.updateMovement();
+		
+		player.money += player.goldGain;
 		
 		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
 		cam.update();
@@ -424,14 +427,14 @@ public class GameScreen implements Screen{
 		
 		if (Gdx.input.isKeyJustPressed(Keys.E)){
 			
-			if(player.money >= 500){
+			if(player.money >= 100){
 				
 				for(Chest chest : chests){
 					
 					if (chest.isTouched && !chest.isOpen){
 						
 						chest.isOpen = true;
-						player.money -= 500;
+						player.money -= 100;
 						createItem(chest);
 					}
 				}
@@ -458,7 +461,7 @@ public class GameScreen implements Screen{
 		spriteBatch.begin();
 		//hudBatch.begin();
 		
-		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + player.money);
+		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + (int) player.money);
 		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
 		
 		spriteBatch.setColor(Color.BLACK);
@@ -469,7 +472,6 @@ public class GameScreen implements Screen{
 		spriteBatch.setColor(Color.WHITE);
 		
 		for(Item i : itemList){
-			i.itemNum = itemNum;
 			i.writeItem(spriteBatch);
 		}
 	
@@ -620,7 +622,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_LAUNCHER;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -816,7 +818,7 @@ public class GameScreen implements Screen{
 			fdef.shape = squareShape;
 			fdef.isSensor = true;
 			fdef.filter.categoryBits = BIT_LAUNCHER;
-			fdef.filter.maskBits = BIT_PLAYER;
+			fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER;
 			
 			Body body = world.createBody(bdef);
 			body.createFixture(fdef).setUserData("launcher");
@@ -878,8 +880,9 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);
-		
-		Item i = new Item(body, this, "root", itemNum);
+
+		//Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 2) + 4), itemNum);
 		floatingItemList.add(i);
 		
 		itemNum++;

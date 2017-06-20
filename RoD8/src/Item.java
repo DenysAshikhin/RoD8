@@ -13,14 +13,13 @@ public class Item extends B2DSprite{
 
 	GameScreen gameScreen;
 	
-	String type;
-	int itemType;
+	int type;
 	
 	int itemNum;
 
 	private Animation<TextureRegion> image;
 	
-	public Item(Body body, GameScreen gamescreen, String item, float identity){
+	public Item(Body body, GameScreen gamescreen, int item, float identity){
 		
 		super(body);
 		
@@ -34,27 +33,33 @@ public class Item extends B2DSprite{
 		this.width = 32f;
 		this.height = 32f;
 		
-		switch(type){
-		case "root":
-			itemType = 1;
-			sprites = new TextureRegion[10];
-			sprites = TextureRegion.split(texture, 32, 32)[0];
-			image = new Animation<TextureRegion>(0.07f, sprites[itemType]);
-			break;
-		}
+		sprites = new TextureRegion[10];
+		sprites = TextureRegion.split(texture, 32, 32)[0];
+		image = new Animation<TextureRegion>(0.07f, sprites[type - 1]);
 	}
 	
 	public void getItem(){
-		switch(itemType){
+		switch(type){
 		case 1: //root
 			GameScreen.player.increaseMaxHealth(10);
 			break;
+		case 2: //piggy bank
+			GameScreen.player.increaseGoldGain(0.02f);
+			break;
+		case 3: //smart shopper
+			GameScreen.player.increaseGoldLeech(2f);
+			break;
+		case 4: //infusion
+			GameScreen.player.increaseHealthSteal(2f);
+			break;
+		case 5: //leech
+			GameScreen.player.increaseHealthLeech(0.1f);
 		}
 	}
 	
 	public void writeItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 36, 100, this.width, this.height);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 20, 80, this.width, this.height);
 	}
 	
 	public void drawItem(SpriteBatch spritebatch){

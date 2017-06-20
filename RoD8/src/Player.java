@@ -12,11 +12,19 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 public class Player extends B2DSprite{
 
-	public int money;
+	public float money;
 
 	public float maxHealth = 100f;
 
 	public float health = maxHealth;
+	
+	public float goldGain = 0.02f;
+
+	public float goldLeech = 10f;
+
+	public float HealthSteal = 0f;
+
+	public float HealthLeech = 0f;
 
 	/** The Constant PLAYER_WIDTH. */
 	public static final float PLAYER_WIDTH = 8f;
@@ -314,10 +322,25 @@ public class Player extends B2DSprite{
 	}
 	
 	public void increaseMaxHealth(float increase){
-		float percent = this.health / this.maxHealth;
 		
 		this.maxHealth += increase;
-		this.health = maxHealth * percent;
+		this.health += increase;
+	}
+	
+	public void increaseGoldGain(float increase){
+		this.goldGain += increase;
+	}
+	
+	public void increaseGoldLeech(float increase){
+		this.goldLeech += increase;
+	}
+	
+	public void increaseHealthSteal(float increase){
+		this.HealthSteal += increase;
+	}
+	
+	public void increaseHealthLeech(float increase){
+		this.HealthLeech += increase;
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}

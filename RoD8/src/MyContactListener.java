@@ -85,19 +85,13 @@ public class MyContactListener implements ContactListener{
 		
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("launcher")){
-			
-			if(fb.getUserData() != null && fb.getUserData().equals("player")){
 				
-				fb.getBody().applyLinearImpulse(new Vector2(0,8.7f), fb.getBody().getPosition(), true);
-			}
+			fb.getBody().applyLinearImpulse(new Vector2(0,8.7f), fb.getBody().getPosition(), true);
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("launcher")){
-			
-			if(fa.getUserData() != null && fa.getUserData().equals("player")){
 				
-				fa.getBody().applyLinearImpulse(new Vector2(0, 8.7f), fa.getBody().getPosition(), true);
-			}
+			fa.getBody().applyLinearImpulse(new Vector2(0, 8.7f), fa.getBody().getPosition(), true);
 		}
 		
 		
@@ -225,12 +219,9 @@ public class MyContactListener implements ContactListener{
 			for(Item i : GameScreen.floatingItemList){
 				
 				if(i.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
-					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
 					
 					i.getItem();		
-					
-					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
-	
+						
 					bodyToRemove.add(i.getBody());
 					GameScreen.transitionItems.add(i);
 				}
@@ -242,12 +233,9 @@ public class MyContactListener implements ContactListener{
 			for(Item i : GameScreen.floatingItemList){
 				
 				if(i.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
-					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
 					
 					i.getItem();
-					
-					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
-					
+							
 					GameScreen.transitionItems.add(i);
 				}
 			}
@@ -313,17 +301,30 @@ public class MyContactListener implements ContactListener{
 	
 						m.health -= damage;
 						
+						float leech = GameScreen.player.HealthLeech * damage;
+						
+						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
+								GameScreen.player.health += leech;
+							}else{
+								GameScreen.player.health = GameScreen.player.maxHealth;
+							}
+						}
+						
 						if((fa.getBody().getLinearVelocity().x) < 0)
 							fb.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fb.getBody().getPosition(), true);
 						if((fa.getBody().getLinearVelocity().x) > 0)
 							fb.getBody().applyLinearImpulse(new Vector2(4f, 0f), fb.getBody().getPosition(), true);
 						
 						if(m.health <= 0){
+
+							GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+							GameScreen.player.health += GameScreen.player.HealthSteal;
 							
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
 							GameScreen.removeMobs.add(m);	
-							GameScreen.player.money += 100;
+							GameScreen.player.money += GameScreen.player.goldLeech;
 	
 						}
 					}
@@ -344,6 +345,16 @@ public class MyContactListener implements ContactListener{
 					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 	
 						m.health -= damage;
+
+						float leech = GameScreen.player.HealthLeech * damage;
+						
+						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
+								GameScreen.player.health += leech;
+							}else{
+								GameScreen.player.health = GameScreen.player.maxHealth;
+							}
+						}
 						
 						if ((fb.getBody().getLinearVelocity().x) <0)
 							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
@@ -352,11 +363,14 @@ public class MyContactListener implements ContactListener{
 					}
 	
 					if (m.health <= 0){
+
+						GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+						GameScreen.player.health += GameScreen.player.HealthSteal;
 						
 						bodyToRemove.add(fa.getBody());
 						m.killed = true;
 						GameScreen.removeMobs.add(m);	
-						GameScreen.player.money += 100;
+						GameScreen.player.money += GameScreen.player.goldLeech;;
 					
 					}
 				}	
@@ -376,13 +390,26 @@ public class MyContactListener implements ContactListener{
 					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
 						
 						m.health -= damage;
+
+						float leech = GameScreen.player.HealthLeech * damage;
+						
+						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
+								GameScreen.player.health += leech;
+							}else{
+								GameScreen.player.health = GameScreen.player.maxHealth;
+							}
+						}
 						
 						if(m.health <= 0){
+
+							GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+							GameScreen.player.health += GameScreen.player.HealthSteal;
 							
 							bodyToRemove.add(fb.getBody());
 							m.killed = true;
 							GameScreen.removeMobs.add(m);
-							GameScreen.player.money += 100;
+							GameScreen.player.money += GameScreen.player.goldLeech;;
 	
 						}
 					}
@@ -404,13 +431,26 @@ public class MyContactListener implements ContactListener{
 					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 						
 						m.health -= damage;
+
+						float leech = GameScreen.player.HealthLeech * damage;
+						
+						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
+								GameScreen.player.health += leech;
+							}else{
+								GameScreen.player.health = GameScreen.player.maxHealth;
+							}
+						}
 						
 						if(m.health <= 0){
+
+							GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+							GameScreen.player.health += GameScreen.player.HealthSteal;
 							
 							bodyToRemove.add(fa.getBody());
 							m.killed = true;
 							GameScreen.removeMobs.add(m);
-							GameScreen.player.money += 100;
+							GameScreen.player.money += GameScreen.player.goldLeech;;
 	
 						}
 					}

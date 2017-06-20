@@ -12,6 +12,7 @@ public class Launcher extends B2DSprite{
 		super(body);
 			
 		Texture texture = GameScreen.textures.getTexture("launcher");
+		
 		TextureRegion[] sprites = new TextureRegion[5];
 			
 		sprites = TextureRegion.split(texture, 32, 63)[0];
