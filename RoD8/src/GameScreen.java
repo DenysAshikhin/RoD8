@@ -750,20 +750,18 @@ public class GameScreen implements Screen{
 		switch(difficulty){
 		
 		case 1:
-			System.out.println(1);
+			
 			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
-
 			break;
 			
 		case 2:
-			System.out.println(2);
+			
 			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
 			break;
 			
 		case 3:
-			System.out.println(3);
-
+			
 			tileMap = new TmxMapLoader().load("testingmap.tmx");
 			break;
 		}
@@ -981,8 +979,6 @@ public class GameScreen implements Screen{
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
-		
-		itemNum++;
 	}
 	
 	/**
