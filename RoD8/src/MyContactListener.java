@@ -107,25 +107,27 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
-						
-			for(Chest chest : GameScreen.chests){
+				
+			((Chest)fa.getBody().getUserData()).isTouched = true;
+			/*for(Chest chest : GameScreen.chests){
 				
 				if(chest.getBody() == fa.getBody()){
 					
 					chest.isTouched = true;
 				}
-			}
+			}*/
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
 			
-			for(Chest chest : GameScreen.chests){
+			((Chest)fb.getBody().getUserData()).isTouched = true;
+			/*for(Chest chest : GameScreen.chests){
 				
 				if(chest.getBody() == fb.getBody()){
 					
 					chest.isTouched = true;
 				}
-			}
+			}*/
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
@@ -140,13 +142,15 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
 				
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fa.getBody().getUserData()).onGround++;
+				
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
 						m.onGround++;
 					}
-				}
+				}*/
 			}
 		}
 		
@@ -154,49 +158,56 @@ public class MyContactListener implements ContactListener{
 	
 			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
 	
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fb.getBody().getUserData()).onGround++;
+				
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
 						
 						m.onGround++;
 					}
-				}
+				}*/
 			}
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mwall")){
 			
-			for(Monster m : GameScreen.monsterList){
+			((Monster)fa.getBody().getUserData()).onWall++;
+
+			/*for(Monster m : GameScreen.monsterList){
 				
 				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 					
 					m.onWall++;
 				}
-			}
+			}*/
 		}
 	
 		if(fb.getUserData() != null && fb.getUserData().equals("mwall")){
-			
-			for(Monster m : GameScreen.monsterList){
+		
+			((Monster)fb.getBody().getUserData()).onWall++;
+
+			/*for(Monster m : GameScreen.monsterList){
 				
 				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
 					
 					m.onWall++;
 				}
-			}
+			}*/
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mjump")){
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
 				
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fa.getBody().getUserData()).canHurdle--;
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
 						m.canHurdle--;
 					}
-				}
+				}*/
 			}
 		}
 		
@@ -204,19 +215,24 @@ public class MyContactListener implements ContactListener{
 			
 			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
 				
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fb.getBody().getUserData()).canHurdle++;
+
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
 						
 						m.canHurdle--;
 					}
-				}
+				}*/
 			}
 		}
 		
 		if(fa.getUserData() != null & ((String) fa.getUserData()).contains("item")){
 			
-			for(Item i : GameScreen.floatingItemList){
+			
+			bodyToRemove.add(fa.getBody());
+			GameScreen.transitionItems.add((Item)fa.getBody().getUserData());
+			/*for(Item i : GameScreen.floatingItemList){
 				
 				if(i.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 					
@@ -225,12 +241,15 @@ public class MyContactListener implements ContactListener{
 					bodyToRemove.add(i.getBody());
 					GameScreen.transitionItems.add(i);
 				}
-			}
+			}*/
 		}
 		
 		if(fb.getUserData() != null & ((String) fb.getUserData()).contains("item")){
 			
-			for(Item i : GameScreen.floatingItemList){
+			bodyToRemove.add(fb.getBody());
+			GameScreen.transitionItems.add((Item)fb.getBody().getUserData());
+			
+			/*for(Item i : GameScreen.floatingItemList){
 				
 				if(i.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
 					
@@ -238,7 +257,7 @@ public class MyContactListener implements ContactListener{
 							
 					GameScreen.transitionItems.add(i);
 				}
-			}
+			}*/
 		}
 	
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("attack")){
@@ -293,20 +312,23 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && ((String)fb.getUserData()).contains("monster")){
 	
-				for(Monster m : GameScreen.monsterList){
+				Monster m = (Monster)fb.getBody().getUserData();
+				//for(Monster m : GameScreen.monsterList){
 					
 					float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 					
-					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
+					//if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
 	
 						m.health -= damage;
 						
 						float leech = GameScreen.player.HealthLeech * damage;
 						
 						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							
 							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
 								GameScreen.player.health += leech;
-							}else{
+							}
+							else{
 								GameScreen.player.health = GameScreen.player.maxHealth;
 							}
 						}
@@ -327,8 +349,8 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += GameScreen.player.goldLeech;
 	
 						}
-					}
-				}	
+					//}
+				//}	
 			}
 		}
 		
@@ -338,20 +360,23 @@ public class MyContactListener implements ContactListener{
 				bodyToRemove.add(fb.getBody());
 			if(fa.getUserData() != null && ((String)fa.getUserData()).contains("monster")){
 				
-				for(Monster m : GameScreen.monsterList){
+				//for(Monster m : GameScreen.monsterList){
 					
+				Monster m = (Monster)fa.getBody().getUserData();
 					float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 					
-					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
+					//if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 	
 						m.health -= damage;
 
 						float leech = GameScreen.player.HealthLeech * damage;
 						
 						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							
 							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
 								GameScreen.player.health += leech;
-							}else{
+							}
+							else{
 								GameScreen.player.health = GameScreen.player.maxHealth;
 							}
 						}
@@ -360,7 +385,7 @@ public class MyContactListener implements ContactListener{
 							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
 						if((fb.getBody().getLinearVelocity().x) > 0)
 							fa.getBody().applyLinearImpulse(new Vector2(4f, 0f), fa.getBody().getPosition(), true);					
-					}
+					//}
 	
 					if (m.health <= 0){
 
@@ -373,7 +398,7 @@ public class MyContactListener implements ContactListener{
 						GameScreen.player.money += GameScreen.player.goldLeech;;
 					
 					}
-				}	
+				//}	
 			}		
 		}
 		
@@ -383,20 +408,23 @@ public class MyContactListener implements ContactListener{
 			
 			if(fb.getUserData() != null && ((String) fb.getUserData()).contains("monster")){
 				
-				for(Monster m : GameScreen.monsterList){
-	
+				//for(Monster m : GameScreen.monsterList){
+					Monster m = (Monster)fb.getBody().getUserData();
+					
 					float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 					
-					if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
+					//if (m.identifier == Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()))){
 						
 						m.health -= damage;
 
 						float leech = GameScreen.player.HealthLeech * damage;
 						
 						if(GameScreen.player.health < GameScreen.player.maxHealth){
+							
 							if((GameScreen.player.maxHealth - GameScreen.player.health) > leech){
 								GameScreen.player.health += leech;
-							}else{
+							}
+							else{
 								GameScreen.player.health = GameScreen.player.maxHealth;
 							}
 						}
@@ -412,8 +440,8 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += GameScreen.player.goldLeech;;
 	
 						}
-					}
-				}
+					//}
+				//}
 			}
 		}
 		
@@ -423,12 +451,14 @@ public class MyContactListener implements ContactListener{
 	
 			if(fa.getUserData() != null && ((String) fa.getUserData()).contains("monster")){
 				
-				for(Monster m : GameScreen.monsterList){
+				
+				Monster m = (Monster)fa.getBody().getUserData();
+				//for(Monster m : GameScreen.monsterList){
 				
 					float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 					
 					
-					if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
+					//if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 						
 						m.health -= damage;
 
@@ -453,8 +483,8 @@ public class MyContactListener implements ContactListener{
 							GameScreen.player.money += GameScreen.player.goldLeech;;
 	
 						}
-					}
-				}
+					//}
+				//}
 			}
 		}
 	}
@@ -483,24 +513,28 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			
-			for(Chest chest : GameScreen.chests){
+			
+			((Chest)fa.getBody().getUserData()).isTouched = true;
+			/*for(Chest chest : GameScreen.chests){
 				
 				if(chest.getBody() == fa.getBody()){
 					
 					chest.isTouched = false;
 				}
-			}
+			}*/
 		}
 	
 		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
 			
-			for(Chest chest : GameScreen.chests){
+			((Chest)fb.getBody().getUserData()).isTouched = true;
+			
+			/*for(Chest chest : GameScreen.chests){
 				
 				if(chest.getBody() == fb.getBody()){
 					
 					chest.isTouched = false;
 				}
-			}
+			}*/
 		}
 				
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
@@ -524,78 +558,92 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 	
 			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
-	
-				for(Monster m : GameScreen.monsterList){
+				
+				((Monster)fa.getBody().getUserData()).onGround--;
+				
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
-						m.onGround--;
+						m.onGround++;
 					}
-				}
+				}*/
 			}
+
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mfoot")){
 	
 			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
-	
-				for(Monster m : GameScreen.monsterList){
+				
+				((Monster)fb.getBody().getUserData()).onGround--;
+				
+				/*for(Monster m : GameScreen.monsterList){
 					
-					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
-						m.onGround--;
+						m.onGround++;
 					}
-				}
+				}*/
 			}
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mwall")){
 			
-			for(Monster m : GameScreen.monsterList){
+			((Monster)fa.getBody().getUserData()).onWall++;
+
+			
+/*			for(Monster m : GameScreen.monsterList){
 				
 				if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 					
 					m.onWall--;
 				}
-			}
+			}*/
 		}
 	
 		if(fb.getUserData() != null && fb.getUserData().equals("mwall")){
 			
-			for(Monster m : GameScreen.monsterList){
+			
+			((Monster)fb.getBody().getUserData()).onWall++;
+
+			
+/*			for(Monster m : GameScreen.monsterList){
 				
 				if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
 					
 					m.onWall--;
 				}
-			}
+			}*/
 		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mjump")){
 			
 			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
 				
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fa.getBody().getUserData()).canHurdle++;
+				/*for(Monster m : GameScreen.monsterList){
 					
 					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
-						m.canHurdle++;
+						m.canHurdle--;
 					}
-				}
+				}*/
 			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("mjump")){
 			
-			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
 				
-				for(Monster m : GameScreen.monsterList){
+				((Monster)fb.getBody().getUserData()).canHurdle++;
+				/*for(Monster m : GameScreen.monsterList){
 					
-					if(m.identifier == Float.parseFloat(((String) fb.getBody().getFixtureList().first().getUserData()).substring(((String) fb.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fb.getBody().getFixtureList().first().getUserData()).length()))){
+					if(m.identifier == Float.parseFloat(((String) fa.getBody().getFixtureList().first().getUserData()).substring(((String) fa.getBody().getFixtureList().first().getUserData()).indexOf(':') + 1, ((String) fa.getBody().getFixtureList().first().getUserData()).length()))){
 						
-						m.canHurdle++;
+						m.canHurdle--;
 					}
-				}
+				}*/
 			}
 		}
 	}

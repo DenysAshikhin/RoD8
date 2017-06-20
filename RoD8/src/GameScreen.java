@@ -571,12 +571,12 @@ public class GameScreen implements Screen{
 		fdef.filter.categoryBits = BIT_PLAYER;
 		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM | BIT_LAUNCHER;
 		body.createFixture(fdef).setUserData("player");
-		
+		body.setUserData(player);
 		//Create Player
 		player = new Player(body, this, 1);
-
 		player.setState(1);
-		
+		player.getBody().setUserData(player);
+
 		//Create foot sensor
 		shape.setAsBox(
 				(((Player.PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
@@ -627,8 +627,12 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
 		//Create Monster
-		monsterList.add(new Monster(body1, this, monsterNum, monsterType));
+		Monster m = new Monster(body1, this, monsterNum, monsterType);
+		monsterList.add(m);
 		monsterList.peek().setState(1);
+		/**Might be able to remove the line below*/
+		body1.setUserData(m);
+		m.getBody().setUserData(m);
 		
 		//Create foot sensor
 		
@@ -664,7 +668,7 @@ public class GameScreen implements Screen{
 		f1def.filter.maskBits = BIT_GROUND;	
 		f1def.isSensor = true;
 		body1.createFixture(f1def).setUserData("mwall");
-		
+		body1.setUserData(m);
 		monsterNum ++;
 	}
 	
@@ -794,7 +798,8 @@ public class GameScreen implements Screen{
 			Body body = world.createBody(bdef);
 			body.createFixture(fdef).setUserData("portal");
 			
-			 teleporter = new Teleporter(body);
+			teleporter = new Teleporter(body);
+			teleporter.getBody().setUserData(teleporter);//Might be able to be removed later
 		}
 	}
 	
@@ -826,6 +831,7 @@ public class GameScreen implements Screen{
 			Launcher c = new Launcher(body);
 			launchers.add(c);
 
+			c.getBody().setUserData(c);
 			body.setUserData(c);
 		}
 	}
@@ -857,7 +863,8 @@ public class GameScreen implements Screen{
 			
 			Chest c = new Chest(body);
 			chests.add(c);
-
+			
+			c.getBody().setUserData(c);
 			body.setUserData(c);
 		}
 	}
@@ -884,6 +891,8 @@ public class GameScreen implements Screen{
 		//Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
 		Item i = new Item(body, this, ((int) (Math.random() * 2) + 4), itemNum);
 		floatingItemList.add(i);
+		
+		i.getBody().setUserData(i);
 		
 		itemNum++;
 	}
@@ -919,7 +928,8 @@ public class GameScreen implements Screen{
 			body.createFixture(fdef).setUserData("crystal");
 			
 			Crystal c = new Crystal(body);
-			crystals.add(c);			
+			crystals.add(c);
+			c.getBody().setUserData(c);
 			body.setUserData(c);
 		}
 	}
