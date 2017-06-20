@@ -1,5 +1,3 @@
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * The Class Player.
@@ -33,7 +30,7 @@ public class Monster extends B2DSprite{
 	private Animation<TextureRegion> runright;
 	private Animation<TextureRegion> standingright;
 	private Animation<TextureRegion> primaryright;
-	private Animation<TextureRegion> deathright;
+	//private Animation<TextureRegion> deathright;
 
 	private TextureRegion prevFrame;
 
@@ -289,7 +286,7 @@ public class Monster extends B2DSprite{
 
 		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 42, 32)[2];
-		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
 	
 	private void createLemurian(){
@@ -312,7 +309,7 @@ public class Monster extends B2DSprite{
 
 		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 28, 28)[2];
-		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
+		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
 	
 	private void createGiant(){
@@ -335,6 +332,6 @@ public class Monster extends B2DSprite{
 
 		sprites = new TextureRegion[deathFrames];
 		sprites = TextureRegion.split(texture, 71, 69)[2];
-		deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
+		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 		}
 }

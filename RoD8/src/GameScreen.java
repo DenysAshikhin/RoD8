@@ -774,7 +774,7 @@ public class GameScreen implements Screen{
 			Body body = world.createBody(bdef);
 			body.createFixture(fdef).setUserData("portal");
 			
-			 teleporter = new Teleporter(body, this);
+			 teleporter = new Teleporter(body);
 			
 	
 			//body.setUserData(teleporter);
