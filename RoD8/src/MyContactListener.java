@@ -374,7 +374,7 @@ public class MyContactListener implements ContactListener{
 					//if (m.identifier == Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()))){
 	
 						m.health -= damage;
-
+	
 						float leech = GameScreen.player.HealthLeech * damage;
 						
 						if(GameScreen.player.health < GameScreen.player.maxHealth){
@@ -387,23 +387,23 @@ public class MyContactListener implements ContactListener{
 							}
 						}
 						
-						if ((fb.getBody().getLinearVelocity().x) <0)
+						if ((fb.getBody().getLinearVelocity().x) < 0)
 							fa.getBody().applyLinearImpulse(new Vector2(-4f, 0f), fa.getBody().getPosition(), true);
 						if((fb.getBody().getLinearVelocity().x) > 0)
-							fa.getBody().applyLinearImpulse(new Vector2(4f, 0f), fa.getBody().getPosition(), true);					
-					//}
+							fa.getBody().applyLinearImpulse(new Vector2(4f, 0f), fa.getBody().getPosition(), true);	
+		
+						if (m.health <= 0){
 	
-					if (m.health <= 0){
-
-						GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
-						GameScreen.player.health += GameScreen.player.HealthSteal;
+							GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+							GameScreen.player.health += GameScreen.player.HealthSteal;
+							
+							bodyToRemove.add(fa.getBody());
+							m.killed = true;
+							GameScreen.removeMobs.add(m);	
+							GameScreen.player.money += GameScreen.player.goldLeech;;
 						
-						bodyToRemove.add(fa.getBody());
-						m.killed = true;
-						GameScreen.removeMobs.add(m);	
-						GameScreen.player.money += GameScreen.player.goldLeech;;
-					
-					}
+						}
+					//}	
 				//}	
 			}		
 		}
@@ -433,6 +433,13 @@ public class MyContactListener implements ContactListener{
 							else{
 								GameScreen.player.health = GameScreen.player.maxHealth;
 							}
+						}
+						
+						if(Math.random() < GameScreen.player.knockbackChance){
+							if ((fb.getBody().getLinearVelocity().x) < 0)
+								fa.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fa.getBody().getPosition(), true);
+							if((fb.getBody().getLinearVelocity().x) > 0)
+								fa.getBody().applyLinearImpulse(new Vector2(3f, 0f), fa.getBody().getPosition(), true);		
 						}
 						
 						if(m.health <= 0){
@@ -476,6 +483,13 @@ public class MyContactListener implements ContactListener{
 							}else{
 								GameScreen.player.health = GameScreen.player.maxHealth;
 							}
+						}
+						
+						if(Math.random() < GameScreen.player.knockbackChance){
+							if ((fb.getBody().getLinearVelocity().x) < 0)
+								fa.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fa.getBody().getPosition(), true);
+							if((fb.getBody().getLinearVelocity().x) > 0)
+								fa.getBody().applyLinearImpulse(new Vector2(3f, 0f), fa.getBody().getPosition(), true);		
 						}
 						
 						if(m.health <= 0){

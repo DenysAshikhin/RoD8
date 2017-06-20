@@ -283,7 +283,7 @@ public class Player extends B2DSprite{
 				this.setFace(false);//CHANGE!!!
 		
 				if(this.getBody().getLinearVelocity().x > -moveSpeed)
-					this.getBody().applyLinearImpulse(new Vector2(-0.5f, 0f), this.getPosition(), true);
+					this.getBody().applyLinearImpulse(new Vector2(-moveSpeed / 2, 0f), this.getPosition(), true);
 			}
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -292,7 +292,7 @@ public class Player extends B2DSprite{
 				this.setFace(true);
 		
 				if(this.getBody().getLinearVelocity().x < moveSpeed)			
-					this.getBody().applyLinearImpulse(new Vector2(0.5f, 0f), this.getPosition(), true);
+					this.getBody().applyLinearImpulse(new Vector2(moveSpeed / 2, 0f), this.getPosition(), true);
 			}
 		
 			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT) && gameScreen.contactListener.isPlayerOnGround() == true){
@@ -364,6 +364,13 @@ public class Player extends B2DSprite{
 	
 	public void increaseAttackSpeed(float increase){
 		this.attackTime -= increase;
+		
+		Texture texture = GameScreen.textures.getTexture("commando");
+		TextureRegion[] sprites = new TextureRegion[4];
+
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 18, 13)[2];
+		primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
 	}
 	
 	public void increaseMoveSpeed(float increase){
@@ -399,7 +406,7 @@ public class Player extends B2DSprite{
 	
 		sprites = new TextureRegion[5];
 		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
 		
 		sprites = new TextureRegion[5];
 		sprites = TextureRegion.split(texture, 33, 13)[3];

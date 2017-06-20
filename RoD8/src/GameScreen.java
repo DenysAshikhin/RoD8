@@ -267,6 +267,7 @@ public class GameScreen implements Screen{
 		shape.setAsBox(1 / PPM, 1 / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
+		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_BULLET;
 		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
 		if(identifier.contains("ray")){
@@ -348,6 +349,8 @@ public class GameScreen implements Screen{
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
+			
+			System.out.println(i.type);
 		}
 		transitionItems.clear();
 		
