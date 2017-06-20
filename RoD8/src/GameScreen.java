@@ -325,11 +325,20 @@ public class GameScreen implements Screen{
 		}
 		removeMobs.clear();
 		
-		for(Item i : transitionItems){
+		LOOP : for(Item i : transitionItems){
+
+			floatingItemList.removeValue(i, true);
+			
+			for(Item j : itemList){
+				if(j.type == i.type){
+					j.itemCount += 1;
+					break LOOP;
+				}
+			}
+			
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
-			floatingItemList.removeValue(i, true);
 		}
 		transitionItems.clear();
 		
@@ -946,11 +955,8 @@ public class GameScreen implements Screen{
 		
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
-		body.setGravityScale(0);
-
-		//Item i = new Item(body, this, 4, itemNum);
-		
-		Item i = new Item(body, this, ((int) (Math.random() * 2) + 4), itemNum);
+		body.setGravityScale(0);		
+		Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
