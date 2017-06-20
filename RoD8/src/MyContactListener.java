@@ -213,7 +213,7 @@ public class MyContactListener implements ContactListener{
 					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
 	
 					bodyToRemove.add(i.getBody());
-					GameScreen.removeItems.add(i);
+					GameScreen.transitionItems.add(i);
 				}
 			}
 		}
@@ -229,8 +229,7 @@ public class MyContactListener implements ContactListener{
 					
 					System.out.println(GameScreen.player.health + ", " + GameScreen.player.maxHealth);
 					
-					bodyToRemove.add(i.getBody());
-					GameScreen.removeItems.add(i);
+					GameScreen.transitionItems.add(i);
 				}
 			}
 		}

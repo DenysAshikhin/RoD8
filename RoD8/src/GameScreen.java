@@ -58,7 +58,7 @@ public class GameScreen implements Screen{
 
 	public static Array<Monster> removeMobs = new Array<Monster>();
 
-	public static Array<Item> removeItems = new Array<Item>();
+	public static Array<Item> transitionItems = new Array<Item>();
 
 	public static HashSet<Chest> chests;
 
@@ -315,8 +315,9 @@ public class GameScreen implements Screen{
 		}
 		removeMobs.clear();
 		
-		for(Item i : removeItems){
-			
+		for(Item i : transitionItems){
+			itemNum++;
+			itemList.add(i);
 			floatingItemList.removeValue(i, true);
 		}
 		
@@ -454,6 +455,10 @@ public class GameScreen implements Screen{
 		spriteBatch.setColor(Color.GREEN);
 		spriteBatch.draw(blank, 100, 50, 3 * (100 * (player.health / player.maxHealth)), 10);
 		spriteBatch.setColor(Color.WHITE);
+		
+		for(Item i : itemList){
+			i.writeItem(spriteBatch, itemNum);
+		}
 	
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
 		scoreFont.draw(spriteBatch, guiLayout, 5, 470);
@@ -822,7 +827,7 @@ public class GameScreen implements Screen{
 		bdef.position.set((chest.getBody().getPosition().x * 100) / PPM, (chest.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.DynamicBody;
 
-		shape.setAsBox(16 * SCALE / PPM, 16 * SCALE / PPM, new Vector2(0, 8f * SCALE / PPM), 0);
+		shape.setAsBox(32 * SCALE / PPM, 32 * SCALE / PPM, new Vector2(0, 8f * SCALE / PPM), 0);
 		fdef.shape = shape;
 		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_ITEM;
