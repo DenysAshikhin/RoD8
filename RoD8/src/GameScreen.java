@@ -212,6 +212,7 @@ public class GameScreen implements Screen{
 		//Load textures (temp)
 		textures = new Content();
 		textures.loadTexture("commando_final.png", "commando");
+		textures.loadTexture("sniper_final.png", "sniper");
 		textures.loadTexture("crystal.png", "crystal");
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
@@ -267,6 +268,7 @@ public class GameScreen implements Screen{
 		shape.setAsBox(1 / PPM, 1 / PPM);
 	//	shape.setAs
 		fdef.shape = shape;
+		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_BULLET;
 		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
 		if(identifier.contains("ray")){
@@ -348,6 +350,8 @@ public class GameScreen implements Screen{
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
+			
+			System.out.println(i.type);
 		}
 		transitionItems.clear();
 		
@@ -642,7 +646,13 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("player");
 		body.setUserData(player);
 		//Create Player
-		player = new Player(body, this, 1);
+		
+		if(difficulty == 1)
+			player = new Player(body, this, 2);
+		
+		else
+			player.setBody(body);
+
 		player.setState(1);
 		player.getBody().setUserData(player);
 
@@ -750,20 +760,18 @@ public class GameScreen implements Screen{
 		switch(difficulty){
 		
 		case 1:
-			System.out.println(1);
+			
 			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
-
 			break;
 			
 		case 2:
-			System.out.println(2);
+			
 			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
 			break;
 			
 		case 3:
-			System.out.println(3);
-
+			
 			tileMap = new TmxMapLoader().load("testingmap.tmx");
 			break;
 		}
@@ -977,12 +985,10 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 5) + 1), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
-		
-		itemNum++;
 	}
 	
 	/**

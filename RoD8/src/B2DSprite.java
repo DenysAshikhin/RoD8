@@ -128,4 +128,6 @@ public class B2DSprite {
 	 */
 	public boolean getFacing(){return facing;}
 	
+	public void setBody(Body body){this.body = body;}
+	
 }

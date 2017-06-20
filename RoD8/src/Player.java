@@ -283,7 +283,7 @@ public class Player extends B2DSprite{
 				this.setFace(false);//CHANGE!!!
 		
 				if(this.getBody().getLinearVelocity().x > -moveSpeed)
-					this.getBody().applyLinearImpulse(new Vector2(-0.5f, 0f), this.getPosition(), true);
+					this.getBody().applyLinearImpulse(new Vector2(-moveSpeed / 2, 0f), this.getPosition(), true);
 			}
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
@@ -292,7 +292,7 @@ public class Player extends B2DSprite{
 				this.setFace(true);
 		
 				if(this.getBody().getLinearVelocity().x < moveSpeed)			
-					this.getBody().applyLinearImpulse(new Vector2(0.5f, 0f), this.getPosition(), true);
+					this.getBody().applyLinearImpulse(new Vector2(moveSpeed / 2, 0f), this.getPosition(), true);
 			}
 		
 			if(!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT) && gameScreen.contactListener.isPlayerOnGround() == true){
@@ -364,6 +364,13 @@ public class Player extends B2DSprite{
 	
 	public void increaseAttackSpeed(float increase){
 		this.attackTime -= increase;
+		
+		Texture texture = GameScreen.textures.getTexture("commando");
+		TextureRegion[] sprites = new TextureRegion[4];
+
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 18, 13)[2];
+		primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
 	}
 	
 	public void increaseMoveSpeed(float increase){
@@ -399,7 +406,7 @@ public class Player extends B2DSprite{
 	
 		sprites = new TextureRegion[5];
 		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
 		
 		sprites = new TextureRegion[5];
 		sprites = TextureRegion.split(texture, 33, 13)[3];
@@ -421,35 +428,37 @@ public class Player extends B2DSprite{
 		Texture texture = GameScreen.textures.getTexture("sniper");
 		TextureRegion[] sprites = new TextureRegion[4];
 		
-		sprites = TextureRegion.split(texture, 7, 13)[0];
+		sprites = TextureRegion.split(texture, 17, 14)[0];
 		standingRight = new Animation<TextureRegion>(0.07f, sprites[0]);
 		jumpRight = new Animation<TextureRegion>(0.07f, sprites[1]);
 	
-		
-		sprites = new TextureRegion[2];
-		sprites = TextureRegion.split(texture, 7, 13)[0];
-		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[2], sprites[3]});
+		sprites = new TextureRegion[5];
+		sprites = TextureRegion.split(texture, 12, 12)[0];
+		climbing = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[3], sprites[4]});
 	
+		
 		sprites = new TextureRegion[8];
-		sprites = TextureRegion.split(texture, 7, 13)[1];
+		sprites = TextureRegion.split(texture, 17, 14)[1];
 		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
 	
-		sprites = new TextureRegion[5];
+		sprites = new TextureRegion[6];
 		sprites = TextureRegion.split(texture, 18, 13)[2];
-		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
-		sprites = new TextureRegion[5];
-		sprites = TextureRegion.split(texture, 33, 13)[3];
-		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+		sprites = new TextureRegion[12];
+		sprites = TextureRegion.split(texture, 19, 20)[4];
+		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11]});
 		
 		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 12, 13)[4];
-		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8]});
+		sprites = TextureRegion.split(texture, 87, 18)[6];
+		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
+		//Not Needed
 		sprites = new TextureRegion[15];
 		sprites = TextureRegion.split(texture, 40, 13)[5];
 		quaternaryRight = new Animation<TextureRegion>(0.07f,
 				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
 		
 	}
+
 }
