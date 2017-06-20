@@ -125,6 +125,7 @@ public class GameScreen implements Screen{
 	
 	/** The crystals. */
 	private Array<Crystal> crystals;
+
 		
 	/** The cam. */
 	private OrthographicCamera cam;
@@ -170,6 +171,7 @@ public class GameScreen implements Screen{
 	
 	private static final short BIT_LAUNCHER = 2048;
 
+	private boolean changing;
 	/**
 	 * Instantiates a new game screen.
 	 *
@@ -190,7 +192,7 @@ public class GameScreen implements Screen{
 		difficulty = 1;
 		spawnTimer = 0;
 		
-		
+		changing = false;
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -224,9 +226,6 @@ public class GameScreen implements Screen{
 		
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
-		
-
-
 		
 		//Create player, tiles and crystals
 		createTiles();
@@ -302,6 +301,11 @@ public class GameScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		
+		if(changing){
+			changeLevel();
+			changing = false;
+		}
+		else{
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
 		
@@ -420,7 +424,7 @@ public class GameScreen implements Screen{
 					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
 					
 					if(difficulty < 4)
-						changeLevel();
+						changing = true;
 			}
 			else{
 				
@@ -515,6 +519,7 @@ public class GameScreen implements Screen{
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);
 		}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -568,11 +573,29 @@ public class GameScreen implements Screen{
 	
 	private void changeLevel(){
 		
+		teleporter = null;
+	
+		crystals.clear();
+		chests.clear();
+		transitionItems.clear();
+		floatingItemList.clear();
+		removeMobs.clear();
+		monsterList.clear();		
+		chests.clear();
+		launchers.clear();
+
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
-		chests = new HashSet<Chest>();
-		launchers = new HashSet<Launcher>();
+
+		
+		world.dispose();
+		
+		world = new World(new Vector2(0, -9.81f), true);
+		contactListener = new MyContactListener();
+		world.setContactListener(contactListener);	
+		
+		difficulty ++;
 
 		
 		//Create player, tiles and crystals
@@ -581,7 +604,10 @@ public class GameScreen implements Screen{
 		createChests();
 		createPortal();
 		createLaunchers();
-		createPlayer();
+		//createPlayer();
+		
+		player.getPosition().x = teleporter.getPosition().x;
+		player.getPosition().y = teleporter.getPosition().y + 1;
 		
 		//player.getPosition().x = 100;
 		//player.getPosition().y = 100;
@@ -590,7 +616,6 @@ public class GameScreen implements Screen{
 				
 		stateTime = 0f;
 		
-		difficulty ++;
 		spawnTimer = 0;
 	}
 	
@@ -605,9 +630,8 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y);
-		System.out.println(teleporter.getPosition().x);
-		System.out.println(teleporter.getPosition().y);
+		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y + 1);
+
 
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
