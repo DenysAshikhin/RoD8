@@ -810,7 +810,7 @@ public class GameScreen implements Screen{
 		case 1:
 			
 			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
-			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
 			break;
 			
 		case 2:
