@@ -103,6 +103,9 @@ public class Monster extends B2DSprite{
 		
 		switch(this.getState()){
 		case 0: 
+			framesRun = 0;
+			animTime = 0;
+			prevFrame = null;
 	
 			if(this.getFacing()){
 				
@@ -114,6 +117,9 @@ public class Monster extends B2DSprite{
 			}
 			break;
 		case 1:
+			framesRun = 0;
+			animTime = 0;
+			prevFrame = null;
 	
 			if(this.getFacing()){
 			
@@ -125,10 +131,16 @@ public class Monster extends B2DSprite{
 			}
 			break;
 		case 2:
+			framesRun = 0;
+			animTime = 0;
+			prevFrame = null;
 			
 			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
 		case 3:
+			framesRun = 0;
+			animTime = 0;
+			prevFrame = null;
 	
 			spriteBatch.draw(runright.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			break;
