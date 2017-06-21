@@ -308,6 +308,10 @@ public class Player extends B2DSprite{
 				if(framesRun == 2){
 					
 					gameScreen.createBullet("bullet:10.00", this.getFacing());
+					
+					if(Math.random() < this.mortarChance){
+						gameScreen.createMortar(20f, this.getFacing());
+					}
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);
@@ -598,9 +602,9 @@ public class Player extends B2DSprite{
 			
 			texture = GameScreen.textures.getTexture("sniper");
 
-			sprites = new TextureRegion[5];
-			sprites = TextureRegion.split(texture, 18, 13)[2];
-			primaryRight = new Animation<TextureRegion>(attackTime, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+			sprites = new TextureRegion[6];
+			sprites = TextureRegion.split(texture, 62, 14)[2];
+			primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 			break;
 			
 		}
