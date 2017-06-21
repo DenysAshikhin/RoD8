@@ -95,9 +95,13 @@ public class CharacterScreen implements Screen{
 		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
 			
 			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
-			scoreFont.draw(game.batch, guiLayout, 190, 300);
+			scoreFont.getData().setScale(2);
+			guiLayout = new GlyphLayout(scoreFont, "Quick, weak attacks.");
+			
+			scoreFont.draw(game.batch, guiLayout, 190, 200);
 			if(Gdx.input.isTouched()){
 
+				
 				game.setScreen(new GameScreen(game, 1));
 			}
 		}
@@ -112,7 +116,10 @@ public class CharacterScreen implements Screen{
 		if (Gdx.input.getY() < y + PLAY_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < PLAY_BUTTON_X + PLAY_BUTTON_WIDTH && Gdx.input.getX() >  PLAY_BUTTON_X){
 			
 			game.batch.draw(sniperActive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			scoreFont.getData().setScale(2);
+			guiLayout = new GlyphLayout(scoreFont, "Powerful, slow attacks.");
 			
+			scoreFont.draw(game.batch, guiLayout, 190, 200);
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game, 2));
