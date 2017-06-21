@@ -7,22 +7,24 @@ import com.badlogic.gdx.graphics.Texture;
 /**
  * The Class MainMenu.
  */
-public class MainMenu implements Screen{
+public class CharacterScreen implements Screen{
 
 	/** The game. */
 	SpaceGame game;
 	
 	/** The exit buttton active. */
-	Texture exitButttonActive;
+	Texture commandoActive;
 
 	/** The exit button inactive. */
-	Texture exitButtonInactive;
+	Texture commandoInactive;
 
 	/** The play button active. */
-	Texture playButtonActive;
+	Texture sniperActive;
 
 	/** The play button inactive. */
-	Texture playButtonInactive;
+	Texture sniperInactive;
+
+	public Object scrollingBackground;
 
 	/** The exit button width. */
 	private static int EXIT_BUTTON_WIDTH = 300;
@@ -47,14 +49,14 @@ public class MainMenu implements Screen{
 	 *
 	 * @param game the game
 	 */
-	public MainMenu(SpaceGame game){
+	public CharacterScreen(SpaceGame game){
 	
 		this.game = game;
 		
-		playButtonActive = new Texture("play_button_active.png");
-		playButtonInactive = new Texture("play_button_inactive.png");
-		exitButttonActive = new Texture("exit_button_active.png");
-		exitButtonInactive = new Texture("exit_button_inactive.png");
+		commandoActive = new Texture("commandoOn.png");
+		commandoInactive = new Texture("commandoOff.png");
+		sniperActive = new Texture("sniperOn.png");
+		sniperInactive = new Texture("sniperOff.png");
 
 		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
 	
@@ -88,20 +90,20 @@ public class MainMenu implements Screen{
 		System.out.println(x + EXIT_BUTTON_WIDTH);
 
 		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
-			game.batch.draw(exitButttonActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			game.batch.draw(commandoActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 			if(Gdx.input.isTouched()){
 				
-				Gdx.app.exit();
+			 
 			}
 		}
 		else{
 			
-			game.batch.draw(exitButtonInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			game.batch.draw(commandoInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 
 		}
 		x = SpaceGame.WIDTH/2 - PLAY_BUTTON_WIDTH/2;
 		if (Gdx.input.getX() < x + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < PLAY_BUTTON_Y + PLAY_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  PLAY_BUTTON_Y){
-			game.batch.draw(playButtonActive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			game.batch.draw(sniperActive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game));
@@ -109,7 +111,7 @@ public class MainMenu implements Screen{
 		}
 		else{
 			
-			game.batch.draw(playButtonInactive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			game.batch.draw(sniperInactive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 
 		}
 		
