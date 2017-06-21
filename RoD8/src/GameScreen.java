@@ -572,12 +572,56 @@ public class GameScreen implements Screen{
 			i.writeItem(spriteBatch);
 		}
 	
-		guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
-		scoreFont.draw(spriteBatch, guiLayout, 5, 470);
-		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health);
-		scoreFont.draw(spriteBatch, guiLayout, 5, 460);
-		guiLayout = new GlyphLayout(scoreFont, "Max Health: " + player.maxHealth);
-		scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+		//guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
+		//scoreFont.draw(spriteBatch, guiLayout, 5, 470);
+		
+		int t = (int) ((System.currentTimeMillis() - player.secondUsed)/1000);
+		if(t < player.secondCD/1000){
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill S ready in..." + ((player.secondCD/1000) - t));
+			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
+		}
+		else{
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill S: Ready!");
+			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
+
+		}
+		
+		
+		t = (int) ((System.currentTimeMillis() - player.thirdUsed)/1000);
+		if(t < player.thirdCD/1000){
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill D ready in..." + ((player.thirdCD/1000) - t));
+			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+		}
+		else{
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill D: Ready!");
+			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+
+		}
+		
+		
+		t = (int) ((System.currentTimeMillis() - player.fourthUsed)/1000);
+		if(t < player.fourthCD/1000){
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill F ready in..." + ((player.fourthCD/1000) - t));
+			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
+		}
+		else{
+			
+			guiLayout = new GlyphLayout(scoreFont, "Skill F: Ready!");
+			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
+
+		}
+		
+		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health + "/" + player.maxHealth);
+		scoreFont.draw(spriteBatch, guiLayout, 210, 57);
+		
+		
+		//guiLayout = new GlyphLayout(scoreFont, "Max Health: " + player.maxHealth);
+		//scoreFont.draw(spriteBatch, guiLayout, 5, 450);
 		
 		spriteBatch.end();
 	

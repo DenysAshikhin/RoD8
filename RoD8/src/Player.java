@@ -66,9 +66,13 @@ public class Player extends B2DSprite{
 	
 	private static final float DETECTION_RANGE = 1.7f;
 	
-	private long secondCD;
-	private long thirdCD;
-	private long fourthCD;
+	public long secondCD;
+	public long thirdCD;
+	public long fourthCD;
+	
+	public long secondUsed;
+	public long thirdUsed;
+	public long fourthUsed;
 	
 	Monster markedMob;
 	
@@ -89,6 +93,10 @@ public class Player extends B2DSprite{
 		
 		super(body);
 		
+		secondCD = 3000;
+		thirdCD = 6000;
+		fourthCD = 10000;
+		
 		markedMob = null;
 		
 		this.gameScreen = gameScreen;
@@ -96,8 +104,6 @@ public class Player extends B2DSprite{
 		this.type = type;
 		
 		money = 0;
-		
-		
 		
 		switch(this.type){
 			
@@ -490,7 +496,7 @@ public class Player extends B2DSprite{
 				this.setState(4);
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.S)){
+			if(Gdx.input.isKeyPressed(Keys.S) && ((System.currentTimeMillis() - secondUsed) >= secondCD)){
 				
 				this.setState(5);
 				
@@ -501,9 +507,10 @@ public class Player extends B2DSprite{
 					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
 						this.getBody().applyLinearImpulse(new Vector2(6f, 0f), this.getPosition(), true);
 				}
+				secondUsed = System.currentTimeMillis();
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.D)){
+			if(Gdx.input.isKeyPressed(Keys.D) && ((System.currentTimeMillis() - thirdUsed) >= thirdCD)){
 				
 				this.setState(6);
 				
@@ -515,9 +522,10 @@ public class Player extends B2DSprite{
 						this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);
 				}
 					
+				thirdUsed = System.currentTimeMillis();
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.F)){
+			if(Gdx.input.isKeyPressed(Keys.F) && ((System.currentTimeMillis() - fourthUsed) >= fourthCD)){
 				
 				if(this.type == 1)
 					this.setState(7);
@@ -525,6 +533,8 @@ public class Player extends B2DSprite{
 					
 					markMob();
 				}
+				
+				fourthUsed = System.currentTimeMillis();
 			}
 		}
 		
