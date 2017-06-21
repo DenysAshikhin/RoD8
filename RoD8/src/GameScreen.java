@@ -126,6 +126,7 @@ public class GameScreen implements Screen{
 	/** The crystals. */
 	private Array<Crystal> crystals;
 
+	public int phase;
 		
 	/** The cam. */
 	private OrthographicCamera cam;
@@ -139,8 +140,6 @@ public class GameScreen implements Screen{
 	private long spawnTimer;
 
 	private Texture blank;
-
-	//private OrthographicCamera hudCam;
 
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
@@ -207,7 +206,7 @@ public class GameScreen implements Screen{
 		spriteBatch = new SpriteBatch();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener();
+		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);	
 		b2dr = new Box2DDebugRenderer();
 		
@@ -240,6 +239,7 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
+		phase = 0;
 		player.money = 9999999;
 
 	}
@@ -542,6 +542,7 @@ public class GameScreen implements Screen{
 				teleporter.isActive = true;
 				teleporter.wasActivated = true;
 				portalStart = System.currentTimeMillis();
+				phase = 10;
 			}
 		}
 		
@@ -571,19 +572,16 @@ public class GameScreen implements Screen{
 		for(Item i : itemList){
 			i.writeItem(spriteBatch);
 		}
-	
-		//guiLayout = new GlyphLayout(scoreFont, "Health: " + ((int) (100 * (player.health / player.maxHealth))) + "%");
-		//scoreFont.draw(spriteBatch, guiLayout, 5, 470);
 		
 		int t = (int) ((System.currentTimeMillis() - player.secondUsed)/1000);
 		if(t < player.secondCD/1000){
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill S ready in..." + ((player.secondCD/1000) - t));
+			guiLayout = new GlyphLayout(scoreFont, "Ability S ready in..." + ((player.secondCD/1000) - t));
 			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
 		}
 		else{
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill S: Ready!");
+			guiLayout = new GlyphLayout(scoreFont, "Ability S: Ready!");
 			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
 
 		}
@@ -592,12 +590,12 @@ public class GameScreen implements Screen{
 		t = (int) ((System.currentTimeMillis() - player.thirdUsed)/1000);
 		if(t < player.thirdCD/1000){
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill D ready in..." + ((player.thirdCD/1000) - t));
+			guiLayout = new GlyphLayout(scoreFont, "Ability D ready in..." + ((player.thirdCD/1000) - t));
 			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
 		}
 		else{
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill D: Ready!");
+			guiLayout = new GlyphLayout(scoreFont, "Ability D: Ready!");
 			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
 
 		}
@@ -606,12 +604,12 @@ public class GameScreen implements Screen{
 		t = (int) ((System.currentTimeMillis() - player.fourthUsed)/1000);
 		if(t < player.fourthCD/1000){
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill F ready in..." + ((player.fourthCD/1000) - t));
+			guiLayout = new GlyphLayout(scoreFont, "Ability F ready in..." + ((player.fourthCD/1000) - t));
 			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
 		}
 		else{
 			
-			guiLayout = new GlyphLayout(scoreFont, "Skill F: Ready!");
+			guiLayout = new GlyphLayout(scoreFont, "Ability F: Ready!");
 			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
 
 		}
@@ -619,9 +617,37 @@ public class GameScreen implements Screen{
 		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health + "/" + player.maxHealth);
 		scoreFont.draw(spriteBatch, guiLayout, 210, 57);
 		
+		switch(phase){
 		
-		//guiLayout = new GlyphLayout(scoreFont, "Max Health: " + player.maxHealth);
-		//scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+		case 0:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Press Left and Right Arrow Keys To Move.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			
+			break;
+		case 1:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Press spacebar To Jump.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			break;
+		case 2:
+			
+			if(this.contactListener.isPlayerOnLadder()){
+			
+				guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb.");
+				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			}
+			break;
+		case 3:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Look in the top left corner for your abilities.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			break;
+		case 4:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Find the portal...");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+		}
 		
 		spriteBatch.end();
 	
@@ -630,6 +656,7 @@ public class GameScreen implements Screen{
 	
 			createMonster();
 			spawnTimer = System.currentTimeMillis();
+			System.out.println(difficulty);
 		}
 	
 		
@@ -710,7 +737,7 @@ public class GameScreen implements Screen{
 		world.dispose();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener();
+		contactListener = new MyContactListener(this);
 		world.setContactListener(contactListener);	
 		
 		difficulty ++;
@@ -749,7 +776,7 @@ public class GameScreen implements Screen{
 		
 		shape.setAsBox(
 				((Player.PLAYER_WIDTH * SCALE) / 2) / PPM, 
-				((Player.PLAYER_HEIGHT * SCALE) / 2) / PPM);
+				((Player.PLAYER_HEIGHT * SCALE) / 2) / PPM + 1/PPM);
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
