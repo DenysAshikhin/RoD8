@@ -31,6 +31,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class GameScreen.
  */
@@ -49,41 +50,37 @@ public class GameScreen implements Screen{
 	/** The monsters. */
 	public static Array<Monster> monsterList = new Array<Monster>();
 
+	/** The item list. */
 	public static Array<Item> itemList = new Array<Item>();
 
+	/** The floating item list. */
 	public static Array<Item> floatingItemList = new Array<Item>();
 
 	/** The textures. */
 	public static Content textures;
 
+	/** The remove mobs. */
 	public static Array<Monster> removeMobs = new Array<Monster>();
 
+	/** The transition items. */
 	public static Array<Item> transitionItems = new Array<Item>();
 
+	/** The chests. */
 	public static HashSet<Chest> chests;
+	
+	/** The launchers. */
 	public static HashSet<Launcher> launchers;
 
+	/** The teleporter. */
 	public static Teleporter teleporter;
 
 	/** The Constant PPM. */
 	public static final float PPM = 100;//Conversion of 100 pixels = 1 metre
 
-	/**
-	 * Associated Indexes:
-	 * 0 : null;
-	 * 1 : crab;
-	 * 2 : lemurian;
-	 * 3 : giant
-	 */
+	/** Associated Indexes: 0 : null; 1 : crab; 2 : lemurian; 3 : giant. */
 	public static final float[] MONSTER_WIDTH = {0f, 25f, 18f, 30f, 24f, 82f};
 
-	/**
-	 * Associated Indexes:
-	 * 0 : null;
-	 * 1 : crab;
-	 * 2 : lemurian;
-	 * 3 : giant
-	 */
+	/** Associated Indexes: 0 : null; 1 : crab; 2 : lemurian; 3 : giant. */
 	public static final float[] MONSTER_HEIGHT = {0f, 25f, 18f, 60f, 30f, 120f};
 
 	/** The Constant SCALE. */
@@ -106,6 +103,7 @@ public class GameScreen implements Screen{
 	/** The debug. */
 	private boolean debug = true;
 		
+	/** The portal start. */
 	private long portalStart;
 
 	/** The b 2 dr. */
@@ -126,19 +124,25 @@ public class GameScreen implements Screen{
 	/** The crystals. */
 	private Array<Crystal> crystals;
 
+	/** The phase. */
 	public int phase;
 		
 	/** The cam. */
 	private OrthographicCamera cam;
 	
+	/** The monster num. */
 	private int monsterNum;
 
+	/** The item num. */
 	private int itemNum;
 
+	/** The difficulty. */
 	private short difficulty;
 
+	/** The spawn timer. */
 	private long spawnTimer;
 
+	/** The blank. */
 	private Texture blank;
 
 	/** The Constant BIT_PLAYER. */
@@ -160,20 +164,28 @@ public class GameScreen implements Screen{
 	/** The Constant BIT_MONSTER. */
 	private static final short BIT_MONSTER = 64;
 	
+	/** The Constant BIT_BULLET. */
 	private static final short BIT_BULLET = 128;
 	
+	/** The Constant BIT_ATTACK. */
 	private static final short BIT_ATTACK = 256;
 	
+	/** The Constant BIT_PORTAL. */
 	private static final short BIT_PORTAL = 512;
 
+	/** The Constant BIT_ITEM. */
 	private static final short BIT_ITEM = 1024;
 	
+	/** The Constant BIT_LAUNCHER. */
 	private static final short BIT_LAUNCHER = 2048;
 	
+	/** The Constant BIT_MORTAR. */
 	private static final short BIT_MORTAR = 4096;
 
+	/** The Constant BIT_EXPLOSION. */
 	private static final short BIT_EXPLOSION = 8192;
 
+	/** The changing. */
 	private boolean changing;
 	/**
 	 * Instantiates a new game screen.
@@ -248,6 +260,12 @@ public class GameScreen implements Screen{
 
 	}
 	
+	/**
+	 * Creates the bullet.
+	 *
+	 * @param identifier the identifier
+	 * @param value the value
+	 */
 	public void createBullet(String identifier, boolean value){
 		
 		BodyDef bdef = new BodyDef();
@@ -281,6 +299,12 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData(identifier);
 	}
 	
+	/**
+	 * Creates the mortar.
+	 *
+	 * @param damage the damage
+	 * @param dir the dir
+	 */
 	public void createMortar(float damage, boolean dir){
 		
 		BodyDef bdef = new BodyDef();
@@ -310,6 +334,14 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
+	/**
+	 * Creates the local attack.
+	 *
+	 * @param m the m
+	 * @param damage the damage
+	 * @param dir the dir
+	 * @param centered the centered
+	 */
 	public void createLocalAttack(Monster m, float damage, boolean dir, boolean centered){
 		
 		FixtureDef fdef = new FixtureDef();
@@ -708,6 +740,9 @@ public class GameScreen implements Screen{
 	}
 
 	
+	/**
+	 * Change level.
+	 */
 	private void changeLevel(){
 		
 		teleporter = null;
@@ -797,6 +832,11 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("foot");
 	}
 	
+	/**
+	 * Creates the explosion.
+	 *
+	 * @param body the body
+	 */
 	private void createExplosion(Body body){
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
@@ -819,6 +859,8 @@ public class GameScreen implements Screen{
 
 	/**
 	 * Creates monsters.
+	 *
+	 * @param boss the boss
 	 */
 	private void createMonster(boolean boss){
 		int monsterType;
@@ -885,7 +927,7 @@ public class GameScreen implements Screen{
 		shape1.setAsBox(
 				(((width + 5) / 2) * SCALE) / PPM, 
 				(((height / 7) / 2) * SCALE) / PPM,
-				new Vector2(0, (float) ((((-height / 2)) * SCALE / PPM) + ((monsterList.peek().jumpHeight)))),
+				new Vector2(0, (((-height / 2)) * SCALE / PPM) + ((monsterList.peek().jumpHeight))),
 				0);
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
@@ -950,6 +992,7 @@ public class GameScreen implements Screen{
 	 *
 	 * @param layer the layer
 	 * @param bits the bits
+	 * @param userData the user data
 	 */
 	private void createLayer(TiledMapTileLayer layer, short bits, String userData){
 		
@@ -1025,6 +1068,9 @@ public class GameScreen implements Screen{
 		 }
 	}
 	
+	/**
+	 * Creates the portal.
+	 */
 	private void createPortal(){
 		
 		MapLayer layer = tileMap.getLayers().get("teleporter");
@@ -1055,6 +1101,9 @@ public class GameScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * Creates the launchers.
+	 */
 	private void createLaunchers(){
 	
 		MapLayer layer = tileMap.getLayers().get("launcher");
@@ -1088,6 +1137,9 @@ public class GameScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * Creates the chests.
+	 */
 	private void createChests(){
 				
 		MapLayer layer = tileMap.getLayers().get("chest");
@@ -1122,6 +1174,11 @@ public class GameScreen implements Screen{
 		}
 	}
 	
+	/**
+	 * Creates the item.
+	 *
+	 * @param chest the chest
+	 */
 	private void createItem(Chest chest){
 		
 		BodyDef bdef = new BodyDef();

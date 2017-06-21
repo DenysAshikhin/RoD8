@@ -5,21 +5,38 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Item.
  */
 public class Item extends B2DSprite{
 	
+	/** The identifier. */
 	public float identifier;
 
+	/** The game screen. */
 	GameScreen gameScreen;
 	
+	/** The type. */
 	int type;
+	
+	/** The item num. */
 	int itemNum;
+	
+	/** The item count. */
 	int itemCount = 1;
 
+	/** The image. */
 	private Animation<TextureRegion> image;
 	
+	/**
+	 * Instantiates a new item.
+	 *
+	 * @param body the body
+	 * @param gamescreen the gamescreen
+	 * @param item the item
+	 * @param identity the identity
+	 */
 	public Item(Body body, GameScreen gamescreen, int item, float identity){
 		
 		super(body);
@@ -39,6 +56,11 @@ public class Item extends B2DSprite{
 		image = new Animation<TextureRegion>(0.07f, sprites[type - 1]);
 	}
 	
+	/**
+	 * Gets the item.
+	 *
+	 * @return the item
+	 */
 	public void getItem(){
 		switch(type){
 		case 1: //root
@@ -74,6 +96,11 @@ public class Item extends B2DSprite{
 		}
 	}
 	
+	/**
+	 * Write item.
+	 *
+	 * @param spritebatch the spritebatch
+	 */
 	public void writeItem(SpriteBatch spritebatch){
 		
 		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.itemNum * 32, 80, this.width, this.height);
@@ -84,6 +111,11 @@ public class Item extends B2DSprite{
 		}
 	}
 	
+	/**
+	 * Draw item.
+	 *
+	 * @param spritebatch the spritebatch
+	 */
 	public void drawItem(SpriteBatch spritebatch){
 		
 		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + (this.width / GameScreen.PPM) / 2, this.getPosition().y * 100 - (this.height / GameScreen.PPM) / 2, 0, 0, this.width, this.height, 1, 1, 0);

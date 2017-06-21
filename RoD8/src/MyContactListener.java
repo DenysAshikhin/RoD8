@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
+// TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving myContact events.
  * The class that is interested in processing a myContact
@@ -22,22 +23,28 @@ import com.badlogic.gdx.utils.Array;
  */
 public class MyContactListener implements ContactListener{
 	
+	/** The body to remove. */
 	public HashSet<Body> bodyToRemove;
 	
+	/** The explosion to add. */
 	public Body explosionToAdd;
 
 	/** The player on ground. */
 	private int playerOnGround;
 	
+	/** The player on ladder. */
 	private int playerOnLadder;
 	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
+	/** The game screen. */
 	private GameScreen gameScreen;
 	
 	/**
 	 * Instantiates a new my contact listener.
+	 *
+	 * @param gameScreen the game screen
 	 */
 	public MyContactListener(GameScreen gameScreen){
 		super();
@@ -57,6 +64,11 @@ public class MyContactListener implements ContactListener{
 	 */
 	public Array<Body> getBodiesToRemove(){return bodiesToRemove;}
 	
+	/**
+	 * Gets the body to remove.
+	 *
+	 * @return the body to remove
+	 */
 	public HashSet<Body> getBodyToRemove(){return bodyToRemove;}
 	
 	/**
@@ -66,6 +78,11 @@ public class MyContactListener implements ContactListener{
 	 */
 	public boolean isPlayerOnGround(){return playerOnGround > 0; }
 	
+	/**
+	 * Checks if is player on ladder.
+	 *
+	 * @return true, if is player on ladder
+	 */
 	public boolean isPlayerOnLadder(){return playerOnLadder > 0;}
 	
 	/* (non-Javadoc)

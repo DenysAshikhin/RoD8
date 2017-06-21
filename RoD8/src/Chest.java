@@ -4,13 +4,29 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Chest.
+ */
 public class Chest extends B2DSprite{
 
+	/** The is open. */
 	public boolean isOpen;
+	
+	/** The is touched. */
 	public boolean isTouched;
+	
+	/** The open. */
 	private Animation<TextureRegion> open;
+	
+	/** The closed. */
 	private Animation<TextureRegion> closed;
 	
+	/**
+	 * Instantiates a new chest.
+	 *
+	 * @param body the body
+	 */
 	public Chest(Body body){
 		
 		super(body);
@@ -27,6 +43,11 @@ public class Chest extends B2DSprite{
 	}
 	
 	
+	/**
+	 * Draw chest.
+	 *
+	 * @param spriteBatch the sprite batch
+	 */
 	public void drawChest(SpriteBatch spriteBatch){
 		
 		spriteBatch.begin();

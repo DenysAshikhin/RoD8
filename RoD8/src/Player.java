@@ -7,35 +7,49 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Player.
  */
 public class Player extends B2DSprite{
 
+	/** The money. */
 	public float money;
 
+	/** The max health. */
 	public float maxHealth = 100f;
 
+	/** The health. */
 	public float health = maxHealth;
 	
+	/** The gold gain. */
 	public float goldGain = 0.02f;
 
+	/** The gold leech. */
 	public float goldLeech = 10f;
 
+	/** The Health steal. */
 	public float HealthSteal = 0f;
 
+	/** The Health leech. */
 	public float HealthLeech = 0f;
 	
+	/** The total jumps. */
 	public int totalJumps = 1;
 	
+	/** The jump count. */
 	public int jumpCount;
 	
+	/** The attack time. */
 	public float attackTime = 0.07f;
 	
+	/** The move speed. */
 	public float moveSpeed = 1f;
 	
+	/** The knockback chance. */
 	public float knockbackChance = 0f;
 	
+	/** The mortar chance. */
 	public float mortarChance = 0f;
 
 	/** The Constant PLAYER_WIDTH. */
@@ -44,43 +58,73 @@ public class Player extends B2DSprite{
 	/** The Constant PLAYER_HEIGHT. */
 	public static float PLAYER_HEIGHT = 20f;
 
+	/** The run right. */
 	Animation<TextureRegion> runRight;
 
+	/** The jump right. */
 	Animation<TextureRegion> jumpRight;
 
+	/** The standing right. */
 	Animation<TextureRegion> standingRight;
 
+	/** The climbing. */
 	Animation<TextureRegion> climbing;
 
+	/** The primary right. */
 	Animation<TextureRegion> primaryRight;
 
+	/** The secondary right. */
 	Animation<TextureRegion> secondaryRight;
 
+	/** The tertiary right. */
 	Animation<TextureRegion> tertiaryRight;
 
+	/** The quaternary right. */
 	Animation<TextureRegion> quaternaryRight;
 	
+	/** The drone idle. */
 	Animation<TextureRegion> droneIdle;
 	
+	/** The drone scan. */
 	Animation<TextureRegion> droneScan;
 	
+	/** The Constant DETECTION_RANGE. */
 	private static final float DETECTION_RANGE = 1.7f;
 	
+	/** The second CD. */
 	public long secondCD;
+	
+	/** The third CD. */
 	public long thirdCD;
+	
+	/** The fourth CD. */
 	public long fourthCD;
 	
+	/** The second used. */
 	public long secondUsed;
+	
+	/** The third used. */
 	public long thirdUsed;
+	
+	/** The fourth used. */
 	public long fourthUsed;
 	
+	/** The marked mob. */
 	Monster markedMob;
 	
+	/** The anim time. */
 	private float animTime;
+	
+	/** The frames run. */
 	private int framesRun;
 	
+	/** The type. */
 	private int type;
+	
+	/** The prev frame. */
 	private TextureRegion prevFrame = null;
+	
+	/** The game screen. */
 	private GameScreen gameScreen;
 
 	
@@ -88,6 +132,8 @@ public class Player extends B2DSprite{
 	 * Instantiates a new player.
 	 *
 	 * @param body the body
+	 * @param gameScreen the game screen
+	 * @param type the type
 	 */
 	public Player(Body body, GameScreen gameScreen, int type){//Add a type int later to determing which animations will be loaded in
 		
@@ -118,6 +164,12 @@ public class Player extends B2DSprite{
 		framesRun = 0;
 	}
 	
+	/**
+	 * Draw commando.
+	 *
+	 * @param spriteBatch the sprite batch
+	 * @param stateTime the state time
+	 */
 	private void drawCommando(SpriteBatch spriteBatch, float stateTime){
 		
 		switch(this.getState()){
@@ -275,6 +327,12 @@ public class Player extends B2DSprite{
 		//spriteBatch.end();
 	}
 	
+	/**
+	 * Draw sniper.
+	 *
+	 * @param spriteBatch the sprite batch
+	 * @param stateTime the state time
+	 */
 	private void drawSniper(SpriteBatch spriteBatch, float stateTime){
 		
 		switch(this.getState()){
@@ -419,7 +477,12 @@ public class Player extends B2DSprite{
 		//spriteBatch.end();
 	}
 	
-	/**Framesrun needs to be changed depending on the character/class*/
+	/**
+	 * Framesrun needs to be changed depending on the character/class.
+	 *
+	 * @param spriteBatch the sprite batch
+	 * @param stateTime the state time
+	 */
 	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
 			
 		//spriteBatch.begin();
@@ -576,6 +639,9 @@ public class Player extends B2DSprite{
 			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
 	}
 	
+	/**
+	 * Mark mob.
+	 */
 	private void markMob(){
 			
 		if(markedMob != null){
@@ -603,32 +669,67 @@ public class Player extends B2DSprite{
 				}
 	}
 	
+	/**
+	 * Increase max health.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseMaxHealth(float increase){
 		
 		this.maxHealth += increase;
 		this.health += increase;
 	}
 	
+	/**
+	 * Increase gold gain.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseGoldGain(float increase){
 		this.goldGain += increase;
 	}
 	
+	/**
+	 * Increase gold leech.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseGoldLeech(float increase){
 		this.goldLeech += increase;
 	}
 	
+	/**
+	 * Increase health steal.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseHealthSteal(float increase){
 		this.HealthSteal += increase;
 	}
 	
+	/**
+	 * Increase health leech.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseHealthLeech(float increase){
 		this.HealthLeech += increase;
 	}
 	
+	/**
+	 * Increase jumps.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseJumps(int increase){
 		this.totalJumps += 1;
 	}
 	
+	/**
+	 * Increase attack speed.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseAttackSpeed(float increase){
 		this.attackTime -= increase;
 		
@@ -655,20 +756,43 @@ public class Player extends B2DSprite{
 		}
 	}
 	
+	/**
+	 * Increase move speed.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseMoveSpeed(float increase){
 		this.moveSpeed += increase;
 	}
 	
+	/**
+	 * Increase knockback chance.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseKnockbackChance(float increase){
 		this.knockbackChance += increase;
 	}
 	
+	/**
+	 * Increase mortar chance.
+	 *
+	 * @param increase the increase
+	 */
 	public void increaseMortarChance(float increase){
 		this.mortarChance += increase;
 	}
 	
+	/**
+	 * Increase anim time.
+	 *
+	 * @param value the value
+	 */
 	public void increaseAnimTime(float value){animTime += value;}
 
+	/**
+	 * Creates the commando.
+	 */
 	private void createCommando(){
 		
 		Texture texture = GameScreen.textures.getTexture("commando");
@@ -705,6 +829,9 @@ public class Player extends B2DSprite{
 		
 	}
 
+	/**
+	 * Creates the sniper.
+	 */
 	private void createSniper(){
 		
 		Texture texture = GameScreen.textures.getTexture("sniper");
