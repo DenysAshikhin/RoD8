@@ -60,14 +60,18 @@ public class Player extends B2DSprite{
 
 	Animation<TextureRegion> quaternaryRight;
 	
-	private static final float DETECTION_RANGE = 20f;
+	Animation<TextureRegion> droneIdle;
+	
+	Animation<TextureRegion> droneScan;
+	
+	private static final float DETECTION_RANGE = 1.7f;
 	
 	Monster markedMob;
 	
 	private float animTime;
 	private int framesRun;
 	
-	private int type;
+	public int type;
 	private TextureRegion prevFrame = null;
 	private GameScreen gameScreen;
 
@@ -383,6 +387,23 @@ public class Player extends B2DSprite{
 			break;
 		}	
 		
+		if(markedMob == null){
+			
+			if(this.getFacing()){
+				spriteBatch.draw(droneIdle.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - 20, this.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(droneIdle.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + 14, this.getBody().getPosition().y * 100 + 14, 0, 0, 15, 15, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+		}
+		else{
+				
+				spriteBatch.draw(droneScan.getKeyFrame(stateTime, true), markedMob.getBody().getPosition().x * 100 - 20, markedMob.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, GameScreen.SCALE, GameScreen.SCALE, 0);
+			
+	
+		}
+		
 		//spriteBatch.end();
 	}
 	
@@ -513,24 +534,24 @@ public class Player extends B2DSprite{
 			markedMob.isMarked = false;
 			markedMob = null;
 		}
-			for (Monster m : GameScreen.monsterList){
+		for (Monster m : GameScreen.monsterList){
 				
-				float range = (float) Math.sqrt(Math.pow(m.getPosition().x - this.getPosition().x, 2) + Math.pow(m.getPosition().y - this.getPosition().y, 2));
-				if(range <= DETECTION_RANGE){
+			float range = (float) Math.sqrt(Math.pow(m.getPosition().x - this.getPosition().x, 2) + Math.pow(m.getPosition().y - this.getPosition().y, 2));
+			if(range <= DETECTION_RANGE){
 					
-					if(markedMob == null){
-						
-						markedMob = m;
-						m.isMarked = true;
-					}
-						if(m.health > markedMob.health){
-							
-							markedMob.isMarked = false;
-							markedMob = m;
-							m.isMarked = true;
-						}
-					}
+				if(markedMob == null){
+					
+					markedMob = m;
+					m.isMarked = true;
 				}
+				if(m.health > markedMob.health){
+						
+					markedMob.isMarked = false;
+					markedMob = m;
+					m.isMarked = true;
+				}
+			}
+		}
 	}
 	
 	public void increaseMaxHealth(float increase){
@@ -668,8 +689,15 @@ public class Player extends B2DSprite{
 		//Not Needed
 		sprites = new TextureRegion[15];
 		sprites = TextureRegion.split(texture, 40, 13)[5];
-		quaternaryRight = new Animation<TextureRegion>(0.07f,
-				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		quaternaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		
+		sprites = new TextureRegion[1];
+		sprites = TextureRegion.split(texture, 21, 11)[13];
+		droneIdle = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[0]});
+		
+		sprites = new TextureRegion[2];
+		sprites = TextureRegion.split(texture, 21, 11)[13];
+		droneScan = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[1], sprites[2]});
 		
 	}
 
