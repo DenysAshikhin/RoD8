@@ -306,22 +306,24 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
-	private void createExplosion(float damage, Vector2 position){
-		BodyDef bdef = new BodyDef();
+	private void createExplosion(Body body){
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
-
-		bdef.position.set(position);
-		bdef.type = BodyType.StaticBody;
 		
-		shape.setAsBox(30f * SCALE, 30f * SCALE);
-
-		Body body = world.createBody(bdef);
+		shape.setAsBox(30f * SCALE / PPM, 30f * SCALE / PPM, new Vector2(0, 0), 0);
+		
+		Body b = body;
+		b.setLinearVelocity(new Vector2(0, 0));
+		b.setGravityScale(0);
+		
 		fdef.shape = shape;
+		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_EXPLOSION;
 		fdef.filter.maskBits = BIT_MONSTER;
 		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("explosion:" + damage);
+
+		b.createFixture(fdef).setUserData("explosion:" + 10f);
+
 	}
 
 	public void createLocalAttack(Monster m, float damage, boolean dir){
@@ -377,9 +379,10 @@ public class GameScreen implements Screen{
 		}
 		bodies.clear();
 		
-		if(contactListener.explosionToAdd[0] != 0){
+		if(contactListener.explosionToAdd != null){
 			
-			createExplosion(contactListener.explosionToAdd[0], new Vector2(contactListener.explosionToAdd[1], contactListener.explosionToAdd[2]));
+			createExplosion(contactListener.explosionToAdd);
+			contactListener.explosionToAdd = null;
 		}
 		
 		for(Monster j : removeMobs){
@@ -406,12 +409,8 @@ public class GameScreen implements Screen{
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
-			
-			System.out.println(i.type);
 		}
 		transitionItems.clear();
-		
-		//System.out.println(player.getPosition());
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -432,6 +431,7 @@ public class GameScreen implements Screen{
 			
 			chest.drawChest(spriteBatch);
 		}
+	
 		
 		for(Launcher launcher : launchers){
 			
@@ -453,7 +453,18 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
-			m.drawMonsters(spriteBatch, stateTime);
+
+			if(m.isMarked){
+				
+				spriteBatch.setColor(Color.SALMON);
+				m.drawMonsters(spriteBatch, stateTime);
+				spriteBatch.setColor(Color.WHITE);
+			}
+			else{
+				
+				m.drawMonsters(spriteBatch, stateTime);
+			}
+			
 			
 			spriteBatch.setColor(Color.GREEN);
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
@@ -757,7 +768,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER | BIT_EXPLOSION;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -818,7 +829,7 @@ public class GameScreen implements Screen{
 		case 1:
 			
 			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
-			tileMap = new TmxMapLoader().load("third_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			break;
 			
 		case 2:
@@ -1041,7 +1052,8 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
+		//Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
+		Item i = new Item(body, this, 10, itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);

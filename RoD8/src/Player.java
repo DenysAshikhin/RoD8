@@ -60,6 +60,10 @@ public class Player extends B2DSprite{
 
 	Animation<TextureRegion> quaternaryRight;
 	
+	Animation<TextureRegion> droneIdle;
+	
+	Animation<TextureRegion> droneScan;
+	
 	private static final float DETECTION_RANGE = 20f;
 	
 	Monster markedMob;
@@ -381,11 +385,24 @@ public class Player extends B2DSprite{
 				prevFrame = null;
 			}
 			break;
-		case 7:
-				
-				this.setState(0);		
-			break;
 		}	
+		
+		if(markedMob == null){
+		
+			if(this.getFacing()){
+			
+				spriteBatch.draw(droneIdle.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - 20, this.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+		
+				spriteBatch.draw(droneIdle.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + 20, this.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+		}else{
+			
+			spriteBatch.draw(droneScan.getKeyFrame(stateTime, true), markedMob.getBody().getPosition().x * 100 - 20, markedMob.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, GameScreen.SCALE, GameScreen.SCALE, 0);
+
+		}
+		
 		
 		//spriteBatch.end();
 	}
@@ -672,8 +689,15 @@ public class Player extends B2DSprite{
 		//Not Needed
 		sprites = new TextureRegion[15];
 		sprites = TextureRegion.split(texture, 40, 13)[5];
-		quaternaryRight = new Animation<TextureRegion>(0.07f,
-				new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		quaternaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11], sprites[12], sprites[13], sprites[14]});
+		
+		sprites = new TextureRegion[1];
+		sprites = TextureRegion.split(texture, 21, 11)[13];
+		droneIdle = new Animation<TextureRegion>(0.07f, sprites[0]);
+		
+		sprites = new TextureRegion[2];
+		sprites = TextureRegion.split(texture, 21, 11)[13];
+		droneScan = new Animation<TextureRegion>(0.5f, new TextureRegion[]{sprites[1], sprites[2]});
 		
 	}
 

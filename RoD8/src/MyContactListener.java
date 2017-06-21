@@ -24,7 +24,7 @@ public class MyContactListener implements ContactListener{
 	
 	public HashSet<Body> bodyToRemove;
 	
-	public float[] explosionToAdd = new float[3];
+	public Body explosionToAdd;
 
 	/** The player on ground. */
 	private int playerOnGround;
@@ -234,7 +234,11 @@ public class MyContactListener implements ContactListener{
 				Monster m = (Monster)fb.getBody().getUserData();
 					
 				float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
-					
+				
+				
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 				
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -278,6 +282,9 @@ public class MyContactListener implements ContactListener{
 				
 				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -321,6 +328,9 @@ public class MyContactListener implements ContactListener{
 				
 				float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 					
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -365,7 +375,10 @@ public class MyContactListener implements ContactListener{
 				Monster m = (Monster)fa.getBody().getUserData();
 				
 				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-					
+				
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -401,20 +414,12 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
 			
-			bodyToRemove.add(fa.getBody());
-
-			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd = fa.getBody();
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
 			
-			bodyToRemove.add(fb.getBody());
-	
-			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd = fb.getBody();
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
