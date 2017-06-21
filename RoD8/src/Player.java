@@ -252,7 +252,7 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 1){
 					
-					gameScreen.createBullet("ray:10.00", this.getFacing());
+					gameScreen.createBullet("ray:20.00", this.getFacing());
 				}
 				framesRun++;
 				prevFrame = secondaryRight.getKeyFrame(animTime, true);
@@ -304,11 +304,11 @@ public class Player extends B2DSprite{
 				
 				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
 					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
+					gameScreen.createBullet("bullet:15.00", this.getFacing());
 				}
 				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
 					
-					gameScreen.createBullet("bullet:10.00", !this.getFacing());
+					gameScreen.createBullet("bullet:15.00", !this.getFacing());
 				}
 				framesRun++;
 				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
