@@ -234,7 +234,11 @@ public class MyContactListener implements ContactListener{
 				Monster m = (Monster)fb.getBody().getUserData();
 					
 				float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
-					
+				
+				
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 				
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -278,6 +282,9 @@ public class MyContactListener implements ContactListener{
 				
 				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
 
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -321,6 +328,9 @@ public class MyContactListener implements ContactListener{
 				
 				float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
 					
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
@@ -365,7 +375,10 @@ public class MyContactListener implements ContactListener{
 				Monster m = (Monster)fa.getBody().getUserData();
 				
 				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-					
+				
+				if(m.isMarked)
+					damage *= 2;
+				
 				m.health -= damage;
 
 				float leech = GameScreen.player.HealthLeech * damage;
