@@ -2,6 +2,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SpaceGame.
  */
@@ -57,6 +58,7 @@ public class SpaceGame extends Game{
 	/* (non-Javadoc)
 	 * @see com.badlogic.gdx.Game#resize(int, int)
 	 */
+	@Override
 	public void resize(int width, int height){
 		
 		//this.scrollingBackground.resize(width, height);

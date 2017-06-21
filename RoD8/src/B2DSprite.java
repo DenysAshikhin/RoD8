@@ -3,6 +3,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class B2DSprite.
  */
@@ -128,6 +129,11 @@ public class B2DSprite {
 	 */
 	public boolean getFacing(){return facing;}
 	
+	/**
+	 * Sets the body.
+	 *
+	 * @param body the new body
+	 */
 	public void setBody(Body body){this.body = body;}
 	
 }

@@ -4,10 +4,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Launcher.
+ */
 public class Launcher extends B2DSprite{
 
+	/** The launcher anim. */
 	Animation<TextureRegion> launcherAnim;
 
+	/**
+	 * Instantiates a new launcher.
+	 *
+	 * @param body the body
+	 */
 	public Launcher(Body body) {
 		super(body);
 			
@@ -21,6 +31,12 @@ public class Launcher extends B2DSprite{
 
 	
 	
+	/**
+	 * Draw launcher.
+	 *
+	 * @param spriteBatch the sprite batch
+	 * @param delta the delta
+	 */
 	public void drawLauncher(SpriteBatch spriteBatch, float delta){
 		
 		spriteBatch.begin();

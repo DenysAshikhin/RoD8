@@ -4,17 +4,38 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Teleporter.
+ */
 public class Teleporter extends B2DSprite{
 
+	/** The is touched. */
 	public boolean isTouched;
+	
+	/** The is active. */
 	public boolean isActive;
+	
+	/** The was activated. */
 	public boolean wasActivated;
+	
+	/** The is finished. */
 	public boolean isFinished;
 
+	/** The body. */
 	Body body;
+	
+	/** The available. */
 	private Animation<TextureRegion> available;
+	
+	/** The unavailable. */
 	private Animation<TextureRegion> unavailable;
 	
+	/**
+	 * Instantiates a new teleporter.
+	 *
+	 * @param body the body
+	 */
 	public Teleporter(Body body){
 		super(body);
 
@@ -34,6 +55,12 @@ public class Teleporter extends B2DSprite{
 	}
 
 	
+	/**
+	 * Draw portal.
+	 *
+	 * @param spriteBatch the sprite batch
+	 * @param value the value
+	 */
 	public void drawPortal(SpriteBatch spriteBatch, boolean value){
 		
 		spriteBatch.begin();
