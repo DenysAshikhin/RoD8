@@ -98,7 +98,7 @@ public class CharacterScreen implements Screen{
 			scoreFont.getData().setScale(2);
 			guiLayout = new GlyphLayout(scoreFont, "Quick, weak attacks.");
 			
-			scoreFont.draw(game.batch, guiLayout, 190, 200);
+			scoreFont.draw(game.batch, guiLayout, 300, 200);
 			if(Gdx.input.isTouched()){
 
 				
@@ -119,7 +119,7 @@ public class CharacterScreen implements Screen{
 			scoreFont.getData().setScale(2);
 			guiLayout = new GlyphLayout(scoreFont, "Powerful, slow attacks.");
 			
-			scoreFont.draw(game.batch, guiLayout, 190, 200);
+			scoreFont.draw(game.batch, guiLayout, 800, 200);
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game, 2));
