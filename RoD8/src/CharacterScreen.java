@@ -2,6 +2,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -81,12 +82,14 @@ public class CharacterScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
-		
+		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
+
 		int y = SpaceGame.HEIGHT/2 - EXIT_BUTTON_HEIGHT/2;
 		
 		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
-			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 			
+			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
 			if(Gdx.input.isTouched()){
 
 				game.setScreen(new GameScreen(game, 1));
