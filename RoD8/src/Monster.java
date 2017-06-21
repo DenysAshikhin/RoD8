@@ -34,14 +34,16 @@ public class Monster extends B2DSprite{
 	private Animation<TextureRegion> runright;
 	private Animation<TextureRegion> standingright;
 	private Animation<TextureRegion> primaryright;
+	private Animation<TextureRegion> secondaryright;
 
 	private TextureRegion prevFrame;
 	
 	private int framesRun;
 	private float jumpStrength;
 	private float attackRange;
-	
-	private int attackFrames;
+
+	private int primaryAttackFrames;
+	private int secondaryAttackFrames;
 	
 	private float animTime;
 	
@@ -99,7 +101,6 @@ public class Monster extends B2DSprite{
 			this.setState(-1);
 		}
 		
-		//spriteBatch.begin();
 		switch(this.getState()){
 		case 0: 
 	
@@ -136,15 +137,19 @@ public class Monster extends B2DSprite{
 			
 			if (prevFrame != primaryright.getKeyFrame(animTime, true)){
 				
-				if(framesRun == (attackFrames - 1)){
+				if(framesRun == (primaryAttackFrames - 1)){
 					
-					gameScreen.createLocalAttack(this, 5f, this.getFacing());
+					if(this.type == 4 || this.type == 5){
+						gameScreen.createLocalAttack(this, 5f, this.getFacing(), true);
+					}else{
+						gameScreen.createLocalAttack(this, 5f, this.getFacing(), false);
+					}
 				}
 				framesRun++;
 				prevFrame = primaryright.getKeyFrame(animTime, true);
 			}
 			
-			if (framesRun <= attackFrames){
+			if (framesRun <= primaryAttackFrames){
 				
 				if(this.getState() == 4){
 					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
@@ -160,8 +165,36 @@ public class Monster extends B2DSprite{
 				prevFrame = null;
 			}
 			break;
+		case 6:
+		case 7:
+			
+			if (prevFrame != secondaryright.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 4){
+					
+					gameScreen.createLocalAttack(this, 5f, this.getFacing(), false);
+				}
+				framesRun++;
+				prevFrame = secondaryright.getKeyFrame(animTime, true);
+			}
+			
+			if (framesRun <= secondaryAttackFrames){
+				
+				if(this.getState() == 6){
+					spriteBatch.draw(secondaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
+				}else{
+					spriteBatch.draw(secondaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				}
+				
+			}else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
 		}
-		//spriteBatch.end();
 	}
 
 	/**
@@ -180,11 +213,21 @@ public class Monster extends B2DSprite{
 							if(this.getPosition().x < GameScreen.player.getPosition().x){
 	
 								this.setFace(true);
-								this.setState(4);
+								
+								if(this.type == 5){
+									this.setState(2 * ((int) (Math.random() * 2)) + 4);
+								}else{
+									this.setState(4);
+								}
 							}else if(this.getPosition().x > GameScreen.player.getPosition().x){
 	
 								this.setFace(false);
-								this.setState(5);
+								
+								if(this.type == 5){
+									this.setState(2 * ((int) (Math.random() * 2)) + 5);
+								}else{
+									this.setState(5);
+								}
 							}
 						}else{
 							
@@ -270,7 +313,7 @@ public class Monster extends B2DSprite{
 	private void createCrab(){
 		this.health = 90f;
 		this.jumpStrength = 0f;
-		this.attackFrames = 4;
+		this.primaryAttackFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
 		TextureRegion[] sprites;
@@ -280,7 +323,7 @@ public class Monster extends B2DSprite{
 		standingright = new Animation<TextureRegion>(0.07f, sprites[0]);
 		runright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 
-		sprites = new TextureRegion[attackFrames];
+		sprites = new TextureRegion[primaryAttackFrames];
 		sprites = TextureRegion.split(texture, 35, 32)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
@@ -288,12 +331,12 @@ public class Monster extends B2DSprite{
 	private void createLemurian(){
 		this.health = 60f;
 		this.jumpStrength = 1.3f;
-		this.attackFrames = 3;
+		this.primaryAttackFrames = 3;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
 		
-		sprites = new TextureRegion[attackFrames];
+		sprites = new TextureRegion[primaryAttackFrames];
 		sprites = TextureRegion.split(texture, 22, 28)[0];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2]});
 
@@ -306,7 +349,7 @@ public class Monster extends B2DSprite{
 	private void createGiant(){
 		this.health = 120f;
 		this.jumpStrength = 0f;
-		this.attackFrames = 4;
+		this.primaryAttackFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("giant");
 		TextureRegion[] sprites;
@@ -316,7 +359,7 @@ public class Monster extends B2DSprite{
 		standingright = new Animation<TextureRegion>(0.07f, sprites[3]);
 		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 		
-		sprites = new TextureRegion[attackFrames];
+		sprites = new TextureRegion[primaryAttackFrames];
 		sprites = TextureRegion.split(texture, 80, 69)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
@@ -324,7 +367,7 @@ public class Monster extends B2DSprite{
 	private void createGolem(){
 		this.health = 80f;
 		this.jumpStrength = 0f;
-		this.attackFrames = 5;
+		this.primaryAttackFrames = 5;
 		
 		Texture texture = GameScreen.textures.getTexture("golem");
 		TextureRegion[] sprites;
@@ -334,7 +377,7 @@ public class Monster extends B2DSprite{
 		standingright = new Animation<TextureRegion>(0.07f, sprites[0]);
 		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6]});
 		
-		sprites = new TextureRegion[attackFrames];
+		sprites = new TextureRegion[primaryAttackFrames];
 		sprites = TextureRegion.split(texture, 42, 33)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
 	}
@@ -342,18 +385,23 @@ public class Monster extends B2DSprite{
 	private void createCastle(){
 		this.health = 1000f;
 		this.jumpStrength = 0f;
-		this.attackFrames = 8;
+		this.primaryAttackFrames = 8;
+		this.secondaryAttackFrames = 10;
 		
 		Texture texture = GameScreen.textures.getTexture("castle");
 		TextureRegion[] sprites;
 
-		sprites = new TextureRegion[attackFrames];
-		sprites = TextureRegion.split(texture, 180, 119)[0];
-		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
-		
 		sprites = new TextureRegion[6];
-		sprites = TextureRegion.split(texture, 82, 119)[1];
+		sprites = TextureRegion.split(texture, 82, 119)[0];
 		standingright = new Animation<TextureRegion>(0.07f, sprites[5]);
 		runright = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+
+		sprites = new TextureRegion[primaryAttackFrames];
+		sprites = TextureRegion.split(texture, 180, 119)[1];
+		primaryright = new Animation<TextureRegion>(0.11f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
+		
+		sprites = new TextureRegion[secondaryAttackFrames];
+		sprites = TextureRegion.split(texture, 110, 119)[2];
+		secondaryright = new Animation<TextureRegion>(0.12f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9]});
 	}
 }

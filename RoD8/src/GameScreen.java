@@ -308,12 +308,12 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
-	public void createLocalAttack(Monster m, float damage, boolean dir){
+	public void createLocalAttack(Monster m, float damage, boolean dir, boolean centered){
 		
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		if(m.type == 4){
+		if(centered){
 			shape.setAsBox((2 * m.width / 3) * SCALE / PPM, (2 * m.height / 3) * SCALE / PPM);
 		}else{
 			if(dir){
