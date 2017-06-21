@@ -506,12 +506,12 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			
 			
-			((Chest)fa.getBody().getUserData()).isTouched = true;
+			((Chest)fa.getBody().getUserData()).isTouched = false;
 		}
 	
 		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
 			
-			((Chest)fb.getBody().getUserData()).isTouched = true;
+			((Chest)fb.getBody().getUserData()).isTouched = false;
 		}
 				
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
