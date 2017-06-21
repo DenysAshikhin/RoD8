@@ -153,9 +153,17 @@ public class Player extends B2DSprite{
 		switch(this.type){
 			
 		case 1:
+			
+			secondCD = 2000;
+			thirdCD = 4000;
+			fourthCD = 6000;
 			this.createCommando();
 			break;
 		case 2:
+			
+			secondCD = 3000;
+			thirdCD = 6000;
+			fourthCD = 10000;
 			this.createSniper();
 			break;
 		}
