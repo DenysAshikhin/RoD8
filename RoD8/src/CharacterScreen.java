@@ -2,9 +2,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MainMenu.
  */
@@ -12,6 +12,9 @@ public class CharacterScreen implements Screen{
 
 	/** The game. */
 	SpaceGame game;
+	
+	BitmapFont scoreFont;
+
 	
 	/** The exit buttton active. */
 	Texture commandoActive;
@@ -61,6 +64,9 @@ public class CharacterScreen implements Screen{
 
 		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);
 	
+		scoreFont = new BitmapFont();
+		scoreFont.getData().setScale(0.5f);
+		
 	}
 	
 	/* (non-Javadoc)
@@ -89,7 +95,7 @@ public class CharacterScreen implements Screen{
 		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
 			
 			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			scoreFont.draw(game.batch, guiLayout, 190, 300);
 			if(Gdx.input.isTouched()){
 
 				game.setScreen(new GameScreen(game, 1));
