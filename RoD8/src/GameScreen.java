@@ -142,6 +142,8 @@ public class GameScreen implements Screen{
 
 	/** The blank. */
 	private Texture blank;
+	
+	private int charType;
 
 	/** The Constant BIT_PLAYER. */
 	//Filter Bits
@@ -190,7 +192,9 @@ public class GameScreen implements Screen{
 	 *
 	 * @param game the game
 	 */
-	public GameScreen(SpaceGame game){
+	public GameScreen(SpaceGame game, int charType){
+		
+		this.charType = charType;
 
 		portalStart = 0;
 		
@@ -808,7 +812,7 @@ public class GameScreen implements Screen{
 		//Create Player
 		
 		if(difficulty == 1)
-			player = new Player(body, this, 2);
+			player = new Player(body, this, this.charType);
 		
 		else
 			player.setBody(body);

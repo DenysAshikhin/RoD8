@@ -113,7 +113,7 @@ public class GameOverScreen implements Screen{
 				
 				this.dispose();
 				game.batch.end();
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new CharacterScreen(game));
 				return;
 			}
 			

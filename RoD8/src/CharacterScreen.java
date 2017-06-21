@@ -39,10 +39,10 @@ public class CharacterScreen implements Screen{
 	private static int PLAY_BUTTON_HEIGHT = 300;
 	
 	/** The Constant PLAY_BUTTON_Y. */
-	private static final int PLAY_BUTTON_Y = 300;
+	private static final int PLAY_BUTTON_X = 300;
 	
 	/** The Constant EXIT_BUTTON_Y. */
-	private static final int EXIT_BUTTON_Y = 125;
+	private static final int EXIT_BUTTON_X = 125;
 	
 	/**
 	 * Instantiates a new main menu.
@@ -82,40 +82,41 @@ public class CharacterScreen implements Screen{
 		
 		game.batch.begin();
 		
+		int y = SpaceGame.HEIGHT/2 - EXIT_BUTTON_HEIGHT/2;
 		
-		
-		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
-		
-		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
-		System.out.println(x + EXIT_BUTTON_WIDTH);
+		System.out.println(SpaceGame.WIDTH - Gdx.input.getX() + "| " + Gdx.input.getY());
+		System.out.println(EXIT_BUTTON_X + ", " + (EXIT_BUTTON_X + EXIT_BUTTON_WIDTH));
 
-		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
-			game.batch.draw(commandoActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
+			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			
 			if(Gdx.input.isTouched()){
-				
-			 
+
+				game.setScreen(new GameScreen(game, 1));
 			}
 		}
 		else{
 			
-			game.batch.draw(commandoInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			game.batch.draw(commandoInactive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 
 		}
-		x = SpaceGame.WIDTH/2 - PLAY_BUTTON_WIDTH/2;
-		if (Gdx.input.getX() < x + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < PLAY_BUTTON_Y + PLAY_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  PLAY_BUTTON_Y){
-			game.batch.draw(sniperActive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+		
+		y = SpaceGame.HEIGHT/2 - PLAY_BUTTON_HEIGHT/2;
+		
+		if (Gdx.input.getY() < y + PLAY_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < PLAY_BUTTON_X + PLAY_BUTTON_WIDTH && Gdx.input.getX() >  PLAY_BUTTON_X){
+			
+			game.batch.draw(sniperActive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			
 			if(Gdx.input.isTouched()){
 				
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new GameScreen(game, 2));
 			}
 		}
 		else{
 			
-			game.batch.draw(sniperInactive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
-
+			game.batch.draw(sniperInactive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 		}
 		
-
 		game.batch.end();
 	}
 

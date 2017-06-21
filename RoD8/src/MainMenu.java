@@ -83,9 +83,6 @@ public class MainMenu implements Screen{
 		
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
-		
-		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
-		System.out.println(x + EXIT_BUTTON_WIDTH);
 
 		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
 			
