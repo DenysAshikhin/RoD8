@@ -59,7 +59,7 @@ public class GameOverScreen implements Screen{
 		
 		//Load textures and fonts
 		gameOverBanner = new Texture("game_over.png");
-		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		scoreFont = new BitmapFont();
 			
 
 		game.scrollingBackground.setSpeed(ScrollingBackground.DEFAULT_SPEED);

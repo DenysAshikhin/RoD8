@@ -187,12 +187,16 @@ public class GameScreen implements Screen{
 
 	/** The changing. */
 	private boolean changing;
+	
+	private SpaceGame game;
 	/**
 	 * Instantiates a new game screen.
 	 *
 	 * @param game the game
 	 */
 	public GameScreen(SpaceGame game, int charType){
+		
+		this.game = game;
 		
 		this.charType = charType;
 
@@ -374,6 +378,10 @@ public class GameScreen implements Screen{
 	 */
 	@Override
 	public void render(float delta) {
+		
+		if(player.health <= 0){
+			game.setScreen(new GameOverScreen(game, 9473));
+		}
 		
 		if(changing){
 			changeLevel();
