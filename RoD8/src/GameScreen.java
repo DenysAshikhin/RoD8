@@ -506,7 +506,7 @@ public class GameScreen implements Screen{
 
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
 			
-			createMonster();
+			createMonster(false);
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.E)){
@@ -529,6 +529,7 @@ public class GameScreen implements Screen{
 				teleporter.isActive = true;
 				teleporter.wasActivated = true;
 				portalStart = System.currentTimeMillis();
+				createMonster(true);
 				phase = 10;
 			}
 		}
@@ -641,7 +642,7 @@ public class GameScreen implements Screen{
 		//spawnTimer += System.currentTimeMillis();
 		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
 	
-			createMonster();
+			createMonster(false);
 			spawnTimer = System.currentTimeMillis();
 			System.out.println(difficulty);
 		}
@@ -817,14 +818,13 @@ public class GameScreen implements Screen{
 	/**
 	 * Creates monsters.
 	 */
-	private void createMonster(){
-
-		//int monsterType = (int) (Math.random() * 4) + 1;
-		//int monsterType = 1;
-		//int monsterType = 2;
-		//int monsterType = 3;
-		//int monsterType = 4;
-		int monsterType = 5;
+	private void createMonster(boolean boss){
+		int monsterType;
+		if(!boss){
+			monsterType = (int) (Math.random() * 4) + 1;
+		}else{
+			monsterType = 5;
+		}
 		
 		float width = MONSTER_WIDTH[monsterType];
 		float height = MONSTER_HEIGHT[monsterType];
@@ -833,8 +833,14 @@ public class GameScreen implements Screen{
 		FixtureDef f1def = new FixtureDef();
 		PolygonShape shape1 = new PolygonShape();
 		
-		//get crystal spawn point
-		Vector2 position = crystals.random().getPosition();
+		Vector2 position;
+		
+		if(!boss){
+			//get crystal spawn point
+			position = crystals.random().getPosition();
+		}else{
+			position = new Vector2(teleporter.getPosition().x, teleporter.getPosition().y + (MONSTER_HEIGHT[monsterType] / 2) / PPM);
+		}
 		
 		//Create Monster
 		b1def.position.set(position);
@@ -1123,7 +1129,7 @@ public class GameScreen implements Screen{
 		bdef.position.set((chest.getBody().getPosition().x * 100) / PPM, (chest.getBody().getPosition().y * 100) / PPM);
 		bdef.type = BodyType.DynamicBody;
 
-		shape.setAsBox(32 * SCALE / PPM, 32 * SCALE / PPM, new Vector2(0, 8f * SCALE / PPM), 0);
+		shape.setAsBox(16 * SCALE / PPM, 16 * SCALE / PPM, new Vector2(0, 8f * SCALE / PPM), 0);
 		fdef.shape = shape;
 		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_ITEM;
@@ -1132,8 +1138,7 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		//Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
-		Item i = new Item(body, this, 10, itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);

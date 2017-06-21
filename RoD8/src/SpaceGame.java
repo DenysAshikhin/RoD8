@@ -50,7 +50,7 @@ public class SpaceGame extends Game{
 		
 		cam.setToOrtho(false, WIDTH, HEIGHT);
 		
-		this.setScreen(new MainMenu(this));
+		this.setScreen(new GameScreen(this));
 	}
 
 	/* (non-Javadoc)
