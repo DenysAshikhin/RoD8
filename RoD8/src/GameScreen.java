@@ -196,6 +196,7 @@ public class GameScreen implements Screen{
 		
 		changing = false;
 
+		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
 		
@@ -226,7 +227,6 @@ public class GameScreen implements Screen{
 		textures.loadTexture("launcher.png", "launcher");
 		blank = textures.getTexture("blank");
 		
-
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
