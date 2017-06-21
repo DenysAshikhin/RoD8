@@ -164,11 +164,6 @@ public class Monster extends B2DSprite{
 	 * Update monster movement.
 	 */
 	public void monsterMovement(){
-		/*
-		System.out.println("ground" + onGround);
-		System.out.println("wall" + onWall);
-		System.out.println("jump" + canHurdle);
-		*/
 		
 		if(this.getState() != -1){
 			float range = (float) Math.sqrt(Math.pow(this.getPosition().x - GameScreen.player.getPosition().x, 2) + Math.pow(this.getPosition().y - GameScreen.player.getPosition().y, 2));

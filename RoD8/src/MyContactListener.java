@@ -414,18 +414,15 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
 			
-			System.out.println("hit");
 			explosionToAdd = fa.getBody();
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
 			
-			System.out.println("hit");
 			explosionToAdd = fb.getBody();
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
-			System.out.println("hit2");
 			
 			bodyToRemove.add(fa.getBody());
 				

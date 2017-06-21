@@ -307,7 +307,6 @@ public class GameScreen implements Screen{
 	}
 	
 	private void createExplosion(Body body){
-		System.out.println("explode");
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
@@ -410,12 +409,8 @@ public class GameScreen implements Screen{
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
-			
-			System.out.println(i.type);
 		}
 		transitionItems.clear();
-		
-		//System.out.println(player.getPosition());
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
