@@ -49,10 +49,6 @@ public class SpaceGame extends Game{
 		HEIGHT = (int) screenSize.getHeight();
 		
 		cam.setToOrtho(false, WIDTH, HEIGHT);
-	
-		
-		WIDTH = (int) screenSize.getWidth();
-		HEIGHT = (int) screenSize.getHeight();
 		
 		this.setScreen(new MainMenu(this));
 	}
