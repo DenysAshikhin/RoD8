@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.Array;
 public class MyContactListener implements ContactListener{
 	
 	public HashSet<Body> bodyToRemove;
+	
+	public float[] explosionToAdd = new float[2];
 
 	/** The player on ground. */
 	private int playerOnGround;
@@ -44,6 +46,7 @@ public class MyContactListener implements ContactListener{
 		
 		bodiesToRemove = new Array<Body>();
 		bodyToRemove = new HashSet<Body>();
+		
 	}
 	
 	/**
@@ -403,18 +406,22 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
 			
 			bodyToRemove.add(fa.getBody());
-	
-			gameScreen.createExplosion(Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length())), fa.getBody().getPosition());
+
+			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
+			explosionToAdd[1] = fb.getBody().getPosition().x;
+			explosionToAdd[2] = fb.getBody().getPosition().y;
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
 			
 			bodyToRemove.add(fb.getBody());
 	
-			gameScreen.createExplosion(Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length())), fa.getBody().getPosition());
+			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
+			explosionToAdd[1] = fb.getBody().getPosition().x;
+			explosionToAdd[2] = fb.getBody().getPosition().y;
 		}
 		
-		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
 			
 			bodyToRemove.add(fa.getBody());
 				
@@ -443,7 +450,7 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
-		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("explosion")){
 			
 			bodyToRemove.add(fb.getBody());
 				

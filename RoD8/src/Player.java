@@ -304,6 +304,10 @@ public class Player extends B2DSprite{
 				if(framesRun == 2){
 					
 					gameScreen.createBullet("bullet:10.00", this.getFacing());
+					
+					if(Math.random() < this.mortarChance){
+						gameScreen.createMortar(20f, this.getFacing());
+					}
 				}
 				framesRun++;
 				prevFrame = primaryRight.getKeyFrame(animTime, true);

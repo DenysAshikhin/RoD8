@@ -377,7 +377,11 @@ public class GameScreen implements Screen{
 				world.destroyBody(body);
 		}
 		bodies.clear();
-	
+		
+		if(contactListener.explosionToAdd[0] == null){
+			
+		}
+		
 		for(Monster j : removeMobs){
 			
 			if(j.isMarked){
