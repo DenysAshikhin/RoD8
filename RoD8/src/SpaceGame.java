@@ -1,6 +1,3 @@
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,10 +14,10 @@ public class SpaceGame extends Game{
 	public ScrollingBackground scrollingBackground;
 	
 	/** The Constant WIDTH. */
-	public static int WIDTH;
+	public static final int WIDTH = 320;
 	
 	/** The Constant HEIGHT. */
-	public static int HEIGHT;
+	public static final int HEIGHT = 240;
 	
 	/** The Constant SCALE. */
 	public static final int SCALE = 2;
@@ -32,8 +29,6 @@ public class SpaceGame extends Game{
 	/* (non-Javadoc)
  * @see com.badlogic.gdx.ApplicationListener#create()
  */
-	
-	
 @Override
 	public void create (){
 		
@@ -43,14 +38,9 @@ public class SpaceGame extends Game{
 		cam = new OrthographicCamera();
 		//viewPort = new StretchViewport(WIDTH, HEIGHT, cam);
 		//viewPort.apply();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		WIDTH = (int) screenSize.getWidth();
-		HEIGHT = (int) screenSize.getHeight();
-		
 		cam.setToOrtho(false, WIDTH, HEIGHT);
-		
-		this.setScreen(new MainMenu(this));
+	
+		this.setScreen(new GameScreen(this));
 	}
 
 	/* (non-Javadoc)
