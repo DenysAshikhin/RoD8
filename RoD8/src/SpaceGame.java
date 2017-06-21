@@ -14,10 +14,10 @@ public class SpaceGame extends Game{
 	public ScrollingBackground scrollingBackground;
 	
 	/** The Constant WIDTH. */
-	public static final int WIDTH = 320;
+	public static final int WIDTH = 1440;
 	
 	/** The Constant HEIGHT. */
-	public static final int HEIGHT = 240;
+	public static final int HEIGHT = 900;
 	
 	/** The Constant SCALE. */
 	public static final int SCALE = 2;
@@ -40,7 +40,7 @@ public class SpaceGame extends Game{
 		//viewPort.apply();
 		cam.setToOrtho(false, WIDTH, HEIGHT);
 	
-		this.setScreen(new GameScreen(this));
+		this.setScreen(new MainMenu(this));
 	}
 
 	/* (non-Javadoc)
