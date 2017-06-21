@@ -413,7 +413,7 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
-			
+			System.out.println("hit");
 			bodyToRemove.add(fa.getBody());
 
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
@@ -422,7 +422,7 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
-			
+			System.out.println("hit");
 			bodyToRemove.add(fb.getBody());
 	
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
@@ -431,7 +431,6 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
-			
 			bodyToRemove.add(fa.getBody());
 				
 			Monster m = (Monster)fb.getBody().getUserData();
@@ -460,7 +459,6 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("explosion")){
-			
 			bodyToRemove.add(fb.getBody());
 				
 			Monster m = (Monster)fa.getBody().getUserData();

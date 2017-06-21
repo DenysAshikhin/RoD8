@@ -307,6 +307,7 @@ public class GameScreen implements Screen{
 	}
 	
 	private void createExplosion(float damage, Vector2 position){
+		System.out.println("explode");
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
