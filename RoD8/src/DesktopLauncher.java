@@ -1,3 +1,6 @@
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -18,8 +21,14 @@ public class DesktopLauncher {
 		config.foregroundFPS = 60;    
 		//config.width = SpaceGame.WIDTH * SpaceGame.WIDTH;
 		//config.height = SpaceGame.HEIGHT * SpaceGame.WIDTH;
-		config.width = 1440;
-		config.height = 900;
+		
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		
+		
+	//	WIDTH = 
+		//HEIGHT = 
+		config.width = gd.getDisplayMode().getWidth();
+		config.height = gd.getDisplayMode().getHeight();
 		config.resizable = false;
 		new LwjglApplication(new SpaceGame(), config);
 		

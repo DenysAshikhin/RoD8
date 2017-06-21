@@ -196,13 +196,15 @@ public class GameScreen implements Screen{
 		
 		changing = false;
 
+		int width = 320;
+		int height = 240;
 		
 		cam = new OrthographicCamera();
-		cam.setToOrtho(false, game.WIDTH, game.HEIGHT);
+		cam.setToOrtho(false, width, height);
 		
 		// set up box2d cam
 		b2dCam = new OrthographicCamera();
-		b2dCam.setToOrtho(false, game.WIDTH / PPM, game.HEIGHT / PPM);
+		b2dCam.setToOrtho(false, width / PPM, height / PPM);
 		
 		spriteBatch = new SpriteBatch();
 		
