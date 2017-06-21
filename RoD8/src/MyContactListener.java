@@ -425,7 +425,6 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
-			System.out.println("hit2");
 			
 			bodyToRemove.add(fa.getBody());
 				
