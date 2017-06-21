@@ -40,7 +40,7 @@ public class SpaceGame extends Game{
 		//viewPort.apply();
 		cam.setToOrtho(false, WIDTH, HEIGHT);
 	
-		this.setScreen(new MainMenu(this));
+		this.setScreen(new GameScreen(this));
 	}
 
 	/* (non-Javadoc)
