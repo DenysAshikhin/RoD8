@@ -96,316 +96,6 @@ public class Player extends B2DSprite{
 		framesRun = 0;
 	}
 	
-	private void drawCommando(SpriteBatch spriteBatch, float stateTime){
-		
-		switch(this.getState()){
-		
-		case 0:
-			
-			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
-		case 1: 		
-			
-			if(this.getFacing()){
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 2:
-			
-			if(this.getBody().getLinearVelocity().x >= 0){
-			
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 3:
-			
-			if(this.getFacing())
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-			else
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-
-			break;
-		case 4:
-
-			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 0 || framesRun == 3){
-					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
-					
-					if(Math.random() < this.mortarChance){
-						gameScreen.createMortar(20f, this.getFacing());
-					}
-				}
-				framesRun++;
-				prevFrame = primaryRight.getKeyFrame(animTime, true);
-			}
-	
-			if (framesRun <= 5){
-
-				if(this.getFacing())
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 18, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 18, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		case 5:
-			
-			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 1){
-					
-					gameScreen.createBullet("ray:10.00", this.getFacing());
-				}
-				framesRun++;
-				prevFrame = secondaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 5){
-				
-				if(this.getFacing())
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 33, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 33, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);				
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			
-			break;
-		case 6:
-					
-			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <=  9){
-			
-				if(this.getFacing())
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * PLAYER_WIDTH/1.5f, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 12, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * PLAYER_WIDTH/1.5f, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 12, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		case 7:
-			
-			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
-					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
-				}
-				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
-					
-					gameScreen.createBullet("bullet:10.00", !this.getFacing());
-				}
-				framesRun++;
-				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 15){
-				
-				if(this.getFacing())
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		}	
-		
-		//spriteBatch.end();
-	}
-	
-	private void drawSniper(SpriteBatch spriteBatch, float stateTime){
-		
-		switch(this.getState()){
-		
-		case 0:
-			
-			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-			break;
-		case 1: 		
-			
-			if(this.getFacing()){
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 2:
-			
-			if(this.getBody().getLinearVelocity().x >= 0){
-			
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			break;
-		case 3:
-			
-			if(this.getFacing())
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-			else
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-
-			break;
-		case 4:
-
-			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 2){
-					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
-				}
-				framesRun++;
-				prevFrame = primaryRight.getKeyFrame(animTime, true);
-			}
-	
-			if (framesRun <= 6){
-
-				if(this.getFacing())
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		case 5:
-			
-			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 1){
-					
-					gameScreen.createBullet("ray:10.00", this.getFacing());
-				}
-				framesRun++;
-				prevFrame = secondaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 12){
-				
-				if(this.getFacing())
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);				
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			
-			break;
-		case 6:
-					
-			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
-				
-				framesRun++;
-				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <=  6){
-			
-				if(this.getFacing())
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		case 7:
-			
-			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
-				
-				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
-					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
-				}
-				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
-					
-					gameScreen.createBullet("bullet:10.00", !this.getFacing());
-				}
-				framesRun++;
-				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 15){
-				
-				if(this.getFacing())
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
-			break;
-		}	
-		
-		//spriteBatch.end();
-	}
-	
 	/**Framesrun needs to be changed depending on the character/class*/
 	public void drawPlayer(SpriteBatch spriteBatch, float stateTime){
 			
@@ -586,6 +276,320 @@ public class Player extends B2DSprite{
 	}
 	
 	public void increaseAnimTime(float value){animTime += value;}
+
+	private void drawCommando(SpriteBatch spriteBatch, float stateTime){
+		
+		switch(this.getState()){
+		
+		case 0:
+			
+			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+			break;
+		case 1: 		
+			
+			if(this.getFacing()){
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 3) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 2:
+			
+			if(this.getBody().getLinearVelocity().x >= 0){
+			
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 3:
+			
+			if(this.getFacing())
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+			else
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+	
+			break;
+		case 4:
+	
+			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 0 || framesRun == 3){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+					
+					if(Math.random() < this.mortarChance){
+						gameScreen.createMortar(20f, this.getFacing());
+					}
+				}
+				framesRun++;
+				prevFrame = primaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 5){
+	
+				if(this.getFacing())
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 18, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 18, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 5:
+			
+			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1){
+					
+					gameScreen.createBullet("ray:10.00", this.getFacing());
+				}
+				framesRun++;
+				prevFrame = secondaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 5){
+				
+				if(this.getFacing())
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 33, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 33, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);				
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			
+			break;
+		case 6:
+					
+			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
+				
+				framesRun++;
+				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <=  9){
+			
+				if(this.getFacing())
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * PLAYER_WIDTH/1.5f, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 12, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * PLAYER_WIDTH/1.5f, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 12, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+	
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 7:
+			
+			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+				}
+				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
+					
+					gameScreen.createBullet("bullet:10.00", !this.getFacing());
+				}
+				framesRun++;
+				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 15){
+				
+				if(this.getFacing())
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 5) * GameScreen.SCALE, 0, 0, 40, PLAYER_HEIGHT, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		}	
+		
+		//spriteBatch.end();
+	}
+
+	private void drawSniper(SpriteBatch spriteBatch, float stateTime){
+		
+		switch(this.getState()){
+		
+		case 0:
+			
+			spriteBatch.draw(climbing.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			break;
+		case 1: 		
+			
+			if(this.getFacing()){
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 2:
+			
+			if(this.getBody().getLinearVelocity().x >= 0){
+			
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			break;
+		case 3:
+			
+			if(this.getFacing())
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+			else
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+	
+			break;
+		case 4:
+	
+			if (prevFrame != primaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 2){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+
+					if(Math.random() < this.mortarChance){
+						gameScreen.createMortar(20f, this.getFacing());
+					}
+				}
+				framesRun++;
+				prevFrame = primaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 6){
+	
+				if(this.getFacing())
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 5:
+			
+			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1){
+					
+					gameScreen.createBullet("ray:10.00", this.getFacing());
+				}
+				framesRun++;
+				prevFrame = secondaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 12){
+				
+				if(this.getFacing())
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);				
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			
+			break;
+		case 6:
+					
+			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
+				
+				framesRun++;
+				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <=  6){
+			
+				if(this.getFacing())
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+	
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		case 7:
+			
+			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
+				
+				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
+					
+					gameScreen.createBullet("bullet:10.00", this.getFacing());
+				}
+				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
+					
+					gameScreen.createBullet("bullet:10.00", !this.getFacing());
+				}
+				framesRun++;
+				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
+			}
+	
+			if (framesRun <= 15){
+				
+				if(this.getFacing())
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				else
+					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+			}
+			else{
+				
+				this.setState(0);
+				framesRun = 0;
+				animTime = 0;
+				prevFrame = null;
+			}
+			break;
+		}	
+		
+		//spriteBatch.end();
+	}
 
 	private void createCommando(){
 		
