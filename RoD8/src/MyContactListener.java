@@ -34,16 +34,21 @@ public class MyContactListener implements ContactListener{
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
+	private GameScreen gameScreen;
+	
 	/**
 	 * Instantiates a new my contact listener.
 	 */
-	public MyContactListener(){
+	public MyContactListener(GameScreen gameScreen){
 		super();
 		
+		this.gameScreen = gameScreen;
 		bodiesToRemove = new Array<Body>();
 		bodyToRemove = new HashSet<Body>();
 		
 	}
+	
+
 	
 	/**
 	 * Gets the bodies to remove.
@@ -125,12 +130,14 @@ public class MyContactListener implements ContactListener{
 			((Chest)fb.getBody().getUserData()).isTouched = true;
 		}
 		
-		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder")){
+
 			playerOnLadder++;
-		
-		else if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
+		}
+		else if(fa.getUserData() != null && fa.getUserData().equals("ladder")){
+			
 			playerOnLadder++;
-		
+		}
 	
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
@@ -506,12 +513,12 @@ public class MyContactListener implements ContactListener{
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			
 			
-			((Chest)fa.getBody().getUserData()).isTouched = true;
+			((Chest)fa.getBody().getUserData()).isTouched = false;
 		}
 	
 		if(fb.getUserData() != null && fb.getUserData().equals("chest")){
 			
-			((Chest)fb.getBody().getUserData()).isTouched = true;
+			((Chest)fb.getBody().getUserData()).isTouched = false;
 		}
 				
 		if(fa.getUserData() != null && fa.getUserData().equals("foot")){
@@ -526,11 +533,14 @@ public class MyContactListener implements ContactListener{
 				playerOnGround--;
 		}
 		
-		if(fa.getUserData() != null && fa.getUserData().equals("ladder"))
-			playerOnLadder--;
+		if(fa.getUserData() != null && fa.getUserData().equals("ladder")){
 		
-		if(fb.getUserData() != null && fb.getUserData().equals("ladder"))
 			playerOnLadder--;
+		}
+		if(fb.getUserData() != null && fb.getUserData().equals("ladder")){
+		
+			playerOnLadder--;
+		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("mfoot")){
 	

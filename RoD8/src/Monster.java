@@ -13,9 +13,11 @@ public class Monster extends B2DSprite{
 
 	public float identifier;
 
+	public int type;
+
 	public boolean killed = false;
 
-	public float health = 1f;
+	public float health;
 
 	public float jumpHeight;
 
@@ -32,18 +34,14 @@ public class Monster extends B2DSprite{
 	private Animation<TextureRegion> runright;
 	private Animation<TextureRegion> standingright;
 	private Animation<TextureRegion> primaryright;
-	//private Animation<TextureRegion> deathright;
 
 	private TextureRegion prevFrame;
-
-	private int type;
 	
 	private int framesRun;
 	private float jumpStrength;
 	private float attackRange;
 	
 	private int attackFrames;
-	private int deathFrames;
 	
 	private float animTime;
 	
@@ -66,6 +64,12 @@ public class Monster extends B2DSprite{
 			break;
 		case 3:
 			createGiant();
+			break;
+		case 4:
+			createGolem();
+			break;
+		case 5:
+			createCastle();
 			break;
 		}
 
@@ -267,7 +271,6 @@ public class Monster extends B2DSprite{
 		this.health = 90f;
 		this.jumpStrength = 0f;
 		this.attackFrames = 4;
-		this.deathFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
 		TextureRegion[] sprites;
@@ -280,17 +283,12 @@ public class Monster extends B2DSprite{
 		sprites = new TextureRegion[attackFrames];
 		sprites = TextureRegion.split(texture, 35, 32)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
-
-		sprites = new TextureRegion[deathFrames];
-		sprites = TextureRegion.split(texture, 42, 32)[2];
-		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
 	}
 	
 	private void createLemurian(){
 		this.health = 60f;
-		this.jumpStrength = 2f;
+		this.jumpStrength = 1.3f;
 		this.attackFrames = 3;
-		this.deathFrames = 2;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
 		TextureRegion[] sprites;
@@ -303,17 +301,12 @@ public class Monster extends B2DSprite{
 		sprites = TextureRegion.split(texture, 22, 28)[1];
 		standingright = new Animation<TextureRegion>(0.07f, sprites[2]);
 		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
-
-		sprites = new TextureRegion[deathFrames];
-		sprites = TextureRegion.split(texture, 28, 28)[2];
-		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
 	}
 	
 	private void createGiant(){
 		this.health = 120f;
 		this.jumpStrength = 0f;
 		this.attackFrames = 4;
-		this.deathFrames = 2;
 		
 		Texture texture = GameScreen.textures.getTexture("giant");
 		TextureRegion[] sprites;
@@ -326,9 +319,41 @@ public class Monster extends B2DSprite{
 		sprites = new TextureRegion[attackFrames];
 		sprites = TextureRegion.split(texture, 80, 69)[1];
 		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3]});
+	}
+	
+	private void createGolem(){
+		this.health = 80f;
+		this.jumpStrength = 0f;
+		this.attackFrames = 5;
+		
+		Texture texture = GameScreen.textures.getTexture("golem");
+		TextureRegion[] sprites;
 
-		sprites = new TextureRegion[deathFrames];
-		sprites = TextureRegion.split(texture, 71, 69)[2];
-		//deathright = new Animation<TextureRegion>(1f, new TextureRegion[]{sprites[0], sprites[1]});
-		}
+		sprites = new TextureRegion[7];
+		sprites = TextureRegion.split(texture, 22, 33)[0];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[0]);
+		runright = new Animation<TextureRegion>(0.08f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6]});
+		
+		sprites = new TextureRegion[attackFrames];
+		sprites = TextureRegion.split(texture, 42, 33)[1];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4]});
+	}
+	
+	private void createCastle(){
+		this.health = 1000f;
+		this.jumpStrength = 0f;
+		this.attackFrames = 8;
+		
+		Texture texture = GameScreen.textures.getTexture("castle");
+		TextureRegion[] sprites;
+
+		sprites = new TextureRegion[attackFrames];
+		sprites = TextureRegion.split(texture, 180, 119)[0];
+		primaryright = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
+		
+		sprites = new TextureRegion[6];
+		sprites = TextureRegion.split(texture, 82, 119)[1];
+		standingright = new Animation<TextureRegion>(0.07f, sprites[5]);
+		runright = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
+	}
 }

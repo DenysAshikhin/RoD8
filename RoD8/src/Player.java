@@ -66,9 +66,13 @@ public class Player extends B2DSprite{
 	
 	private static final float DETECTION_RANGE = 1.7f;
 	
-	private long secondCD;
-	private long thirdCD;
-	private long fourthCD;
+	public long secondCD;
+	public long thirdCD;
+	public long fourthCD;
+	
+	public long secondUsed;
+	public long thirdUsed;
+	public long fourthUsed;
 	
 	Monster markedMob;
 	
@@ -89,6 +93,10 @@ public class Player extends B2DSprite{
 		
 		super(body);
 		
+		secondCD = 3000;
+		thirdCD = 6000;
+		fourthCD = 10000;
+		
 		markedMob = null;
 		
 		this.gameScreen = gameScreen;
@@ -96,8 +104,6 @@ public class Player extends B2DSprite{
 		this.type = type;
 		
 		money = 0;
-		
-		
 		
 		switch(this.type){
 			
@@ -443,6 +449,10 @@ public class Player extends B2DSprite{
 			
 				if(this.jumpCount > 0){		
 			
+					if(gameScreen.phase == 1){
+						
+						gameScreen.phase = 2;
+					}
 					this.getBody().applyLinearImpulse(new Vector2(0f, 2.8f), this.getPosition(), true);
 					
 					this.setState(2);
@@ -453,12 +463,20 @@ public class Player extends B2DSprite{
 		
 			if (Gdx.input.isKeyPressed(Keys.UP) && gameScreen.contactListener.isPlayerOnLadder()){
 				
+				if(gameScreen.phase == 2){
+					
+					gameScreen.phase = 3;
+				}
 				this.setState(0);
 				this.getBody().setLinearVelocity(new Vector2(0f, 1.5f));
 			}
 			
 			if(Gdx.input.isKeyPressed(Keys.LEFT)){	
 		
+				if(gameScreen.phase == 0){
+					
+					gameScreen.phase = 1;
+				}
 				this.setState(3);
 				this.setFace(false);//CHANGE!!!
 		
@@ -468,6 +486,10 @@ public class Player extends B2DSprite{
 		
 			if(Gdx.input.isKeyPressed(Keys.RIGHT)){
 						
+				if(gameScreen.phase == 0){
+					
+					gameScreen.phase = 1;
+				}
 				this.setState(3);
 				this.setFace(true);
 		
@@ -487,11 +509,19 @@ public class Player extends B2DSprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.A)){
 			
+				if(gameScreen.phase == 3){
+					
+					gameScreen.phase = 4;
+				}
 				this.setState(4);
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.S)){
+			if(Gdx.input.isKeyPressed(Keys.S) && ((System.currentTimeMillis() - secondUsed) >= secondCD)){
 				
+				if(gameScreen.phase == 3){
+					
+					gameScreen.phase = 4;
+				}
 				this.setState(5);
 				
 				if(this.type == 2){
@@ -501,10 +531,15 @@ public class Player extends B2DSprite{
 					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
 						this.getBody().applyLinearImpulse(new Vector2(6f, 0f), this.getPosition(), true);
 				}
+				secondUsed = System.currentTimeMillis();
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.D)){
+			if(Gdx.input.isKeyPressed(Keys.D) && ((System.currentTimeMillis() - thirdUsed) >= thirdCD)){
 				
+				if(gameScreen.phase == 3){
+					
+					gameScreen.phase = 4;
+				}
 				this.setState(6);
 				
 				if(this.type == 1){
@@ -515,9 +550,15 @@ public class Player extends B2DSprite{
 						this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);
 				}
 					
+				thirdUsed = System.currentTimeMillis();
 			}
 			
-			if(Gdx.input.isKeyPressed(Keys.F)){
+			if(Gdx.input.isKeyPressed(Keys.F) && ((System.currentTimeMillis() - fourthUsed) >= fourthCD)){
+				
+				if(gameScreen.phase == 3){
+					
+					gameScreen.phase = 4;
+				}
 				
 				if(this.type == 1)
 					this.setState(7);
@@ -525,6 +566,8 @@ public class Player extends B2DSprite{
 					
 					markMob();
 				}
+				
+				fourthUsed = System.currentTimeMillis();
 			}
 		}
 		
