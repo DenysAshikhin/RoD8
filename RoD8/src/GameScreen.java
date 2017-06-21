@@ -380,6 +380,26 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		
 		if(player.health <= 0){
+			
+			teleporter = null;
+			
+			crystals.clear();
+			chests.clear();
+			transitionItems.clear();
+			floatingItemList.clear();
+			removeMobs.clear();
+			monsterList.clear();		
+			chests.clear();
+			launchers.clear();
+
+			monsterNum = 0;
+			monsterList.ordered = false;
+			
+			world.dispose();
+			
+			world = new World(new Vector2(0, -9.81f), true);
+			contactListener = new MyContactListener(this);
+			world.setContactListener(contactListener);	
 			game.setScreen(new GameOverScreen(game, 9473));
 		}
 		
@@ -398,8 +418,6 @@ public class GameScreen implements Screen{
 		
 		world.step(delta, 6, 2);
 		
-		//Remove crystals
-		//Array<Body> bodies = contactListener.getBodiesToRemove();
 		HashSet<Body> bodies = contactListener.getBodyToRemove();
 		
 		for (Body body : bodies){
@@ -669,6 +687,11 @@ public class GameScreen implements Screen{
 				guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
 				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
 			}
+			else{
+				
+				guiLayout = new GlyphLayout(scoreFont, "Look around...");
+				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			}
 			break;
 		case 3:
 			
@@ -696,6 +719,12 @@ public class GameScreen implements Screen{
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
 			b2dCam.update();
 			b2dr.render(world, b2dCam.combined);
+		}
+		
+		
+		if(player.getBody().getPosition().y < 35 && difficulty == 30){
+			
+			player.getBody().setTransform(new Vector2(47, 48), 0);
 		}
 		}
 	}
@@ -783,7 +812,6 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 
-		player.getBody().setTransform(new Vector2(teleporter.getPosition().x, teleporter.getPosition().y + 1), 0);
 		
 		portalStart = 0;
 				
@@ -802,7 +830,22 @@ public class GameScreen implements Screen{
 		PolygonShape shape = new PolygonShape();
 		
 		//Create Player
-		bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y + 1);
+		switch(difficulty){
+		
+			case 1: 
+			
+				bdef.position.set(3, 6);
+				break;
+			case 2:
+			
+				bdef.position.set(10, 63);
+				break;
+			case 3:
+
+				bdef.position.set(47, 48);
+				break;
+		}
+		//bdef.position.set(teleporter.getPosition().x, teleporter.getPosition().y + 1);
 
 		bdef.type = BodyType.DynamicBody;
 		//bdef.linearVelocity.set(1f, 0);
@@ -818,7 +861,6 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("player");
 		body.setUserData(player);
 		//Create Player
-		
 		if(difficulty == 1)
 			player = new Player(body, this, this.charType);
 		
@@ -828,6 +870,8 @@ public class GameScreen implements Screen{
 		player.setState(1);
 		player.getBody().setUserData(player);
 
+
+		
 		//Create foot sensor
 		shape.setAsBox(
 				(((Player.PLAYER_WIDTH - 2) / 2) * SCALE) / PPM, 
@@ -839,6 +883,7 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_GROUND | BIT_LADDER;	
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData("foot");
+		
 	}
 	
 	/**
@@ -963,11 +1008,11 @@ public class GameScreen implements Screen{
 	 */
 	private void createTiles(){
 		
+		
 		switch(difficulty){
 		
 		case 1:
 			
-			//tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			break;
 			

@@ -2082,7 +2082,7 @@
  </objectgroup>
  <objectgroup name="launcher">
   <object id="10" x="1856" y="1792" width="30.6667" height="77.3333"/>
-  <object id="14" x="672" y="1792" width="30.6667" height="74.6667"/>
+  <object id="14" x="672" y="1799" width="30.6667" height="74.6667"/>
   <object id="16" x="2416" y="1792" width="30.6667" height="76"/>
   <object id="22" x="3088" y="1792" width="30" height="77"/>
   <object id="26" x="3920" y="1793" width="30" height="76"/>

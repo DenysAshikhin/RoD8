@@ -84,9 +84,6 @@ public class CharacterScreen implements Screen{
 		
 		int y = SpaceGame.HEIGHT/2 - EXIT_BUTTON_HEIGHT/2;
 		
-		System.out.println(SpaceGame.WIDTH - Gdx.input.getX() + "| " + Gdx.input.getY());
-		System.out.println(EXIT_BUTTON_X + ", " + (EXIT_BUTTON_X + EXIT_BUTTON_WIDTH));
-
 		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
 			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 			
