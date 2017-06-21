@@ -382,6 +382,7 @@ public class GameScreen implements Screen{
 			
 			createExplosion(contactListener.explosionToAdd[0], new Vector2(contactListener.explosionToAdd[1], contactListener.explosionToAdd[2]));
 		}
+		contactListener.explosionToAdd = new float[3];
 		
 		for(Monster j : removeMobs){
 			
