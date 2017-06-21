@@ -1041,7 +1041,7 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		Item i = new Item(body, this, ((int) (Math.random() * 4) + 7), itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
