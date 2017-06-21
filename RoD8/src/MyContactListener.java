@@ -417,8 +417,8 @@ public class MyContactListener implements ContactListener{
 			bodyToRemove.add(fa.getBody());
 
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd[1] = fa.getBody().getPosition().x;
+			explosionToAdd[2] = fa.getBody().getPosition().y;
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
@@ -426,8 +426,8 @@ public class MyContactListener implements ContactListener{
 			bodyToRemove.add(fb.getBody());
 	
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd[1] = fb.getBody().getPosition().x;
+			explosionToAdd[2] = fb.getBody().getPosition().y;
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){

@@ -314,15 +314,19 @@ public class GameScreen implements Screen{
 
 		bdef.position.set(position);
 		bdef.type = BodyType.StaticBody;
-		
+		System.out.println("PLAYEWR: " + player.getBody().getPosition());
+
 		shape.setAsBox(30f * SCALE, 30f * SCALE);
 
 		Body body = world.createBody(bdef);
+		System.out.println("MORTAR: " + body.getPosition());
+
 		fdef.shape = shape;
+		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_EXPLOSION;
 		fdef.filter.maskBits = BIT_MONSTER;
 		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("explosion:" + damage);
+		body.createFixture(fdef).setUserData("explosion:");
 	}
 
 	public void createLocalAttack(Monster m, float damage, boolean dir){
@@ -434,6 +438,7 @@ public class GameScreen implements Screen{
 			
 			chest.drawChest(spriteBatch);
 		}
+	
 		
 		for(Launcher launcher : launchers){
 			
@@ -455,7 +460,18 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
-			m.drawMonsters(spriteBatch, stateTime);
+
+			if(m.isMarked){
+				
+				spriteBatch.setColor(Color.SALMON);
+				m.drawMonsters(spriteBatch, stateTime);
+				spriteBatch.setColor(Color.WHITE);
+			}
+			else{
+				
+				m.drawMonsters(spriteBatch, stateTime);
+			}
+			
 			
 			spriteBatch.setColor(Color.GREEN);
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
