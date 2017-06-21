@@ -23,6 +23,8 @@ public class MainMenu implements Screen{
 
 	/** The play button inactive. */
 	Texture playButtonInactive;
+	
+	Texture splashScreen;
 
 	/** The exit button width. */
 	private static int EXIT_BUTTON_WIDTH = 300;
@@ -41,6 +43,14 @@ public class MainMenu implements Screen{
 	
 	/** The Constant EXIT_BUTTON_Y. */
 	private static final int EXIT_BUTTON_Y = 125;
+
+	private static final float SPLASHSCREEN_X = 305;
+
+	private static final float SPLASHSCREEN_Y = 10;
+
+	private static final float SPLASHSCREEN_WIDTH = 750;
+
+	private static final float SPLASHSCREEN_HEIGHT = 750;
 	
 	/**
 	 * Instantiates a new main menu.
@@ -51,6 +61,7 @@ public class MainMenu implements Screen{
 	
 		this.game = game;
 		
+		splashScreen = new Texture("risk of drizzle.png");
 		playButtonActive = new Texture("play_button_active.png");
 		playButtonInactive = new Texture("play_button_inactive.png");
 		exitButttonActive = new Texture("exit_button_active.png");
@@ -79,8 +90,8 @@ public class MainMenu implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
-		
-		
+
+		game.batch.draw(splashScreen, SPLASHSCREEN_X, SPLASHSCREEN_Y, SPLASHSCREEN_WIDTH, SPLASHSCREEN_HEIGHT);
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
 
