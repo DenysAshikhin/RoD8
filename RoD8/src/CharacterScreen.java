@@ -27,16 +27,16 @@ public class CharacterScreen implements Screen{
 	public Object scrollingBackground;
 
 	/** The exit button width. */
-	private static int EXIT_BUTTON_WIDTH = 300;
+	private static int EXIT_BUTTON_WIDTH = 150;
 	
 	/** The exit button height. */
-	private static int EXIT_BUTTON_HEIGHT = 150;
+	private static int EXIT_BUTTON_HEIGHT = 300;
 
 	/** The play button width. */
-	private static int PLAY_BUTTON_WIDTH = 500;
+	private static int PLAY_BUTTON_WIDTH = 150;
 	
 	/** The play button height. */
-	private static int PLAY_BUTTON_HEIGHT = 200;
+	private static int PLAY_BUTTON_HEIGHT = 300;
 	
 	/** The Constant PLAY_BUTTON_Y. */
 	private static final int PLAY_BUTTON_Y = 300;
