@@ -773,7 +773,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER | BIT_EXPLOSION;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
