@@ -43,10 +43,10 @@ public class CharacterScreen implements Screen{
 	private static int PLAY_BUTTON_HEIGHT = 300;
 	
 	/** The Constant PLAY_BUTTON_Y. */
-	private static final int PLAY_BUTTON_X = 300;
+	private static final int PLAY_BUTTON_X = 200;
 	
 	/** The Constant EXIT_BUTTON_Y. */
-	private static final int EXIT_BUTTON_X = 125;
+	private static final int EXIT_BUTTON_X = 50;
 	
 	/**
 	 * Instantiates a new main menu.
