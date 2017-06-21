@@ -24,7 +24,7 @@ public class MyContactListener implements ContactListener{
 	
 	public HashSet<Body> bodyToRemove;
 	
-	public float[] explosionToAdd = new float[3];
+	public Body explosionToAdd;
 
 	/** The player on ground. */
 	private int playerOnGround;
@@ -414,23 +414,17 @@ public class MyContactListener implements ContactListener{
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
 			System.out.println("hit");
-			bodyToRemove.add(fa.getBody());
-
-			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd = fa.getBody();
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
 			System.out.println("hit");
-			bodyToRemove.add(fb.getBody());
-	
-			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
-			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
+			explosionToAdd = fb.getBody();
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
+			System.out.println("hit2");
+			
 			bodyToRemove.add(fa.getBody());
 				
 			Monster m = (Monster)fb.getBody().getUserData();
@@ -459,6 +453,7 @@ public class MyContactListener implements ContactListener{
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("explosion")){
+			
 			bodyToRemove.add(fb.getBody());
 				
 			Monster m = (Monster)fa.getBody().getUserData();

@@ -306,23 +306,22 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
-	private void createExplosion(float damage, Vector2 position){
+	private void createExplosion(Body body){
 		System.out.println("explode");
-		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
-
-		bdef.position.set(position);
-		bdef.type = BodyType.StaticBody;
 		
-		shape.setAsBox(30f * SCALE, 30f * SCALE);
-
-		Body body = world.createBody(bdef);
+		shape.setAsBox(30f * SCALE / PPM, 30f * SCALE / PPM, new Vector2(0, 0), 0);
+		
+		Body b = body;
+		b.setLinearVelocity(new Vector2(0, 0));
+		b.setGravityScale(0);
+		
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_EXPLOSION;
 		fdef.filter.maskBits = BIT_MONSTER;
 		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("explosion:" + damage);
+		b.createFixture(fdef).setUserData("explosion:" + 10f);
 	}
 
 	public void createLocalAttack(Monster m, float damage, boolean dir){
@@ -378,11 +377,11 @@ public class GameScreen implements Screen{
 		}
 		bodies.clear();
 		
-		if(contactListener.explosionToAdd[0] != 0){
+		if(contactListener.explosionToAdd != null){
 			
-			createExplosion(contactListener.explosionToAdd[0], new Vector2(contactListener.explosionToAdd[1], contactListener.explosionToAdd[2]));
+			createExplosion(contactListener.explosionToAdd);
+			contactListener.explosionToAdd = null;
 		}
-		contactListener.explosionToAdd = new float[3];
 		
 		for(Monster j : removeMobs){
 			
