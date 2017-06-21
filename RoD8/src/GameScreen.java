@@ -380,6 +380,10 @@ public class GameScreen implements Screen{
 	
 		for(Monster j : removeMobs){
 			
+			if(j.isMarked){
+				
+				player.markedMob = null;
+			}
 			monsterList.removeValue(j, true);
 		}
 		removeMobs.clear();
