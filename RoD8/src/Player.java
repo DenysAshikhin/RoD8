@@ -64,7 +64,11 @@ public class Player extends B2DSprite{
 	
 	Animation<TextureRegion> droneScan;
 	
-	private static final float DETECTION_RANGE = 20f;
+	private static final float DETECTION_RANGE = 1.7f;
+	
+	private long secondCD;
+	private long thirdCD;
+	private long fourthCD;
 	
 	Monster markedMob;
 	
@@ -92,6 +96,8 @@ public class Player extends B2DSprite{
 		this.type = type;
 		
 		money = 0;
+		
+		
 		
 		switch(this.type){
 			
