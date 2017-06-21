@@ -184,6 +184,8 @@ public class GameScreen implements Screen{
 
 	/** The Constant BIT_EXPLOSION. */
 	private static final short BIT_EXPLOSION = 8192;
+	
+	private static final short BIT_LAVA = 16384;
 
 	/** The changing. */
 	private boolean changing;
@@ -707,14 +709,18 @@ public class GameScreen implements Screen{
 		
 		spriteBatch.end();
 	
-		//spawnTimer += System.currentTimeMillis();
-		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/250 >= 1)) && teleporter.isActive; i++){
+		int i = 0;
+		for (i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
 	
 			createMonster(false);
+	
+
+		}
+		if(i >= difficulty){
+			
 			spawnTimer = System.currentTimeMillis();
 		}
 	
-		
 		if(debug){
 	
 			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
@@ -726,6 +732,11 @@ public class GameScreen implements Screen{
 		if(player.getBody().getPosition().y < 35 && difficulty == 30){
 			
 			player.getBody().setTransform(new Vector2(47, 48), 0);
+		}
+		
+		if(contactListener.isPlayerInLava()){
+			
+			player.health -= 0.1;
 		}
 		}
 	}
@@ -858,10 +869,12 @@ public class GameScreen implements Screen{
 	//	shape.setAs
 		fdef.shape = shape;
 		fdef.filter.categoryBits = BIT_PLAYER;
-		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM | BIT_LAUNCHER;
+		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM | BIT_LAUNCHER | BIT_LAVA;
 		body.createFixture(fdef).setUserData("player");
 		body.setUserData(player);
-		//Create Player
+		//Create Playeraa
+		player = new Player(body, this, this.charType);
+
 		if(difficulty == 1)
 			player = new Player(body, this, this.charType);
 		
@@ -870,7 +883,6 @@ public class GameScreen implements Screen{
 
 		player.setState(1);
 		player.getBody().setUserData(player);
-
 
 		
 		//Create foot sensor
@@ -953,7 +965,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER | BIT_EXPLOSION;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER | BIT_EXPLOSION | BIT_LAVA;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -1012,9 +1024,10 @@ public class GameScreen implements Screen{
 		
 		switch(difficulty){
 		
+		
 		case 1:
-			
-			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
+			difficulty ++;
+			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
 			break;
 			
 		case 2:
@@ -1039,6 +1052,8 @@ public class GameScreen implements Screen{
 		 createLayer(layer, BIT_GROUND, "ground");
 		 layer = (TiledMapTileLayer) tileMap.getLayers().get("ladder");
 		 createLayer(layer, BIT_LADDER, "ladder");
+		 layer = (TiledMapTileLayer) tileMap.getLayers().get("lava");
+		 createLayer(layer, BIT_LAVA, "lava");
 	}
 	
 
@@ -1072,30 +1087,15 @@ public class GameScreen implements Screen{
 				
 				 if(bits != BIT_AIR){
 					 ChainShape chainShape = new ChainShape();
-					 
-					 //if(bits == BIT_GROUND){
-						 
+					 						 
 						 Vector2[] vertices = new Vector2[4];
 						 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
 						 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
 						 vertices[2] = new Vector2(tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
 						 vertices[3] = new Vector2(tileSize / 2 / PPM, -tileSize / 2 / PPM);
 						 chainShape.createChain(vertices);
-					 //}
-					 /*else{
 					
-						 Vector2[] vertices = new Vector2[6];
-						 vertices[0] = new Vector2(-tileSize / 2 / PPM, -tileSize / 2 / PPM);//Bottom left corner
-						 vertices[1] = new Vector2(-tileSize / 2 / PPM, tileSize / 2 / PPM);
-						 vertices[2] = new Vector2(-tileSize / 16 / PPM, -tileSize / 2 / PPM);
-
-						 vertices[3] = new Vector2(tileSize / 2 / PPM, tileSize / 2 / PPM);//Upper right corner
-						 vertices[4] = new Vector2(tileSize / 2 / PPM, -tileSize / 2 / PPM);
-						 vertices[5] = new Vector2(tileSize / 20 / PPM, -tileSize / 1 / PPM);
-						 chainShape.createChain(vertices);
-					 }*/
-					
-					 if(bits == BIT_LADDER)
+					 if(bits == BIT_LADDER || bits == BIT_LAVA)
 						 fdef.isSensor = true;
 					 else
 						 fdef.isSensor = false;
@@ -1112,6 +1112,9 @@ public class GameScreen implements Screen{
 					 case BIT_GROUND:
 						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET | BIT_MORTAR;
 						 break;
+					 case BIT_LAVA:
+						 
+						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER;
 					 }
 				 
 					 world.createBody(bdef).createFixture(fdef).setUserData(userData);

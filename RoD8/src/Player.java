@@ -474,7 +474,8 @@ public class Player extends B2DSprite{
 		
 				spriteBatch.draw(droneIdle.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + 20, this.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
-		}else{
+		}
+		else{
 			
 			spriteBatch.draw(droneScan.getKeyFrame(stateTime, true), markedMob.getBody().getPosition().x * 100 - 20, markedMob.getBody().getPosition().y * 100 + 10, 0, 0, 15, 15, GameScreen.SCALE, GameScreen.SCALE, 0);
 
@@ -641,7 +642,7 @@ public class Player extends B2DSprite{
 			}
 		}
 		
-		if(gameScreen.contactListener.isPlayerOnGround() && this.getState() != 6)	
+		if((type == 2 && gameScreen.contactListener.isPlayerOnGround() && this.getState() != 5 ) || (gameScreen.contactListener.isPlayerOnGround() && this.getState() != 6 && type == 1))	
 			
 			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
 	}
@@ -650,7 +651,7 @@ public class Player extends B2DSprite{
 	 * Mark mob.
 	 */
 	private void markMob(){
-			
+	
 		if(markedMob != null){
 			
 			markedMob.isMarked = false;

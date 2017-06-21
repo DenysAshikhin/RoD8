@@ -31,6 +31,8 @@ public class MyContactListener implements ContactListener{
 	/** The player on ground. */
 	private int playerOnGround;
 	
+	private int playerInLava;
+	
 	/** The player on ladder. */
 	private int playerOnLadder;
 	
@@ -80,6 +82,8 @@ public class MyContactListener implements ContactListener{
 	 */
 	public boolean isPlayerOnLadder(){return playerOnLadder > 0;}
 	
+	public boolean isPlayerInLava(){return playerInLava > 0;}
+	
 	/* (non-Javadoc)
 	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
 	 */
@@ -108,7 +112,21 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
-		
+		if(fa.getUserData() != null && fa.getUserData().equals("lava")){
+
+			if(fb.getBody().getUserData() instanceof Player){
+				
+				playerInLava++;
+			}
+		}
+
+		if(fb.getUserData() != null && fb.getUserData().equals("lava")){
+
+			if(fa.getBody().getUserData() instanceof Player){
+				
+				playerInLava++;
+			}
+		}
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("launcher")){
 				
@@ -520,7 +538,21 @@ public class MyContactListener implements ContactListener{
 			GameScreen.teleporter.isTouched = false;
 		}
 
+		if(fa.getUserData() != null && fa.getUserData().equals("lava")){
+
+			if(fb.getBody().getUserData() instanceof Player){
+				
+				playerInLava--;
+			}
+		}
 		
+		if(fb.getUserData() != null && fb.getUserData().equals("lava")){
+
+			if(fa.getBody().getUserData() instanceof Player){
+				
+				playerInLava--;
+			}
+		}		
 		
 		if(fa.getUserData() != null && fa.getUserData().equals("chest")){
 			
