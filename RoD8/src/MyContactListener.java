@@ -24,7 +24,7 @@ public class MyContactListener implements ContactListener{
 	
 	public HashSet<Body> bodyToRemove;
 	
-	public float[] explosionToAdd = new float[2];
+	public float[] explosionToAdd = new float[3];
 
 	/** The player on ground. */
 	private int playerOnGround;
@@ -34,15 +34,11 @@ public class MyContactListener implements ContactListener{
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
-	private GameScreen gameScreen;
-	
 	/**
 	 * Instantiates a new my contact listener.
 	 */
-	public MyContactListener(GameScreen gamescreen){
+	public MyContactListener(){
 		super();
-		
-		gameScreen = gamescreen;
 		
 		bodiesToRemove = new Array<Body>();
 		bodyToRemove = new HashSet<Body>();
@@ -408,8 +404,8 @@ public class MyContactListener implements ContactListener{
 			bodyToRemove.add(fa.getBody());
 
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x;
-			explosionToAdd[2] = fb.getBody().getPosition().y;
+			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
+			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
 		}
 		
 		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
@@ -417,8 +413,8 @@ public class MyContactListener implements ContactListener{
 			bodyToRemove.add(fb.getBody());
 	
 			explosionToAdd[0] = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-			explosionToAdd[1] = fb.getBody().getPosition().x;
-			explosionToAdd[2] = fb.getBody().getPosition().y;
+			explosionToAdd[1] = fb.getBody().getPosition().x * 100;
+			explosionToAdd[2] = fb.getBody().getPosition().y * 100;
 		}
 		
 		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){

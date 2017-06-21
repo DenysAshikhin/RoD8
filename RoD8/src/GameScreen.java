@@ -207,7 +207,7 @@ public class GameScreen implements Screen{
 		spriteBatch = new SpriteBatch();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener(this);
+		contactListener = new MyContactListener();
 		world.setContactListener(contactListener);	
 		b2dr = new Box2DDebugRenderer();
 		
@@ -288,15 +288,14 @@ public class GameScreen implements Screen{
 		
 		if(dir){
 			
-			bdef.linearVelocity.x = 1f;
+			bdef.linearVelocity.x = 1.5f;
 		}else{
 			
-			bdef.linearVelocity.x = -1f;
+			bdef.linearVelocity.x = -1.5f;
 		}
 		
-		bdef.linearVelocity.y = 3f;
+		bdef.linearVelocity.y = 4f;
 		
-		bdef.bullet = true;
 		Body body = world.createBody(bdef);
 		shape.setAsBox(3 / PPM, 3 / PPM);
 		fdef.shape = shape;
@@ -307,7 +306,7 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
-	public void createExplosion(float damage, Vector2 position){
+	private void createExplosion(float damage, Vector2 position){
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
@@ -378,8 +377,9 @@ public class GameScreen implements Screen{
 		}
 		bodies.clear();
 		
-		if(contactListener.explosionToAdd[0] == null){
+		if(contactListener.explosionToAdd[0] != 0){
 			
+			createExplosion(contactListener.explosionToAdd[0], new Vector2(contactListener.explosionToAdd[1], contactListener.explosionToAdd[2]));
 		}
 		
 		for(Monster j : removeMobs){
@@ -655,7 +655,7 @@ public class GameScreen implements Screen{
 		world.dispose();
 		
 		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener(this);
+		contactListener = new MyContactListener();
 		world.setContactListener(contactListener);	
 		
 		difficulty ++;
