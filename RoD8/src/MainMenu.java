@@ -73,7 +73,6 @@ public class MainMenu implements Screen{
 	@Override
 	public void render(float delta) {
 
-		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
 		
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -84,13 +83,12 @@ public class MainMenu implements Screen{
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
 		
-		//System.out.println(x);
-		//System.out.println(EXIT_BUTTON_WIDTH);
+		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
+		System.out.println(x + EXIT_BUTTON_WIDTH);
 
-		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y ){
+		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
 			
-			
-
+	
 			game.batch.draw(exitButttonActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 		}
 		else{
