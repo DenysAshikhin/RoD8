@@ -66,6 +66,9 @@ public class GameScreen implements Screen{
 	/** The chests. */
 	public static HashSet<Chest> chests;
 	
+	public static HashSet<Mine> mines;
+
+	
 	/** The launchers. */
 	public static HashSet<Launcher> launchers;
 
@@ -246,6 +249,7 @@ public class GameScreen implements Screen{
 		textures.loadTexture("chestandteleporter.png", "portal");
 		textures.loadTexture("Items.png", "items");
 		textures.loadTexture("launcher.png", "launcher");
+		textures.loadTexture("Engineer_Part_3.png", "mine");
 		blank = textures.getTexture("blank");
 		
 		monsterNum = 0;
@@ -262,6 +266,7 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
+		mines = new HashSet<Mine>();
 		phase = 0;
 
 	}
@@ -336,6 +341,9 @@ public class GameScreen implements Screen{
 		fdef.isSensor = true;
 		fdef.filter.categoryBits = BIT_MORTAR;
 		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
+		
+		Mine m = new Mine(body);
+		mines.add(m);
 		
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
