@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
-// TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving myContact events.
  * The class that is interested in processing a myContact
@@ -38,9 +37,6 @@ public class MyContactListener implements ContactListener{
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
-	/** The game screen. */
-	private GameScreen gameScreen;
-	
 	/**
 	 * Instantiates a new my contact listener.
 	 *
@@ -49,7 +45,6 @@ public class MyContactListener implements ContactListener{
 	public MyContactListener(GameScreen gameScreen){
 		super();
 		
-		this.gameScreen = gameScreen;
 		bodiesToRemove = new Array<Body>();
 		bodyToRemove = new HashSet<Body>();
 		

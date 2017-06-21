@@ -3,7 +3,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MainMenu.
  */
@@ -81,39 +80,36 @@ public class MainMenu implements Screen{
 		game.batch.begin();
 		
 		
-		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
 		
-		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
-		System.out.println(x + EXIT_BUTTON_WIDTH);
-
 		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
+			
 			game.batch.draw(exitButttonActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			
 			if(Gdx.input.isTouched()){
 				
 				Gdx.app.exit();
 			}
-		}
-		else{
+		}else{
 			
 			game.batch.draw(exitButtonInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
-
 		}
+		
 		x = SpaceGame.WIDTH/2 - PLAY_BUTTON_WIDTH/2;
+		
 		if (Gdx.input.getX() < x + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < PLAY_BUTTON_Y + PLAY_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  PLAY_BUTTON_Y){
+			
 			game.batch.draw(playButtonActive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game));
 			}
-		}
-		else{
+		}else{
 			
 			game.batch.draw(playButtonInactive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
-
 		}
 		
-
 		game.batch.end();
 	}
 

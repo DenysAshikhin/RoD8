@@ -30,8 +30,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class GameScreen.
  */
@@ -192,7 +190,6 @@ public class GameScreen implements Screen{
 	 *
 	 * @param game the game
 	 */
-	@SuppressWarnings("static-access")
 	public GameScreen(SpaceGame game){
 
 		portalStart = 0;
@@ -256,7 +253,6 @@ public class GameScreen implements Screen{
 		createPlayer();
 		
 		phase = 0;
-		player.money = 9999999;
 
 	}
 	
@@ -563,7 +559,9 @@ public class GameScreen implements Screen{
 				teleporter.isActive = true;
 				teleporter.wasActivated = true;
 				portalStart = System.currentTimeMillis();
-				createMonster(true);
+				if(difficulty == 3){
+					createMonster(true);
+				}
 				phase = 10;
 			}
 		}
@@ -656,13 +654,13 @@ public class GameScreen implements Screen{
 			
 			if(this.contactListener.isPlayerOnLadder()){
 			
-				guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb.");
+				guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
 				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
 			}
 			break;
 		case 3:
 			
-			guiLayout = new GlyphLayout(scoreFont, "Look in the top left corner for your abilities.");
+			guiLayout = new GlyphLayout(scoreFont, "Look in the top left corner for your ability cooldowns.");
 			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
 			break;
 		case 4:
@@ -674,11 +672,10 @@ public class GameScreen implements Screen{
 		spriteBatch.end();
 	
 		//spawnTimer += System.currentTimeMillis();
-		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
+		for (int i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/250 >= 1)) && teleporter.isActive; i++){
 	
 			createMonster(false);
 			spawnTimer = System.currentTimeMillis();
-			System.out.println(difficulty);
 		}
 	
 		

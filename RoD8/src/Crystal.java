@@ -2,7 +2,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Crystal.
  */
