@@ -60,6 +60,10 @@ public class Player extends B2DSprite{
 
 	Animation<TextureRegion> quaternaryRight;
 	
+	private static final float DETECTION_RANGE = 20f;
+	
+	Monster markedMob;
+	
 	private float animTime;
 	private int framesRun;
 	
@@ -76,6 +80,8 @@ public class Player extends B2DSprite{
 	public Player(Body body, GameScreen gameScreen, int type){//Add a type int later to determing which animations will be loaded in
 		
 		super(body);
+		
+		markedMob = null;
 		
 		this.gameScreen = gameScreen;
 		
@@ -265,30 +271,30 @@ public class Player extends B2DSprite{
 			
 			if(this.getFacing()){
 				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE - 1, 0, 0, 20, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(standingRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE - 1, 0, 0, 20, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 2:
 			
 			if(this.getBody().getLinearVelocity().x >= 0){
 			
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 20, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
-				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(jumpRight.getKeyFrame(stateTime, false), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 20, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			break;
 		case 3:
 			
 			if(this.getFacing())
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 20, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
 			else
-				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, PLAYER_WIDTH * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+				spriteBatch.draw(runRight.getKeyFrame(stateTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 20, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
 
 			break;
 		case 4:
@@ -306,9 +312,9 @@ public class Player extends B2DSprite{
 			if (framesRun <= 6){
 
 				if(this.getFacing())
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE- 2, 0, 0, 56, 33, GameScreen.SCALE, GameScreen.SCALE, 0);
 				else
-					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE * 1.5f, 0, 0, 18, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(primaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + (PLAYER_WIDTH/2 * GameScreen.SCALE), this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE - 2, 0, 0, 56, 33, -GameScreen.SCALE, GameScreen.SCALE, 0);
 			}
 			else{
 				
@@ -322,10 +328,7 @@ public class Player extends B2DSprite{
 			
 			if (prevFrame != secondaryRight.getKeyFrame(animTime, true)){
 				
-				if(framesRun == 1){
-					
-					gameScreen.createBullet("ray:10.00", this.getFacing());
-				}
+
 				framesRun++;
 				prevFrame = secondaryRight.getKeyFrame(animTime, true);
 			}
@@ -333,9 +336,9 @@ public class Player extends B2DSprite{
 			if (framesRun <= 12){
 				
 				if(this.getFacing())
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - 1 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 23, 39, GameScreen.SCALE, GameScreen.SCALE, 0);
 				else
-					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 33 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);				
+					spriteBatch.draw(secondaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH/2 * GameScreen.SCALE, this.getBody().getPosition().y * 100 - 1 -  (PLAYER_HEIGHT/2) * GameScreen.SCALE, 0, 0, 23, 39, -GameScreen.SCALE, GameScreen.SCALE, 0);				
 			}
 			else{
 				
@@ -350,6 +353,10 @@ public class Player extends B2DSprite{
 					
 			if (prevFrame != tertiaryRight.getKeyFrame(animTime, true)){
 				
+				if(framesRun == 1){
+					
+					gameScreen.createBullet("ray:10.00", this.getFacing());
+				}
 				framesRun++;
 				prevFrame = tertiaryRight.getKeyFrame(animTime, true);
 			}
@@ -357,9 +364,9 @@ public class Player extends B2DSprite{
 			if (framesRun <=  6){
 			
 				if(this.getFacing())
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - 20, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 94, 39, GameScreen.SCALE, GameScreen.SCALE, 0);
 				else
-					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + GameScreen.SCALE * 30, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 87, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
+					spriteBatch.draw(tertiaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + 20, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 94, 39, -GameScreen.SCALE, GameScreen.SCALE, 0);
 
 			}
 			else{
@@ -371,35 +378,8 @@ public class Player extends B2DSprite{
 			}
 			break;
 		case 7:
-			
-			if (prevFrame != quaternaryRight.getKeyFrame(animTime, true)){
 				
-				if(framesRun == 1 || framesRun == 5 || framesRun == 9){
-					
-					gameScreen.createBullet("bullet:10.00", this.getFacing());
-				}
-				else if(framesRun == 3 || framesRun ==7 || framesRun == 11){
-					
-					gameScreen.createBullet("bullet:10.00", !this.getFacing());
-				}
-				framesRun++;
-				prevFrame = quaternaryRight.getKeyFrame(animTime, true);
-			}
-
-			if (framesRun <= 15){
-				
-				if(this.getFacing())
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, GameScreen.SCALE, GameScreen.SCALE, 0);
-				else
-					spriteBatch.draw(quaternaryRight.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 + PLAYER_WIDTH * 2.2f * GameScreen.SCALE, this.getBody().getPosition().y * 100 - (PLAYER_HEIGHT/2 + 1) * GameScreen.SCALE, 0, 0, 40 * 1.5f, PLAYER_HEIGHT * 1.5f, -GameScreen.SCALE, GameScreen.SCALE, 0);
-			}
-			else{
-				
-				this.setState(0);
-				framesRun = 0;
-				animTime = 0;
-				prevFrame = null;
-			}
+				this.setState(0);		
 			break;
 		}	
 		
@@ -512,13 +492,45 @@ public class Player extends B2DSprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.F)){
 				
-				this.setState(7);
+				if(this.type == 1)
+					this.setState(7);
+				else if(this.type == 2){
+					
+					markMob();
+				}
 			}
 		}
 		
 		if(gameScreen.contactListener.isPlayerOnGround() && this.getState() != 6)	
 			
 			this.getBody().setLinearVelocity(this.getBody().getLinearVelocity().x * 0.9f, this.getBody().getLinearVelocity().y);
+	}
+	
+	private void markMob(){
+			
+		if(markedMob != null){
+			
+			markedMob.isMarked = false;
+			markedMob = null;
+		}
+			for (Monster m : GameScreen.monsterList){
+				
+				float range = (float) Math.sqrt(Math.pow(m.getPosition().x - this.getPosition().x, 2) + Math.pow(m.getPosition().y - this.getPosition().y, 2));
+				if(range <= DETECTION_RANGE){
+					
+					if(markedMob == null){
+						
+						markedMob = m;
+						m.isMarked = true;
+					}
+						if(m.health > markedMob.health){
+							
+							markedMob.isMarked = false;
+							markedMob = m;
+							m.isMarked = true;
+						}
+					}
+				}
 	}
 	
 	public void increaseMaxHealth(float increase){
@@ -642,7 +654,7 @@ public class Player extends B2DSprite{
 		runRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7]});
 	
 		sprites = new TextureRegion[6];
-		sprites = TextureRegion.split(texture, 18, 13)[2];
+		sprites = TextureRegion.split(texture, 62, 14)[2];
 		primaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
 		sprites = new TextureRegion[12];
@@ -650,7 +662,7 @@ public class Player extends B2DSprite{
 		secondaryRight = new Animation<TextureRegion>(0.07f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5], sprites[6], sprites[7], sprites[8], sprites[9], sprites[10], sprites[11]});
 		
 		sprites = new TextureRegion[9];
-		sprites = TextureRegion.split(texture, 87, 18)[6];
+		sprites = TextureRegion.split(texture, 90, 18)[6];
 		tertiaryRight = new Animation<TextureRegion>(0.1f, new TextureRegion[]{sprites[0], sprites[1], sprites[2], sprites[3], sprites[4], sprites[5]});
 		
 		//Not Needed

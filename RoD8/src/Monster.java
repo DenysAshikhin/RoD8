@@ -24,6 +24,8 @@ public class Monster extends B2DSprite{
 	public int onWall;
 
 	public int canHurdle = 1;
+	
+	public boolean isMarked;
 
 	GameScreen gameScreen;
 
@@ -50,6 +52,7 @@ public class Monster extends B2DSprite{
 	public Monster(Body body, GameScreen gameScreen, float num, int type) {
 	
 		super(body);
+		this.isMarked = false;
 		this.gameScreen = gameScreen;
 		this.identifier = num;
 		this.type = type;
