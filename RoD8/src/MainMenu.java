@@ -25,22 +25,22 @@ public class MainMenu implements Screen{
 	Texture playButtonInactive;
 
 	/** The exit button width. */
-	private static int EXIT_BUTTON_WIDTH = 10;
+	private static int EXIT_BUTTON_WIDTH = 300;
 	
 	/** The exit button height. */
-	private static int EXIT_BUTTON_HEIGHT = 15;
+	private static int EXIT_BUTTON_HEIGHT = 150;
 
 	/** The play button width. */
-	private static int PLAY_BUTTON_WIDTH = 33;
+	private static int PLAY_BUTTON_WIDTH = 500;
 	
 	/** The play button height. */
-	private static int PLAY_BUTTON_HEIGHT = 15;
+	private static int PLAY_BUTTON_HEIGHT = 200;
 	
 	/** The Constant PLAY_BUTTON_Y. */
-	private static final int PLAY_BUTTON_Y = 30;
+	private static final int PLAY_BUTTON_Y = 300;
 	
 	/** The Constant EXIT_BUTTON_Y. */
-	private static final int EXIT_BUTTON_Y = 10;
+	private static final int EXIT_BUTTON_Y = 125;
 	
 	/**
 	 * Instantiates a new main menu.
@@ -74,23 +74,20 @@ public class MainMenu implements Screen{
 	@Override
 	public void render(float delta) {
 
-		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
 		
-		Gdx.gl.glClearColor(0.25f, 0.25f, 0.3f, 1);
+		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
 		
-		game.scrollingBackground.updateAndRender(delta, game.batch);
-
+		
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
-
-		System.out.println("[" + x + ", " + (x + EXIT_BUTTON_WIDTH) + "]");
-		System.out.println("[" + EXIT_BUTTON_HEIGHT + ", " + (EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT) + "]");
 		
-		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y ){
-			
+		System.out.println(Gdx.input.getX() + ", " + Gdx.input.getY());
+		System.out.println(x + EXIT_BUTTON_WIDTH);
+
+		if (Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  EXIT_BUTTON_Y){
 			game.batch.draw(exitButttonActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 			if(Gdx.input.isTouched()){
 				
@@ -102,24 +99,21 @@ public class MainMenu implements Screen{
 			game.batch.draw(exitButtonInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 
 		}
-
 		x = SpaceGame.WIDTH/2 - PLAY_BUTTON_WIDTH/2;
-		
-		if (Gdx.input.getX() < x + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < PLAY_BUTTON_Y + PLAY_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  PLAY_BUTTON_Y ){
-			
+		if (Gdx.input.getX() < x + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x && SpaceGame.HEIGHT - Gdx.input.getY() < PLAY_BUTTON_Y + PLAY_BUTTON_HEIGHT && SpaceGame.HEIGHT - Gdx.input.getY() >  PLAY_BUTTON_Y){
 			game.batch.draw(playButtonActive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 			if(Gdx.input.isTouched()){
 				
-				game.setScreen(new GameScreen(game));
+				
 			}
 		}
 		else{
 			
 			game.batch.draw(playButtonInactive, x, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+
 		}
 		
-		
-		
+
 		game.batch.end();
 	}
 
