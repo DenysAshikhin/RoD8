@@ -99,7 +99,7 @@ public class GameScreen implements Screen{
 	SpriteBatch spriteBatch;
 
 	/** The debug. */
-	private boolean debug = true;
+	private boolean debug = false;
 		
 	/** The portal start. */
 	private long portalStart;
@@ -404,8 +404,7 @@ public class GameScreen implements Screen{
 			world.setContactListener(contactListener);	
 			game.setScreen(new GameOverScreen(game, 9473));
 		}
-		
-		if(changing){
+		else if(changing){
 			changeLevel();
 			changing = false;
 		}
@@ -549,8 +548,6 @@ public class GameScreen implements Screen{
 					
 					if(difficulty < 4)
 						changing = true;
-					
-
 			}
 			else{
 				
@@ -587,7 +584,7 @@ public class GameScreen implements Screen{
 				}
 			}
 			
-			if(teleporter.isTouched){
+			if(teleporter.isTouched && monsterList.size == 0){
 				
 				teleporter.isActive = true;
 				teleporter.wasActivated = true;
@@ -698,10 +695,25 @@ public class GameScreen implements Screen{
 			break;
 		case 3:
 			
-			guiLayout = new GlyphLayout(scoreFont, "Look in the top left corner for your ability cooldowns.");
+			guiLayout = new GlyphLayout(scoreFont, "Press  A  to use your basic attack.");
 			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
 			break;
 		case 4:
+
+			guiLayout = new GlyphLayout(scoreFont, "Press  S  to use your secondary attack.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			break;
+		case 5:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Press  D  to use your third ability.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			break;
+		case 6:
+			
+			guiLayout = new GlyphLayout(scoreFont, "Press F to use your fourth ability.");
+			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+			break;
+		case 7:
 			
 			guiLayout = new GlyphLayout(scoreFont, "Find the portal...");
 			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
@@ -713,8 +725,6 @@ public class GameScreen implements Screen{
 		for (i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
 	
 			createMonster(false);
-	
-
 		}
 		if(i >= difficulty){
 			
@@ -736,7 +746,7 @@ public class GameScreen implements Screen{
 		
 		if(contactListener.isPlayerInLava()){
 			
-			player.health -= 0.1;
+			player.health -= 1;
 		}
 		}
 	}
@@ -873,7 +883,6 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("player");
 		body.setUserData(player);
 		//Create Playeraa
-		player = new Player(body, this, this.charType);
 
 		if(difficulty == 1)
 			player = new Player(body, this, this.charType);
@@ -1026,8 +1035,7 @@ public class GameScreen implements Screen{
 		
 		
 		case 1:
-			difficulty ++;
-			tileMap = new TmxMapLoader().load("second_stage_map.tmx");
+			tileMap = new TmxMapLoader().load("first_stage_map.tmx");
 			break;
 			
 		case 2:

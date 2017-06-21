@@ -589,9 +589,9 @@ public class Player extends B2DSprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.S) && ((System.currentTimeMillis() - secondUsed) >= secondCD)){
 				
-				if(gameScreen.phase == 3){
+				if(gameScreen.phase == 4){
 					
-					gameScreen.phase = 4;
+					gameScreen.phase = 5;
 				}
 				this.setState(5);
 				
@@ -607,9 +607,9 @@ public class Player extends B2DSprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.D) && ((System.currentTimeMillis() - thirdUsed) >= thirdCD)){
 				
-				if(gameScreen.phase == 3){
+				if(gameScreen.phase == 5){
 					
-					gameScreen.phase = 4;
+					gameScreen.phase = 6;
 				}
 				this.setState(6);
 				
@@ -626,9 +626,9 @@ public class Player extends B2DSprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.F) && ((System.currentTimeMillis() - fourthUsed) >= fourthCD)){
 				
-				if(gameScreen.phase == 3){
+				if(gameScreen.phase == 6){
 					
-					gameScreen.phase = 4;
+					gameScreen.phase = 7;
 				}
 				
 				if(this.type == 1)

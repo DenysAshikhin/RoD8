@@ -97,8 +97,20 @@ public class CharacterScreen implements Screen{
 			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
 			scoreFont.getData().setScale(2);
 			guiLayout = new GlyphLayout(scoreFont, "Quick, weak attacks.");
+			scoreFont.draw(game.batch, guiLayout, 300, 230);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Basic light attacks.");
+			scoreFont.draw(game.batch, guiLayout, 340, 190);
 			
-			scoreFont.draw(game.batch, guiLayout, 300, 200);
+			guiLayout = new GlyphLayout(scoreFont, "* Knock-back, medium damage.");
+			scoreFont.draw(game.batch, guiLayout, 340, 150);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Roll to safety.");
+			scoreFont.draw(game.batch, guiLayout, 340, 110);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Rapid fire in both directions.");
+			scoreFont.draw(game.batch, guiLayout, 340, 70);
+			
 			if(Gdx.input.isTouched()){
 
 				
@@ -117,9 +129,20 @@ public class CharacterScreen implements Screen{
 			
 			game.batch.draw(sniperActive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
 			scoreFont.getData().setScale(2);
-			guiLayout = new GlyphLayout(scoreFont, "Powerful, slow attacks.");
+			guiLayout = new GlyphLayout(scoreFont, "Powerful, slow attacks.");			
+			scoreFont.draw(game.batch, guiLayout, 800, 230);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Medium light attack.");
+			scoreFont.draw(game.batch, guiLayout, 840, 190);
 			
-			scoreFont.draw(game.batch, guiLayout, 800, 200);
+			guiLayout = new GlyphLayout(scoreFont, "* Leap backwards to safety.");
+			scoreFont.draw(game.batch, guiLayout, 840, 150);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Powerful knockback.");
+			scoreFont.draw(game.batch, guiLayout, 840, 110);
+
+			guiLayout = new GlyphLayout(scoreFont, "* Mark an enemy for double damage.");
+			scoreFont.draw(game.batch, guiLayout, 840, 70);
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game, 2));
