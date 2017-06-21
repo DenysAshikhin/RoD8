@@ -75,7 +75,7 @@ public class GameScreen implements Screen{
 	 * 2 : lemurian;
 	 * 3 : giant
 	 */
-	public static final float[] MONSTER_WIDTH = {0f, 30f, 18f, 30f};
+	public static final float[] MONSTER_WIDTH = {0f, 25f, 18f, 30f, 24f, 82f};
 
 	/**
 	 * Associated Indexes:
@@ -84,7 +84,7 @@ public class GameScreen implements Screen{
 	 * 2 : lemurian;
 	 * 3 : giant
 	 */
-	public static final float[] MONSTER_HEIGHT = {0f, 30f, 18f, 60f};
+	public static final float[] MONSTER_HEIGHT = {0f, 25f, 18f, 60f, 30f, 120f};
 
 	/** The Constant SCALE. */
 	public static final float SCALE = 0.7f;
@@ -218,6 +218,8 @@ public class GameScreen implements Screen{
 		textures.loadTexture("Monster Crab.png", "crab");
 		textures.loadTexture("Monster 2 Final.png", "lemurian");
 		textures.loadTexture("monster4.png", "giant");
+		textures.loadTexture("monster5.png", "golem");
+		textures.loadTexture("finalboss.png", "castle");
 		textures.loadTexture("whitepixel.png", "blank");
 		textures.loadTexture("chestandteleporter.png", "portal");
 		textures.loadTexture("Items.png", "items");
@@ -306,39 +308,24 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("mortar:" + damage);
 	}
 	
-	private void createExplosion(Body body){
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		
-		shape.setAsBox(30f * SCALE / PPM, 30f * SCALE / PPM, new Vector2(0, 0), 0);
-		
-		Body b = body;
-		b.setLinearVelocity(new Vector2(0, 0));
-		b.setGravityScale(0);
-		
-		fdef.shape = shape;
-		fdef.isSensor = true;
-		fdef.filter.categoryBits = BIT_EXPLOSION;
-		fdef.filter.maskBits = BIT_MONSTER;
-		fdef.isSensor = true;
-
-		b.createFixture(fdef).setUserData("explosion:" + 10f);
-
-	}
-
 	public void createLocalAttack(Monster m, float damage, boolean dir){
 		
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		
-		if(dir){
-	
-			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
+		if(m.type == 4){
+			shape.setAsBox((2 * m.width / 3) * SCALE / PPM, (2 * m.height / 3) * SCALE / PPM);
+		}else{
+			if(dir){
+				
+				shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2((m.width / 4) * SCALE / PPM, 0), 0);
+			}
+			else{
+		
+				shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
+			}
 		}
-		else{
-	
-			shape.setAsBox((m.width / 2) * SCALE / PPM, m.height * SCALE / PPM, new Vector2(-(m.width / 4) * SCALE / PPM, 0), 0);
-		}
+		
 		Body body = m.getBody();
 		
 		fdef.shape = shape;
@@ -807,15 +794,37 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("foot");
 	}
 	
+	private void createExplosion(Body body){
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		
+		shape.setAsBox(30f * SCALE / PPM, 30f * SCALE / PPM, new Vector2(0, 0), 0);
+		
+		Body b = body;
+		b.setLinearVelocity(new Vector2(0, 0));
+		b.setGravityScale(0);
+		
+		fdef.shape = shape;
+		fdef.isSensor = true;
+		fdef.filter.categoryBits = BIT_EXPLOSION;
+		fdef.filter.maskBits = BIT_MONSTER;
+		fdef.isSensor = true;
+	
+		b.createFixture(fdef).setUserData("explosion:" + 10f);
+	
+	}
+
 	/**
 	 * Creates monsters.
 	 */
 	private void createMonster(){
 
-		int monsterType = (int) (Math.random() * 3) + 1;
+		//int monsterType = (int) (Math.random() * 4) + 1;
 		//int monsterType = 1;
 		//int monsterType = 2;
 		//int monsterType = 3;
+		//int monsterType = 4;
+		int monsterType = 5;
 		
 		float width = MONSTER_WIDTH[monsterType];
 		float height = MONSTER_HEIGHT[monsterType];
