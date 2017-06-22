@@ -123,7 +123,7 @@ public class MyContactListener implements ContactListener{
 			}
 			else{
 				
-				((Monster)fb.getBody().getUserData()).health -= 1;
+				((Monster)fb.getBody().getUserData()).isInLava ++;
 			}
 		}
 
@@ -135,7 +135,7 @@ public class MyContactListener implements ContactListener{
 			}
 			else{
 				
-				((Monster)fa.getBody().getUserData()).health -= 1;
+				((Monster)fa.getBody().getUserData()).isInLava ++;
 			}
 		}
 		
@@ -571,6 +571,10 @@ public class MyContactListener implements ContactListener{
 				
 				playerInLava--;
 			}
+			else{
+				
+				((Monster)fb.getBody().getUserData()).isInLava --;
+			}
 		}
 		
 		if(fb.getUserData() != null && fb.getUserData().equals("lava")){
@@ -578,6 +582,10 @@ public class MyContactListener implements ContactListener{
 			if(fa.getBody().getUserData() instanceof Player){
 				
 				playerInLava--;
+			}			
+			else{
+				
+				((Monster)fa.getBody().getUserData()).isInLava --;
 			}
 		}		
 		

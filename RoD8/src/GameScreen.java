@@ -87,7 +87,7 @@ public class GameScreen implements Screen{
 	public static final float[] MONSTER_HEIGHT = {0f, 25f, 18f, 60f, 30f, 120f};
 
 	/** The Constant SCALE. */
-	public static final float SCALE = 0.6f;
+	public static final float SCALE = 0.7f;
 
 	/** The state time. */
 	float stateTime;
@@ -270,8 +270,6 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
-		player.money = 1000;
-		
 		phase = 0;
 
 	}
@@ -420,10 +418,10 @@ public class GameScreen implements Screen{
 			world.setContactListener(contactListener);	
 			game.setScreen(new GameOverScreen(game, 9473));
 		}
-		else if(changing){
-			changeLevel();
-			changing = false;
-		}
+		//else if(changing){
+			//changeLevel();
+			//changing = false;
+	//	}
 		else{
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
@@ -443,6 +441,20 @@ public class GameScreen implements Screen{
 		}
 		bodies.clear();
 		
+	
+		for(Monster j : monsterList){
+			
+			if(j.health <= 0){
+				
+				if(j.isMarked){
+					
+					player.markedMob = null;
+				}
+				removeMobs.add(j);
+				world.destroyBody(j.getBody());
+			}
+		}
+		
 		for(Monster j : removeMobs){
 			
 			if(j.isMarked){
@@ -452,6 +464,8 @@ public class GameScreen implements Screen{
 			monsterList.removeValue(j, true);
 		}
 		removeMobs.clear();
+		
+
 		
 		for(Mine m : removeMines){
 			
@@ -518,6 +532,11 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
+			
+			if(m.isInLava > 0){
+				
+				m.health -= 1;
+			}
 
 			if(m.isMarked){
 				
@@ -552,7 +571,7 @@ public class GameScreen implements Screen{
 	
 		if (teleporter.wasActivated){
 			
-			int tempTime = (int)((60*1000) - (System.currentTimeMillis() - portalStart))/1000;
+			int tempTime = (int)((3*1000) - (System.currentTimeMillis() - portalStart))/1000;
 			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
 		
 			if(tempTime > 0){
@@ -566,9 +585,6 @@ public class GameScreen implements Screen{
 					
 					guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
 					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
-					
-					if(difficulty < 4)
-						changing = true;
 			}
 			else{
 				
@@ -614,6 +630,11 @@ public class GameScreen implements Screen{
 					createMonster(true);
 				}
 				phase = 10;
+				
+				if(difficulty < 4 && teleporter.isFinished){
+					
+					changeLevel();
+				}
 			}
 		}
 		
@@ -773,7 +794,7 @@ public class GameScreen implements Screen{
 		}
 		
 		
-		if(player.getBody().getPosition().y < 35 && difficulty == 30){
+		if(player.getBody().getPosition().y < 35 && difficulty == 3){
 			
 			player.getBody().setTransform(new Vector2(47, 48), 0);
 		}
@@ -783,6 +804,9 @@ public class GameScreen implements Screen{
 			player.health -= 1;
 		}
 		}
+		
+		
+		
 	}
 
 	/* (non-Javadoc)
@@ -916,7 +940,7 @@ public class GameScreen implements Screen{
 		fdef.filter.maskBits = BIT_GROUND | BIT_CHEST | BIT_BULLET | BIT_ATTACK | BIT_LADDER | BIT_PORTAL | BIT_ITEM | BIT_LAUNCHER | BIT_LAVA;
 		body.createFixture(fdef).setUserData("player");
 		body.setUserData(player);
-		//Create Playeraa
+		//Create Player
 
 		if(difficulty == 1)
 			player = new Player(body, this, this.charType);
