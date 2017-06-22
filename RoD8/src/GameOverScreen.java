@@ -1,5 +1,4 @@
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,17 +45,6 @@ public class GameOverScreen implements Screen{
 		this.game = game;
 		this.score = score;
 		
-		//Get highscore from save file
-		Preferences prefs = Gdx.app.getPreferences("SpaceGame");//Can be found in user folder, .prefs 
-		this.highscore = prefs.getInteger("highscore", 0);
-	
-		//Check if score beats highscore
-		if (score > highscore){
-			
-			prefs.putInteger("highscore", score);
-			prefs.flush();
-		}
-		
 		//Load textures and fonts
 		gameOverBanner = new Texture("game_over.png");
 		scoreFont = new BitmapFont();
@@ -90,10 +78,8 @@ public class GameOverScreen implements Screen{
 		game.batch.draw(gameOverBanner, Gdx.graphics.getWidth()/2 - BANNER_WIDTH/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15, BANNER_WIDTH, BANNER_HEIGHT);
 		
 		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: \n" + score, Color.WHITE, 0, Align.left, false);
-		GlyphLayout highscoreLayout = new GlyphLayout(scoreFont, "Highscore: \n" + highscore, Color.WHITE, 0, Align.left, false);
 
 		scoreFont.draw(game.batch, scoreLayout, Gdx.graphics.getWidth()/2 - scoreLayout.width/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15 * 2);
-		scoreFont.draw(game.batch, highscoreLayout, Gdx.graphics.getWidth()/2 - highscoreLayout.width/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - scoreLayout.height - 15 * 3);
 
 		GlyphLayout tryAgainLayout = new GlyphLayout(scoreFont, "Try Again");
 		GlyphLayout mainMenuLayout = new GlyphLayout(scoreFont, "Main Menu");

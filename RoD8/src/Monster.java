@@ -131,7 +131,11 @@ public class Monster extends B2DSprite{
 	 * @param stateTime the state time
 	 */	
 	public void drawMonsters(SpriteBatch spriteBatch, float stateTime){
-		
+
+		if(isInLava > 0){
+			this.health -= 1f;
+		}
+
 		if(this.getBody().getFixtureList().size != 0){
 			
 			Fixture f = this.getBody().getFixtureList().peek();

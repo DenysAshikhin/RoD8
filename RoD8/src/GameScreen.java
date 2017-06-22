@@ -42,6 +42,9 @@ public class GameScreen implements Screen{
 	
 	public MyContactListener contactListener;
 
+	/** The phase. */
+	public int phase;
+
 	/** The player. */
 	public static Player player;
 
@@ -127,9 +130,6 @@ public class GameScreen implements Screen{
 	/** The crystals. */
 	private Array<Crystal> crystals;
 
-	/** The phase. */
-	public int phase;
-		
 	/** The cam. */
 	private OrthographicCamera cam;
 
@@ -193,9 +193,6 @@ public class GameScreen implements Screen{
 	private static final short BIT_EXPLOSION = 8192;
 	
 	private static final short BIT_LAVA = 16384;
-
-	/** The changing. */
-	private boolean changing;
 	
 	private SpaceGame game;
 	/**
@@ -219,8 +216,6 @@ public class GameScreen implements Screen{
 		
 		difficulty = 1;
 		spawnTimer = 0;
-		
-		changing = false;
 
 		int width = 320;
 		int height = 240;
@@ -401,6 +396,7 @@ public class GameScreen implements Screen{
 			chests.clear();
 			transitionItems.clear();
 			floatingItemList.clear();
+			itemList.clear();
 			removeMobs.clear();
 			monsterList.clear();		
 			chests.clear();
@@ -409,6 +405,7 @@ public class GameScreen implements Screen{
 			removeMines.clear();
 
 			monsterNum = 0;
+			itemNum = 0;
 			monsterList.ordered = false;
 			
 			world.dispose();
@@ -433,18 +430,26 @@ public class GameScreen implements Screen{
 		
 		world.step(delta, 6, 2);
 		
-		/*for(Monster j : monsterList){
+		for(Monster m : monsterList){
 			
-			if(j.health <= 0){
+			if(m.health <= 0){
 				
-				if(j.isMarked){
+				if(!(m.isInLava > 0)){
+					
+					GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+					GameScreen.player.health += GameScreen.player.HealthSteal;
+					player.money += player.goldLeech;
+				}
+				
+				if(m.isMarked){
 					
 					player.markedMob = null;
 				}
-				removeMobs.add(j);
-				world.destroyBody(j.getBody());
+				
+				removeMobs.add(m);
+				world.destroyBody(m.getBody());
 			}
-		}*/
+		}
 		
 		HashSet<Body> bodies = contactListener.getBodyToRemove();
 		
@@ -457,15 +462,9 @@ public class GameScreen implements Screen{
 		
 		for(Monster j : removeMobs){
 			
-			if(j.isMarked){
-				
-				player.markedMob = null;
-			}
 			monsterList.removeValue(j, true);
 		}
 		removeMobs.clear();
-		
-
 		
 		for(Mine m : removeMines){
 			
@@ -532,11 +531,6 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
-			
-			/*if(m.isInLava > 0){
-				
-				m.health -= 1;
-			}*/
 
 			if(m.isMarked){
 				
