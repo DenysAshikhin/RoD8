@@ -496,7 +496,6 @@ public class GameScreen implements Screen{
 		
 		spriteBatch.begin();
 
-		player.money=1000;
 		for(Item i : floatingItemList){
 			
 			i.drawItem(spriteBatch);
@@ -529,7 +528,6 @@ public class GameScreen implements Screen{
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 			spriteBatch.setColor(Color.WHITE);
 		}
-	
 		
 		for(Chest chest : chests){
 				
