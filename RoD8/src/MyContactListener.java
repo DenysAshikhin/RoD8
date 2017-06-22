@@ -149,8 +149,6 @@ public class MyContactListener implements ContactListener{
 			fa.getBody().applyLinearImpulse(new Vector2(0, 8.7f), fa.getBody().getPosition(), true);
 		}
 		
-		
-		
 		if(fa.getUserData() != null && fa.getUserData().equals("portal")){
 			
 			GameScreen.teleporter.isTouched = true;
@@ -467,9 +465,9 @@ public class MyContactListener implements ContactListener{
 				fa.getBody().setGravityScale(0);
 				fa.getBody().setLinearVelocity(new Vector2(0, 0));
 				
-				filter = fa.getFilterData();
-				filter.maskBits = GameScreen.BIT_MONSTER;
-				fa.setFilterData(filter);
+				//filter = fa.getFilterData();
+				//filter.maskBits = GameScreen.BIT_MONSTER;
+				//fa.setFilterData(filter);
 			}else{
 				
 				bodyToRemove.add(fa.getBody());
@@ -509,9 +507,9 @@ public class MyContactListener implements ContactListener{
 				fb.getBody().setGravityScale(0);
 				fb.getBody().setLinearVelocity(new Vector2(0, 0));
 				
-				filter = fb.getFilterData();
-				filter.maskBits = GameScreen.BIT_MONSTER;
-				fb.setFilterData(filter);
+				//filter = fb.getFilterData();
+				//filter.maskBits = GameScreen.BIT_MONSTER;
+				//fb.setFilterData(filter);
 			}else{
 
 				bodyToRemove.add(fb.getBody());

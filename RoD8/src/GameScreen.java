@@ -169,7 +169,7 @@ public class GameScreen implements Screen{
 	private static final short BIT_CHEST = 32;
 	
 	/** The Constant BIT_MONSTER. */
-	static final short BIT_MONSTER = 64;
+	public static final short BIT_MONSTER = 64;
 	
 	/** The Constant BIT_BULLET. */
 	private static final short BIT_BULLET = 128;
@@ -433,16 +433,7 @@ public class GameScreen implements Screen{
 		
 		world.step(delta, 6, 2);
 		
-		HashSet<Body> bodies = contactListener.getBodyToRemove();
-		
-		for (Body body : bodies){
-		
-				world.destroyBody(body);
-		}
-		bodies.clear();
-		
-	
-		for(Monster j : monsterList){
+		/*for(Monster j : monsterList){
 			
 			if(j.health <= 0){
 				
@@ -453,7 +444,16 @@ public class GameScreen implements Screen{
 				removeMobs.add(j);
 				world.destroyBody(j.getBody());
 			}
+		}*/
+		
+		HashSet<Body> bodies = contactListener.getBodyToRemove();
+		
+		for (Body body : bodies){
+		
+				world.destroyBody(body);
 		}
+		bodies.clear();
+	
 		
 		for(Monster j : removeMobs){
 			
@@ -533,10 +533,10 @@ public class GameScreen implements Screen{
 			}
 			m.monsterMovement();
 			
-			if(m.isInLava > 0){
+			/*if(m.isInLava > 0){
 				
 				m.health -= 1;
-			}
+			}*/
 
 			if(m.isMarked){
 				
