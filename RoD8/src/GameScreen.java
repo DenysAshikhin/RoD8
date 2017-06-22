@@ -59,6 +59,8 @@ public class GameScreen implements Screen{
 
 	/** The remove mobs. */
 	public static Array<Monster> removeMobs = new Array<Monster>();
+	
+	public static Array<Mine> removeMines = new Array<Mine>();
 
 	/** The transition items. */
 	public static Array<Item> transitionItems = new Array<Item>();
@@ -66,7 +68,7 @@ public class GameScreen implements Screen{
 	/** The chests. */
 	public static HashSet<Chest> chests;
 	
-	public static HashSet<Mine> mines;
+	public static Array<Mine> mines = new Array<Mine>();
 
 	
 	/** The launchers. */
@@ -85,7 +87,7 @@ public class GameScreen implements Screen{
 	public static final float[] MONSTER_HEIGHT = {0f, 25f, 18f, 60f, 30f, 120f};
 
 	/** The Constant SCALE. */
-	public static final float SCALE = 0.7f;
+	public static final float SCALE = 0.6f;
 
 	/** The state time. */
 	float stateTime;
@@ -130,9 +132,11 @@ public class GameScreen implements Screen{
 		
 	/** The cam. */
 	private OrthographicCamera cam;
-	
+
 	/** The monster num. */
 	private int monsterNum;
+	
+	private int mineNum;
 
 	/** The item num. */
 	private int itemNum;
@@ -165,7 +169,7 @@ public class GameScreen implements Screen{
 	private static final short BIT_CHEST = 32;
 	
 	/** The Constant BIT_MONSTER. */
-	private static final short BIT_MONSTER = 64;
+	static final short BIT_MONSTER = 64;
 	
 	/** The Constant BIT_BULLET. */
 	private static final short BIT_BULLET = 128;
@@ -183,7 +187,7 @@ public class GameScreen implements Screen{
 	private static final short BIT_LAUNCHER = 2048;
 	
 	/** The Constant BIT_MORTAR. */
-	private static final short BIT_MORTAR = 4096;
+	private static final short BIT_MINE = 4096;
 
 	/** The Constant BIT_EXPLOSION. */
 	private static final short BIT_EXPLOSION = 8192;
@@ -249,11 +253,13 @@ public class GameScreen implements Screen{
 		textures.loadTexture("chestandteleporter.png", "portal");
 		textures.loadTexture("Items.png", "items");
 		textures.loadTexture("launcher.png", "launcher");
-		textures.loadTexture("Engineer_Part_3.png", "mine");
+		textures.loadTexture("mine.png", "mine");
 		blank = textures.getTexture("blank");
-		
+
 		monsterNum = 0;
 		monsterList.ordered = false;
+		
+		mineNum = 0;
 		
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
@@ -266,7 +272,6 @@ public class GameScreen implements Screen{
 		createLaunchers();
 		createPlayer();
 		
-		mines = new HashSet<Mine>();
 		phase = 0;
 
 	}
@@ -316,8 +321,8 @@ public class GameScreen implements Screen{
 	 * @param damage the damage
 	 * @param dir the dir
 	 */
-	public void createMortar(float damage, boolean dir){
-		
+	public void createMine(float damage, boolean dir){
+				
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
@@ -333,19 +338,21 @@ public class GameScreen implements Screen{
 			bdef.linearVelocity.x = -1.5f;
 		}
 		
-		bdef.linearVelocity.y = 4f;
+		bdef.linearVelocity.y = 3f;
 		
 		Body body = world.createBody(bdef);
 		shape.setAsBox(3 / PPM, 3 / PPM);
 		fdef.shape = shape;
 		fdef.isSensor = true;
-		fdef.filter.categoryBits = BIT_MORTAR;
-		fdef.filter.maskBits = BIT_GROUND | BIT_MONSTER;
+		fdef.filter.categoryBits = BIT_MINE;
+		fdef.filter.maskBits = BIT_GROUND;
 		
-		Mine m = new Mine(body);
+		Mine m = new Mine(body, mineNum);
 		mines.add(m);
 		
-		body.createFixture(fdef).setUserData("mortar:" + damage);
+		body.createFixture(fdef).setUserData("mine:" + damage);
+		
+		mineNum++;
 	}
 	
 	/**
@@ -401,6 +408,8 @@ public class GameScreen implements Screen{
 			monsterList.clear();		
 			chests.clear();
 			launchers.clear();
+			mines.clear();
+			removeMines.clear();
 
 			monsterNum = 0;
 			monsterList.ordered = false;
@@ -435,12 +444,6 @@ public class GameScreen implements Screen{
 		}
 		bodies.clear();
 		
-		if(contactListener.explosionToAdd != null){
-			
-			createExplosion(contactListener.explosionToAdd);
-			contactListener.explosionToAdd = null;
-		}
-		
 		for(Monster j : removeMobs){
 			
 			if(j.isMarked){
@@ -450,6 +453,12 @@ public class GameScreen implements Screen{
 			monsterList.removeValue(j, true);
 		}
 		removeMobs.clear();
+		
+		for(Mine m : removeMines){
+			
+			mines.removeValue(m, true);
+		}
+		removeMines.clear();
 		
 		LOOP : for(Item i : transitionItems){
 
@@ -497,10 +506,15 @@ public class GameScreen implements Screen{
 		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
 		
 		spriteBatch.begin();
-		
+
 		for(Item i : floatingItemList){
 			
 			i.drawItem(spriteBatch);
+		}
+		
+		for(Mine m : mines){
+			
+			m.drawMine(spriteBatch, stateTime);
 		}
 		
 		for(Monster m : monsterList){
@@ -982,7 +996,7 @@ public class GameScreen implements Screen{
 		//shape.setAs
 		f1def.shape = shape1;
 		f1def.filter.categoryBits = BIT_MONSTER;
-		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MORTAR | BIT_LAUNCHER | BIT_EXPLOSION | BIT_LAVA;
+		f1def.filter.maskBits = BIT_GROUND | BIT_BULLET | BIT_MINE | BIT_LAUNCHER | BIT_EXPLOSION | BIT_LAVA;
 
 		body1.createFixture(f1def).setUserData("monster:" + monsterNum);
 
@@ -1126,7 +1140,7 @@ public class GameScreen implements Screen{
 						 fdef.filter.maskBits = BIT_PLAYER;
 						 break;
 					 case BIT_GROUND:
-						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET | BIT_MORTAR;
+						 fdef.filter.maskBits = BIT_PLAYER | BIT_MONSTER | BIT_BULLET | BIT_MINE;
 						 break;
 					 case BIT_LAVA:
 						 
@@ -1271,7 +1285,8 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
+		//Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
+		Item i = new Item(body, this, 10, itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);

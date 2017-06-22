@@ -117,6 +117,6 @@ public class Item extends B2DSprite{
 	 */
 	public void drawItem(SpriteBatch spritebatch){
 		
-		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + (this.width / GameScreen.PPM) / 2, this.getPosition().y * 100 - (this.height / GameScreen.PPM) / 2, 0, 0, this.width, this.height, 1, 1, 0);
+		spritebatch.draw(image.getKeyFrame(gameScreen.stateTime, false), this.getPosition().x * 100 + (this.width * GameScreen.SCALE / GameScreen.PPM) / 2, this.getPosition().y * 100 - (this.height * GameScreen.SCALE / GameScreen.PPM) / 2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
 	}
 }

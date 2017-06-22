@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
@@ -24,7 +25,7 @@ public class MyContactListener implements ContactListener{
 	
 	/** The body to remove. */
 	public HashSet<Body> bodyToRemove;
-	
+
 	/** The explosion to add. */
 	public Body explosionToAdd;
 
@@ -38,6 +39,8 @@ public class MyContactListener implements ContactListener{
 	
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
+	
+	private Filter filter;
 	
 	/**
 	 * Instantiates a new my contact listener.
@@ -457,71 +460,83 @@ public class MyContactListener implements ContactListener{
 			}
 		}
 		
-		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mortar")){
-			
-			explosionToAdd = fa.getBody();
-		}
-		
-		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mortar")){
-			
-			explosionToAdd = fb.getBody();
-		}
-		
-		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("explosion")){
-			
-			bodyToRemove.add(fa.getBody());
+		if(fa.getUserData() != null && ((String) fa.getUserData()).contains("mine")){
+
+			if(fb.getUserData() != null && fb.getUserData().equals("ground")){
+
+				fa.getBody().setGravityScale(0);
+				fa.getBody().setLinearVelocity(new Vector2(0, 0));
 				
-			Monster m = (Monster)fb.getBody().getUserData();
-			
-			float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
-				
-			m.health -= damage;
-			
-			if (fb.getBody().getPosition().x < fa.getBody().getPosition().x){
-				fb.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fb.getBody().getPosition(), true);
+				filter = fa.getFilterData();
+				filter.maskBits = GameScreen.BIT_MONSTER;
+				fa.setFilterData(filter);
 			}else{
-				fb.getBody().applyLinearImpulse(new Vector2(3f, 0f), fb.getBody().getPosition(), true);	
-			}
-			
-			if(m.health <= 0){
-
-				GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
-				GameScreen.player.health += GameScreen.player.HealthSteal;
-				
-				bodyToRemove.add(fb.getBody());
-				m.killed = true;
-				GameScreen.removeMobs.add(m);
-				GameScreen.player.money += GameScreen.player.goldLeech;
-
-			}
-		}
-		
-		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("explosion")){
-			
-			bodyToRemove.add(fb.getBody());
-				
-			Monster m = (Monster)fa.getBody().getUserData();
-			
-			float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
-				
-			m.health -= damage;
-			
-			if (fa.getBody().getPosition().x < fb.getBody().getPosition().x){
-				fa.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fa.getBody().getPosition(), true);
-			}else{
-				fa.getBody().applyLinearImpulse(new Vector2(3f, 0f), fa.getBody().getPosition(), true);	
-			}
-			
-			if(m.health <= 0){
-
-				GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
-				GameScreen.player.health += GameScreen.player.HealthSteal;
 				
 				bodyToRemove.add(fa.getBody());
-				m.killed = true;
-				GameScreen.removeMobs.add(m);
-				GameScreen.player.money += GameScreen.player.goldLeech;
+					
+				Monster m = (Monster)fb.getBody().getUserData();
+				
+				float damage = Float.parseFloat(((String) fa.getUserData()).substring(((String) fa.getUserData()).indexOf(':') + 1, ((String) fa.getUserData()).length()));
+					
+				m.health -= damage;
+				
+				if (fb.getBody().getPosition().x < fa.getBody().getPosition().x){
+					fb.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fb.getBody().getPosition(), true);
+				}else{
+					fb.getBody().applyLinearImpulse(new Vector2(3f, 0f), fb.getBody().getPosition(), true);	
+				}
+				
+				if(m.health <= 0){
 
+					GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+					GameScreen.player.health += GameScreen.player.HealthSteal;
+					
+					bodyToRemove.add(fb.getBody());
+					m.killed = true;
+					GameScreen.removeMobs.add(m);
+					GameScreen.player.money += GameScreen.player.goldLeech;
+
+				}
+			}
+		}
+		
+		if(fb.getUserData() != null && ((String) fb.getUserData()).contains("mine")){
+			
+			if(fa.getUserData() != null && fa.getUserData().equals("ground")){
+
+				fb.getBody().setGravityScale(0);
+				fb.getBody().setLinearVelocity(new Vector2(0, 0));
+				
+				filter = fb.getFilterData();
+				filter.maskBits = GameScreen.BIT_MONSTER;
+				fb.setFilterData(filter);
+			}else{
+
+				bodyToRemove.add(fb.getBody());
+					
+				Monster m = (Monster)fa.getBody().getUserData();
+				
+				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));
+					
+				m.health -= damage;
+				
+				if (fa.getBody().getPosition().x < fb.getBody().getPosition().x){
+					fa.getBody().applyLinearImpulse(new Vector2(-3f, 0f), fa.getBody().getPosition(), true);
+				}else{
+					fa.getBody().applyLinearImpulse(new Vector2(3f, 0f), fa.getBody().getPosition(), true);	
+				}
+				
+				if(m.health <= 0){
+
+					GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+					GameScreen.player.health += GameScreen.player.HealthSteal;
+					
+					bodyToRemove.add(fa.getBody());
+					m.killed = true;
+					GameScreen.removeMobs.add(m);
+					GameScreen.player.money += GameScreen.player.goldLeech;
+
+				}
 			}
 		}
 	}
