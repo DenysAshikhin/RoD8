@@ -79,6 +79,8 @@ public class Monster extends B2DSprite{
 	/** The Constant DETECTION_RANGE. */
 	private static final float DETECTION_RANGE = 1.6f;
 
+	public int isInLava;
+	
 	/**
 	 * Instantiates a new monster.
 	 *
@@ -94,6 +96,7 @@ public class Monster extends B2DSprite{
 		this.gameScreen = gameScreen;
 		this.identifier = num;
 		this.type = type;
+		isInLava = 0;
 		
 		switch(this.type){
 		case 1:

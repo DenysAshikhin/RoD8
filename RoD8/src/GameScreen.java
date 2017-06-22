@@ -512,6 +512,11 @@ public class GameScreen implements Screen{
 				m.increaseAnimTime(delta);
 			}
 			m.monsterMovement();
+			
+			if(m.isInLava > 0){
+				
+				m.health -= 1;
+			}
 
 			if(m.isMarked){
 				
