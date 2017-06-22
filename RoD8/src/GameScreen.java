@@ -487,12 +487,6 @@ public class GameScreen implements Screen{
 		tmr.setView(cam);
 		tmr.render();
 		
-		for(Chest chest : chests){
-			
-			chest.drawChest(spriteBatch);
-		}
-	
-		
 		for(Launcher launcher : launchers){
 			
 			launcher.drawLauncher(spriteBatch, stateTime);
@@ -502,6 +496,7 @@ public class GameScreen implements Screen{
 		
 		spriteBatch.begin();
 
+		player.money=1000;
 		for(Item i : floatingItemList){
 			
 			i.drawItem(spriteBatch);
@@ -530,12 +525,17 @@ public class GameScreen implements Screen{
 				m.drawMonsters(spriteBatch, stateTime);
 			}
 			
-			
 			spriteBatch.setColor(Color.GREEN);
 			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 			spriteBatch.setColor(Color.WHITE);
 		}
 	
+		
+		for(Chest chest : chests){
+				
+			chest.drawChest(spriteBatch);
+		}
+		
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
 	
@@ -578,7 +578,7 @@ public class GameScreen implements Screen{
 			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Press E to begin...");
 			scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
 		}
-	
+
 		spriteBatch.end();		
 
 		if (Gdx.input.isKeyJustPressed(Keys.L)){
@@ -624,7 +624,6 @@ public class GameScreen implements Screen{
 		uiMatrix.setToOrtho2D(0, 0, 500, 500);
 		spriteBatch.setProjectionMatrix(uiMatrix);
 		spriteBatch.begin();
-		//hudBatch.begin();
 		
 		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + (int) player.money);
 		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
@@ -734,6 +733,16 @@ public class GameScreen implements Screen{
 			
 			guiLayout = new GlyphLayout(scoreFont, "Find the portal...");
 			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+		}
+			
+		
+		for(Chest chest : chests){
+			
+			if(chest.isTouched && player.money >= 100){
+				
+				guiLayout = new GlyphLayout(scoreFont, "Press  E  to open the chest.");
+				scoreFont.draw(spriteBatch, guiLayout, 200, 310);
+			}
 		}
 		
 		spriteBatch.end();
