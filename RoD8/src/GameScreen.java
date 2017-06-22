@@ -416,10 +416,10 @@ public class GameScreen implements Screen{
 			world.setContactListener(contactListener);	
 			game.setScreen(new GameOverScreen(game, 9473));
 		}
-		else if(changing){
-			changeLevel();
-			changing = false;
-		}
+		//else if(changing){
+			//changeLevel();
+			//changing = false;
+	//	}
 		else{
 		//stateTime += Gdx.graphics.getDeltaTime();
 		stateTime += delta;
@@ -551,7 +551,7 @@ public class GameScreen implements Screen{
 	
 		if (teleporter.wasActivated){
 			
-			int tempTime = (int)((60*1000) - (System.currentTimeMillis() - portalStart))/1000;
+			int tempTime = (int)((3*1000) - (System.currentTimeMillis() - portalStart))/1000;
 			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
 		
 			if(tempTime > 0){
@@ -566,8 +566,8 @@ public class GameScreen implements Screen{
 					guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
 					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
 					
-					if(difficulty < 4)
-						changing = true;
+					//if(difficulty < 4)
+						//changing = true;
 			}
 			else{
 				
@@ -613,6 +613,11 @@ public class GameScreen implements Screen{
 					createMonster(true);
 				}
 				phase = 10;
+				
+				if(difficulty < 4 && teleporter.isFinished){
+					
+					changeLevel();
+				}
 			}
 		}
 		
