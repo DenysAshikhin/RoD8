@@ -1014,8 +1014,7 @@ public class GameScreen implements Screen{
 		body1.createFixture(f1def).setUserData("mwall");
 		body1.setUserData(m);
 		monsterNum ++;
-	}
-	
+	}	
 
 	/**
 	 * Creates the tiles.

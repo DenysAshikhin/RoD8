@@ -192,6 +192,8 @@ public class Monster extends B2DSprite{
 				
 				if(framesRun == (primaryAttackFrames - 1)){
 					
+					GameScreen.player.getBody().setAwake(true);
+					
 					if(this.type == 4 || this.type == 5){
 						gameScreen.createLocalAttack(this, 5f, this.getFacing(), true);
 					}else{
@@ -203,6 +205,8 @@ public class Monster extends B2DSprite{
 			}
 			
 			if (framesRun <= primaryAttackFrames){
+				
+				GameScreen.player.getBody().setAwake(true);
 				
 				if(this.getState() == 4){
 					spriteBatch.draw(primaryright.getKeyFrame(animTime, true), this.getBody().getPosition().x * 100 - this.width * GameScreen.SCALE/2, this.getBody().getPosition().y * 100 - this.height * GameScreen.SCALE/2, 0, 0, this.width, this.height, GameScreen.SCALE, GameScreen.SCALE, 0);
