@@ -148,8 +148,6 @@ public class Player extends B2DSprite{
 		
 		this.type = type;
 		
-		money = 9999;
-		
 		switch(this.type){
 			
 		case 1:
