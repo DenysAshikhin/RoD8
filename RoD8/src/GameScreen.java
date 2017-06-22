@@ -104,7 +104,7 @@ public class GameScreen implements Screen{
 	SpriteBatch spriteBatch;
 
 	/** The debug. */
-	private boolean debug = true;
+	private boolean debug = false;
 		
 	/** The portal start. */
 	private long portalStart;
@@ -144,6 +144,8 @@ public class GameScreen implements Screen{
 
 	/** The spawn timer. */
 	private long spawnTimer;
+	
+	private long itemTimer;
 
 	/** The blank. */
 	private Texture blank;
@@ -267,6 +269,7 @@ public class GameScreen implements Screen{
 		createPortal();
 		createLaunchers();
 		createPlayer();
+		
 		phase = 0;
 
 	}
@@ -484,6 +487,8 @@ public class GameScreen implements Screen{
 			itemNum++;
 			itemList.add(i);
 			i.itemNum = itemNum;
+			
+			itemTimer = System.currentTimeMillis() + 6000;
 		}
 		transitionItems.clear();
 		
@@ -545,7 +550,7 @@ public class GameScreen implements Screen{
 			}
 			
 			spriteBatch.setColor(Color.GREEN);
-			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - 12, m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
+			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - ((float) (0.12 * m.health)), m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 			spriteBatch.setColor(Color.WHITE);
 		}
 		
@@ -657,6 +662,10 @@ public class GameScreen implements Screen{
 		
 		for(Item i : itemList){
 			i.writeItem(spriteBatch);
+		}
+		
+		if(System.currentTimeMillis() < itemTimer){
+			itemList.peek().writeDesc(spriteBatch);
 		}
 		
 		int t = (int) ((System.currentTimeMillis() - player.secondUsed)/1000);

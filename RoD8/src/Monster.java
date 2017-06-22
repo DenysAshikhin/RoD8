@@ -77,7 +77,7 @@ public class Monster extends B2DSprite{
 	private float animTime;
 	
 	/** The Constant DETECTION_RANGE. */
-	private static final float DETECTION_RANGE = 1.6f;
+	private static final float DETECTION_RANGE = 2f;
 
 	public int isInLava;
 	

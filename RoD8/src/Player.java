@@ -49,7 +49,7 @@ public class Player extends B2DSprite{
 	public float knockbackChance = 0f;
 	
 	/** The mortar chance. */
-	public float mortarChance = 0f;
+	public float mineChance = 0f;
 
 	/** The Constant PLAYER_WIDTH. */
 	public static float PLAYER_WIDTH = 8f;
@@ -148,8 +148,6 @@ public class Player extends B2DSprite{
 		
 		this.type = type;
 		
-		money = 0;
-		
 		switch(this.type){
 			
 		case 1:
@@ -223,7 +221,7 @@ public class Player extends B2DSprite{
 					
 					gameScreen.createBullet("bullet:10.00", this.getFacing());
 					
-					if(Math.random() < this.mortarChance){
+					if(Math.random() < this.mineChance){
 						gameScreen.createMine(60f, this.getFacing());
 					}
 				}
@@ -386,7 +384,7 @@ public class Player extends B2DSprite{
 					
 					gameScreen.createBullet("bullet:15.00", this.getFacing());
 					
-					if(Math.random() < this.mortarChance){
+					if(Math.random() < this.mineChance){
 						gameScreen.createMine(20f, this.getFacing());
 					}
 				}
@@ -787,8 +785,8 @@ public class Player extends B2DSprite{
 	 *
 	 * @param increase the increase
 	 */
-	public void increaseMortarChance(float increase){
-		this.mortarChance += increase;
+	public void increaseMineChance(float increase){
+		this.mineChance += increase;
 	}
 	
 	/**
