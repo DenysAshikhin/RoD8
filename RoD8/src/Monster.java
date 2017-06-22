@@ -26,6 +26,8 @@ public class Monster extends B2DSprite{
 	/** The jump height. */
 	public float jumpHeight;
 
+	public float moveSpeed;
+
 	/** The on ground. */
 	public int onGround;
 
@@ -309,9 +311,9 @@ public class Monster extends B2DSprite{
 									this.setState(3);
 									this.setFace(false);
 							
-									if(this.getBody().getLinearVelocity().x > -0.5f){
+									if(this.getBody().getLinearVelocity().x > -moveSpeed){
 								
-										this.getBody().applyLinearImpulse(new Vector2(-0.3f, 0f), this.getPosition(), true);
+										this.getBody().applyLinearImpulse(new Vector2(-moveSpeed / 2, 0f), this.getPosition(), true);
 									}
 								}
 							
@@ -320,9 +322,9 @@ public class Monster extends B2DSprite{
 									this.setState(2);
 									this.setFace(true);
 							
-									if(this.getBody().getLinearVelocity().x < 0.5f){
+									if(this.getBody().getLinearVelocity().x < moveSpeed){
 								
-										this.getBody().applyLinearImpulse(new Vector2(0.3f, 0f), this.getPosition(), true);
+										this.getBody().applyLinearImpulse(new Vector2(moveSpeed / 2, 0f), this.getPosition(), true);
 									}
 								}
 							}
@@ -372,6 +374,7 @@ public class Monster extends B2DSprite{
 	private void createCrab(){
 		this.health = 90f;
 		this.jumpStrength = 0f;
+		this.moveSpeed = 0.5f;
 		this.primaryAttackFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("crab");
@@ -393,6 +396,7 @@ public class Monster extends B2DSprite{
 	private void createLemurian(){
 		this.health = 60f;
 		this.jumpStrength = 1.3f;
+		this.moveSpeed = 1f;
 		this.primaryAttackFrames = 3;
 		
 		Texture texture = GameScreen.textures.getTexture("lemurian");
@@ -414,6 +418,7 @@ public class Monster extends B2DSprite{
 	private void createGiant(){
 		this.health = 120f;
 		this.jumpStrength = 0f;
+		this.moveSpeed = 0.4f;
 		this.primaryAttackFrames = 4;
 		
 		Texture texture = GameScreen.textures.getTexture("giant");
@@ -434,7 +439,8 @@ public class Monster extends B2DSprite{
 	 */
 	private void createGolem(){
 		this.health = 80f;
-		this.jumpStrength = 0f;
+		this.jumpStrength = 0.8f;
+		this.moveSpeed = 0.7f;
 		this.primaryAttackFrames = 5;
 		
 		Texture texture = GameScreen.textures.getTexture("golem");
@@ -456,6 +462,7 @@ public class Monster extends B2DSprite{
 	private void createCastle(){
 		this.health = 1000f;
 		this.jumpStrength = 0f;
+		this.moveSpeed = 0.5f;
 		this.primaryAttackFrames = 8;
 		this.secondaryAttackFrames = 10;
 		

@@ -104,7 +104,7 @@ public class GameScreen implements Screen{
 	SpriteBatch spriteBatch;
 
 	/** The debug. */
-	private boolean debug = false;
+	private boolean debug = true;
 		
 	/** The portal start. */
 	private long portalStart;
