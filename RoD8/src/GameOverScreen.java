@@ -88,9 +88,9 @@ public class GameOverScreen implements Screen{
 		float tryAgainY = SpaceGame.HEIGHT / 2 - tryAgainLayout.height / 2;
 		
 		float mainMenuX = SpaceGame.WIDTH / 2 - mainMenuLayout.width / 2;
-		float mainMenuY = SpaceGame.HEIGHT / 2 - mainMenuLayout.height/2 - tryAgainLayout.height - 15;
+		float mainMenuY = SpaceGame.HEIGHT / 2 - mainMenuLayout.height/2 - tryAgainLayout.height - 20;
 		
-		float touchX = Gdx.input.getX(), touchY = Gdx.input.getY();
+		float touchX = Gdx.input.getX(), touchY = SpaceGame.HEIGHT - Gdx.input.getY();
 		
 		//If user is clicking
 		if (Gdx.input.isTouched()){//Episode 14
