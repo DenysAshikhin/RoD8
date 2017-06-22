@@ -60,7 +60,7 @@ public class Item extends B2DSprite{
 	 *
 	 */
 	public void getItem(){
-		switch(type){
+		switch(this.type){
 		case 1: //root
 			GameScreen.player.increaseMaxHealth(10);
 			break;
@@ -107,6 +107,54 @@ public class Item extends B2DSprite{
 			
 			gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 32 + 2 * this.width / 3, 88);
 		}
+	}
+	
+	public void writeDesc(SpriteBatch spritebatch){
+		
+		System.out.println("hit");
+		
+		gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 32 + 2 * this.width / 3, 88);
+		GlyphLayout glyph = new GlyphLayout(gameScreen.scoreFont, "N/A");
+
+		float xratio = SpaceGame.WIDTH / 280;
+		float yratio = SpaceGame.HEIGHT / 360;
+		float x = SpaceGame.WIDTH / xratio;
+		float y = SpaceGame.HEIGHT / yratio;
+		
+		switch(this.type){
+		case 1: //root
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Earthy Root\n\nIncreases the character's health.");
+			break;
+		case 2: //piggy bank
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Piggy Bank\n\nIncreases the gold gained per second.");
+			break;
+		case 3: //smart shopper
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Smart Shopper\n\nIncreases the gold gained by killing \n monster.");
+			break;
+		case 4: //infusion
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Infusion\n\nCauses the character's health to increase\nupon killing a monster.");
+			break;
+		case 5: //leech
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Leech\n\nCauses the character to regenerate health by\ndamaging monsters.");
+			break;
+		case 6: //double jump
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Double Jump\n\nAllows to character to jump an additional\ntime middair.");
+			break;
+		case 7: //attack speed
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Soldier's Drink\n\nIncreases the characters attack speed.");
+			break;
+		case 8: //goat hoof
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Goat's Hoof\n\nIncreases the characters movement speed.");
+			break;
+		case 9: //boxing glove
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Boxing Glove\n\nGives the basic attack a knockback chance.");
+			break;
+		case 10: //mortar
+			glyph = new GlyphLayout(gameScreen.scoreFont, "NEW ITEM: Mine Spawner\n\nGives the basic attack chance to spawn a mine.");
+			break;
+		}
+		
+		gameScreen.scoreFont.draw(spritebatch, glyph, x, y);
 	}
 	
 	/**
