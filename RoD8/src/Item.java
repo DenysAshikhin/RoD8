@@ -88,8 +88,8 @@ public class Item extends B2DSprite{
 		case 9: //boxing glove
 			GameScreen.player.increaseKnockbackChance(0.1f);
 			break;
-		case 10: //mortar
-			GameScreen.player.increaseMortarChance(0.1f);
+		case 10: //mine launcher
+			GameScreen.player.increaseMineChance(0.1f);
 			break;
 		}
 	}
