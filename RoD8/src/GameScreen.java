@@ -351,7 +351,7 @@ public class GameScreen implements Screen{
 		mines.add(m);
 		
 		body.createFixture(fdef).setUserData("mine:" + damage);
-		
+		m.getBody().setUserData(m);
 		mineNum++;
 	}
 	
