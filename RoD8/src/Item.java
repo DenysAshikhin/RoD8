@@ -58,7 +58,6 @@ public class Item extends B2DSprite{
 	/**
 	 * Gets the item.
 	 *
-	 * @return the item
 	 */
 	public void getItem(){
 		switch(type){

@@ -598,9 +598,9 @@ public class Player extends B2DSprite{
 				if(this.type == 2){
 					
 					if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-						this.getBody().applyLinearImpulse(new Vector2(-6f, 0f), this.getPosition(), true);
+						this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
 					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-						this.getBody().applyLinearImpulse(new Vector2(6f, 0f), this.getPosition(), true);
+						this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
 				}
 				secondUsed = System.currentTimeMillis();
 			}
@@ -616,9 +616,9 @@ public class Player extends B2DSprite{
 				if(this.type == 1){
 					
 					if(this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-						this.getBody().applyLinearImpulse(new Vector2(0.75f, 0f), this.getPosition(), true);
+						this.getBody().applyLinearImpulse(new Vector2(1f, 0f), this.getPosition(), true);
 					else if(!this.getFacing() && gameScreen.contactListener.isPlayerOnGround())
-						this.getBody().applyLinearImpulse(new Vector2(-0.75f, 0f), this.getPosition(), true);
+						this.getBody().applyLinearImpulse(new Vector2(-1f, 0f), this.getPosition(), true);
 				}
 					
 				thirdUsed = System.currentTimeMillis();

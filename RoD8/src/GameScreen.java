@@ -924,31 +924,6 @@ public class GameScreen implements Screen{
 		body.createFixture(fdef).setUserData("foot");
 		
 	}
-	
-	/**
-	 * Creates the explosion.
-	 *
-	 * @param body the body
-	 */
-	private void createExplosion(Body body){
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		
-		shape.setAsBox(30f * SCALE / PPM, 30f * SCALE / PPM, new Vector2(0, 0), 0);
-		
-		Body b = body;
-		b.setLinearVelocity(new Vector2(0, 0));
-		b.setGravityScale(0);
-		
-		fdef.shape = shape;
-		fdef.isSensor = true;
-		fdef.filter.categoryBits = BIT_EXPLOSION;
-		fdef.filter.maskBits = BIT_MONSTER;
-		fdef.isSensor = true;
-	
-		b.createFixture(fdef).setUserData("explosion:" + 10f);
-	
-	}
 
 	/**
 	 * Creates monsters.
@@ -1280,8 +1255,7 @@ public class GameScreen implements Screen{
 		Body body = world.createBody(bdef);
 		body.createFixture(fdef).setUserData("item:" + itemNum);
 		body.setGravityScale(0);		
-		//Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
-		Item i = new Item(body, this, 10, itemNum);
+		Item i = new Item(body, this, ((int) (Math.random() * 10) + 1), itemNum);
 		floatingItemList.add(i);
 		
 		i.getBody().setUserData(i);
