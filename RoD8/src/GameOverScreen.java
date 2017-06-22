@@ -21,12 +21,6 @@ public class GameOverScreen implements Screen{
 	/** The game. */
 	SpaceGame game;
 
-	/** The score. */
-	int score;
-
-	/** The highscore. */
-	int highscore;
-
 	/** The Constant BANNER_WIDTH. */
 	private static final int BANNER_WIDTH = 350;
 	
@@ -40,10 +34,9 @@ public class GameOverScreen implements Screen{
 	 * @param game the game
 	 * @param score the score
 	 */
-	public GameOverScreen(SpaceGame game, int score){
+	public GameOverScreen(SpaceGame game){
 		
 		this.game = game;
-		this.score = score;
 		
 		//Load textures and fonts
 		gameOverBanner = new Texture("game_over.png");
@@ -75,11 +68,7 @@ public class GameOverScreen implements Screen{
 		
 		game.scrollingBackground.updateAndRender(delta, game.batch);
 
-		game.batch.draw(gameOverBanner, Gdx.graphics.getWidth()/2 - BANNER_WIDTH/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15, BANNER_WIDTH, BANNER_HEIGHT);
-		
-		GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: \n" + score, Color.WHITE, 0, Align.left, false);
-
-		scoreFont.draw(game.batch, scoreLayout, Gdx.graphics.getWidth()/2 - scoreLayout.width/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15 * 2);
+		game.batch.draw(gameOverBanner, Gdx.graphics.getWidth()/2 - BANNER_WIDTH/2, Gdx.graphics.getHeight() - BANNER_HEIGHT - 15, BANNER_WIDTH, BANNER_HEIGHT);	
 
 		GlyphLayout tryAgainLayout = new GlyphLayout(scoreFont, "Try Again");
 		GlyphLayout mainMenuLayout = new GlyphLayout(scoreFont, "Main Menu");

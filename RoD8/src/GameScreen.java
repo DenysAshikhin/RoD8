@@ -413,7 +413,7 @@ public class GameScreen implements Screen{
 			world = new World(new Vector2(0, -9.81f), true);
 			contactListener = new MyContactListener(this);
 			world.setContactListener(contactListener);	
-			game.setScreen(new GameOverScreen(game, 9473));
+			game.setScreen(new GameOverScreen(game));
 		}
 		//else if(changing){
 			//changeLevel();
@@ -555,12 +555,6 @@ public class GameScreen implements Screen{
 		
 		//Draw player
 		player.drawPlayer(spriteBatch, stateTime);
-	
-		//Draw crystals
-		for(int i = 0; i < crystals.size; i++){
-			
-			spriteBatch.draw(crystals.get(i).getAnim().getKeyFrame(stateTime, true), crystals.get(i).getBody().getPosition().x * PPM - 8, crystals.get(i).getBody().getPosition().y * PPM - 8);
-		}
 		
 	
 		if (teleporter.wasActivated){
@@ -627,7 +621,14 @@ public class GameScreen implements Screen{
 				
 				if(difficulty < 4 && teleporter.isFinished){
 					
-					changeLevel();
+					if(difficulty == 3){
+						
+						game.setScreen(new GameOverScreen(game));
+					}
+					else{
+
+						changeLevel();	
+					}
 				}
 			}
 		}
