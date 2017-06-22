@@ -84,18 +84,18 @@ public class GameOverScreen implements Screen{
 		GlyphLayout tryAgainLayout = new GlyphLayout(scoreFont, "Try Again");
 		GlyphLayout mainMenuLayout = new GlyphLayout(scoreFont, "Main Menu");
 		
-		float tryAgainX = Gdx.graphics.getWidth()/2 - tryAgainLayout.width / 2;
-		float tryAgainY = Gdx.graphics.getHeight() /2 - tryAgainLayout.height/2;
+		float tryAgainX = SpaceGame.WIDTH / 2 - tryAgainLayout.width / 2;
+		float tryAgainY = SpaceGame.HEIGHT / 2 - tryAgainLayout.height / 2;
 		
-		float mainMenuX = Gdx.graphics.getWidth()/2 - mainMenuLayout.width / 2;
-		float mainMenuY = Gdx.graphics.getHeight() /2 - mainMenuLayout.height/2 - tryAgainLayout.height - 15;
+		float mainMenuX = SpaceGame.WIDTH / 2 - mainMenuLayout.width / 2;
+		float mainMenuY = SpaceGame.HEIGHT / 2 - mainMenuLayout.height/2 - tryAgainLayout.height - 15;
 		
-		float touchX = Gdx.input.getX(), touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+		float touchX = Gdx.input.getX(), touchY = Gdx.input.getY();
 		
 		//If user is clicking
 		if (Gdx.input.isTouched()){//Episode 14
 			//Try again
-			if (touchX > tryAgainX && touchX < tryAgainX + tryAgainLayout.width && touchY > tryAgainY - tryAgainLayout.height && touchY < tryAgainY){
+			if (touchX > tryAgainX && touchX < tryAgainX + tryAgainLayout.width && touchY > tryAgainY && touchY < tryAgainY + tryAgainLayout.height){
 				
 				this.dispose();
 				game.batch.end();
@@ -103,7 +103,7 @@ public class GameOverScreen implements Screen{
 				return;
 			}
 			
-			if (touchX > mainMenuX && touchX < mainMenuX + mainMenuLayout.width && touchY > mainMenuY - mainMenuLayout.height && touchY < mainMenuY){
+			if (touchX > mainMenuX && touchX < mainMenuX + mainMenuLayout.width && touchY > mainMenuY && touchY < mainMenuY + mainMenuLayout.height){
 				
 				this.dispose();
 				game.batch.end();
