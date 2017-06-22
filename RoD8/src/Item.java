@@ -111,8 +111,6 @@ public class Item extends B2DSprite{
 	
 	public void writeDesc(SpriteBatch spritebatch){
 		
-		System.out.println("hit");
-		
 		gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 32 + 2 * this.width / 3, 88);
 		GlyphLayout glyph = new GlyphLayout(gameScreen.scoreFont, "N/A");
 
