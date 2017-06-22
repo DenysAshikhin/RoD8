@@ -49,7 +49,7 @@ public class Chest extends B2DSprite{
 	 */
 	public void drawChest(SpriteBatch spriteBatch){
 		
-		spriteBatch.begin();
+		//spriteBatch.begin();
 		if(isOpen){
 			spriteBatch.draw(open.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 10, this.getBody().getPosition().y * 100 - 2, 0, 0, 19, 14, 1, 1, 0);
 		}
@@ -57,6 +57,6 @@ public class Chest extends B2DSprite{
 			spriteBatch.draw(closed.getKeyFrame(0, false), this.getBody().getPosition().x * 100 - 10, this.getBody().getPosition().y * 100 - 2, 0, 0, 19, 14, 1, 1, 0);
 		}
 		
-		spriteBatch.end();
+	//	spriteBatch.end();
 	}
 }
