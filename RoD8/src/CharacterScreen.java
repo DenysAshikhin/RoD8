@@ -29,24 +29,6 @@ public class CharacterScreen implements Screen{
 	Texture sniperInactive;
 
 	public Object scrollingBackground;
-
-	/** The exit button width. */
-	private static int EXIT_BUTTON_WIDTH = 300;
-	
-	/** The exit button height. */
-	private static int EXIT_BUTTON_HEIGHT = 300;
-
-	/** The play button width. */
-	private static int PLAY_BUTTON_WIDTH = 300;
-	
-	/** The play button height. */
-	private static int PLAY_BUTTON_HEIGHT = 300;
-	
-	/** The Constant PLAY_BUTTON_Y. */
-	private static final int PLAY_BUTTON_X = 800;
-	
-	/** The Constant EXIT_BUTTON_Y. */
-	private static final int EXIT_BUTTON_X = 300;
 	
 	/**
 	 * Instantiates a new main menu.
@@ -83,33 +65,42 @@ public class CharacterScreen implements Screen{
 	@Override
 	public void render(float delta) {
 
-		
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
-		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
-
-		int y = SpaceGame.HEIGHT/2 - EXIT_BUTTON_HEIGHT/2;
+		GlyphLayout guiLayout;
 		
-		if (Gdx.input.getY() < y + EXIT_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && Gdx.input.getX() >  EXIT_BUTTON_X){
+		float x;
+		float y;
+		float width;
+		float height;
+		
+		width = SpaceGame.WIDTH / 5;
+		height = SpaceGame.WIDTH / 3;
+		
+		x = SpaceGame.WIDTH / 5;
+		y = SpaceGame.HEIGHT / 4;
+		
+		if (Gdx.input.getY() < y + height && Gdx.input.getY() > y && Gdx.input.getX() < x + width && Gdx.input.getX() > x){
 			
-			game.batch.draw(commandoActive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			game.batch.draw(commandoActive, x, y, width, height);
 			scoreFont.getData().setScale(2);
 			guiLayout = new GlyphLayout(scoreFont, "Quick, weak attacks.");
-			scoreFont.draw(game.batch, guiLayout, 300, 230);
+			scoreFont.draw(game.batch, guiLayout, x, y - 20);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Basic light attacks.");
-			scoreFont.draw(game.batch, guiLayout, 340, 190);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 50);
 			
 			guiLayout = new GlyphLayout(scoreFont, "* Knock-back, medium damage.");
-			scoreFont.draw(game.batch, guiLayout, 340, 150);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 80);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Roll to safety.");
-			scoreFont.draw(game.batch, guiLayout, 340, 110);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 110);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Rapid fire in both directions.");
-			scoreFont.draw(game.batch, guiLayout, 340, 70);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 140);
 			
 			if(Gdx.input.isTouched()){
 
@@ -119,30 +110,31 @@ public class CharacterScreen implements Screen{
 		}
 		else{
 			
-			game.batch.draw(commandoInactive, EXIT_BUTTON_X, y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
+			game.batch.draw(commandoInactive, x, y, width, height);
 
 		}
+
+		x = 3 * SpaceGame.WIDTH / 5;
+		y = SpaceGame.HEIGHT / 4;
 		
-		y = SpaceGame.HEIGHT/2 - PLAY_BUTTON_HEIGHT/2;
-		
-		if (Gdx.input.getY() < y + PLAY_BUTTON_HEIGHT && Gdx.input.getY() > y && Gdx.input.getX() < PLAY_BUTTON_X + PLAY_BUTTON_WIDTH && Gdx.input.getX() >  PLAY_BUTTON_X){
+		if (Gdx.input.getY() < y + height && Gdx.input.getY() > y && Gdx.input.getX() < x + width && Gdx.input.getX() > x){
 			
-			game.batch.draw(sniperActive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			game.batch.draw(sniperActive, x, y, width, height);
 			scoreFont.getData().setScale(2);
 			guiLayout = new GlyphLayout(scoreFont, "Powerful, slow attacks.");			
-			scoreFont.draw(game.batch, guiLayout, 800, 230);
+			scoreFont.draw(game.batch, guiLayout, x, y - 20);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Medium light attack.");
-			scoreFont.draw(game.batch, guiLayout, 840, 190);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 50);
 			
 			guiLayout = new GlyphLayout(scoreFont, "* Leap backwards to safety.");
-			scoreFont.draw(game.batch, guiLayout, 840, 150);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 80);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Powerful knockback.");
-			scoreFont.draw(game.batch, guiLayout, 840, 110);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 110);
 
 			guiLayout = new GlyphLayout(scoreFont, "* Mark an enemy for double damage.");
-			scoreFont.draw(game.batch, guiLayout, 840, 70);
+			scoreFont.draw(game.batch, guiLayout, x + 40, y - 140);
 			if(Gdx.input.isTouched()){
 				
 				game.setScreen(new GameScreen(game, 2));
@@ -150,7 +142,7 @@ public class CharacterScreen implements Screen{
 		}
 		else{
 			
-			game.batch.draw(sniperInactive, PLAY_BUTTON_X, y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+			game.batch.draw(sniperInactive, x, y, width, height);
 		}
 		
 		game.batch.end();

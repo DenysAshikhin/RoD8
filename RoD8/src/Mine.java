@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class Mine extends B2DSprite{
-
-	public int number;
 	
 	/** The open. */
 	private Animation<TextureRegion> anim;
@@ -16,11 +14,9 @@ public class Mine extends B2DSprite{
 	 *
 	 * @param body the body
 	 */
-	public Mine(Body body, int num){
+	public Mine(Body body){
 		
 		super(body);
-		
-		this.number = num;
 		
 		Texture texture = GameScreen.textures.getTexture("mine");
 		

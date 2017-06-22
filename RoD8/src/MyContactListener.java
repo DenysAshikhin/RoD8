@@ -473,6 +473,8 @@ public class MyContactListener implements ContactListener{
 			}else{
 				
 				bodyToRemove.add(fa.getBody());
+				
+				GameScreen.removeMines.add((Mine) fa.getBody().getUserData()); 
 					
 				Monster m = (Monster)fb.getBody().getUserData();
 				
@@ -513,7 +515,9 @@ public class MyContactListener implements ContactListener{
 			}else{
 
 				bodyToRemove.add(fb.getBody());
-					
+
+				GameScreen.removeMines.add((Mine) fb.getBody().getUserData()); 
+				
 				Monster m = (Monster)fa.getBody().getUserData();
 				
 				float damage = Float.parseFloat(((String) fb.getUserData()).substring(((String) fb.getUserData()).indexOf(':') + 1, ((String) fb.getUserData()).length()));

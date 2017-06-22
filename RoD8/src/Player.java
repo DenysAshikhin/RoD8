@@ -224,7 +224,7 @@ public class Player extends B2DSprite{
 					gameScreen.createBullet("bullet:10.00", this.getFacing());
 					
 					if(Math.random() < this.mortarChance){
-						gameScreen.createMine(20f, this.getFacing());
+						gameScreen.createMine(60f, this.getFacing());
 					}
 				}
 				framesRun++;

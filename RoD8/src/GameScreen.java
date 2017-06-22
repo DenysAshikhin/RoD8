@@ -136,8 +136,6 @@ public class GameScreen implements Screen{
 	/** The monster num. */
 	private int monsterNum;
 	
-	private int mineNum;
-
 	/** The item num. */
 	private int itemNum;
 
@@ -259,8 +257,6 @@ public class GameScreen implements Screen{
 		monsterNum = 0;
 		monsterList.ordered = false;
 		
-		mineNum = 0;
-		
 		chests = new HashSet<Chest>();
 		launchers = new HashSet<Launcher>();
 		
@@ -347,12 +343,11 @@ public class GameScreen implements Screen{
 		fdef.filter.categoryBits = BIT_MINE;
 		fdef.filter.maskBits = BIT_GROUND;
 		
-		Mine m = new Mine(body, mineNum);
+		Mine m = new Mine(body);
 		mines.add(m);
 		
 		body.createFixture(fdef).setUserData("mine:" + damage);
 		m.getBody().setUserData(m);
-		mineNum++;
 	}
 	
 	/**

@@ -43,14 +43,6 @@ public class MainMenu implements Screen{
 	
 	/** The Constant EXIT_BUTTON_Y. */
 	private static final int EXIT_BUTTON_Y = 125;
-
-	private static final float SPLASHSCREEN_X = 305;
-
-	private static final float SPLASHSCREEN_Y = 10;
-
-	private static final float SPLASHSCREEN_WIDTH = 750;
-
-	private static final float SPLASHSCREEN_HEIGHT = 750;
 	
 	/**
 	 * Instantiates a new main menu.
@@ -85,13 +77,12 @@ public class MainMenu implements Screen{
 	@Override
 	public void render(float delta) {
 
-		
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
 
-		game.batch.draw(splashScreen, SPLASHSCREEN_X, SPLASHSCREEN_Y, SPLASHSCREEN_WIDTH, SPLASHSCREEN_HEIGHT);
+		game.batch.draw(splashScreen, SpaceGame.WIDTH / 2 - SpaceGame.HEIGHT / 2 + 20, 20, SpaceGame.HEIGHT - 40, SpaceGame.HEIGHT - 40);
 		
 		int x = SpaceGame.WIDTH/2 - EXIT_BUTTON_WIDTH/2;
 
