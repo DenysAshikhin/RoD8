@@ -58,6 +58,7 @@ public class Item extends B2DSprite{
 	/**
 	 * Gets the item.
 	 *
+	 * @return the item
 	 */
 	public void getItem(){
 		switch(this.type){
@@ -109,6 +110,11 @@ public class Item extends B2DSprite{
 		}
 	}
 	
+	/**
+	 * Write desc.
+	 *
+	 * @param spritebatch the spritebatch
+	 */
 	public void writeDesc(SpriteBatch spritebatch){
 		
 		gameScreen.scoreFont.draw(spritebatch, new GlyphLayout(gameScreen.scoreFont, "x" + this.itemCount), this.itemNum * 32 + 2 * this.width / 3, 88);

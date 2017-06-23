@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
+/**
+ * The Class Mine.
+ */
 public class Mine extends B2DSprite{
 	
 	/** The open. */
@@ -31,6 +34,7 @@ public class Mine extends B2DSprite{
 	 * Draw chest.
 	 *
 	 * @param spriteBatch the sprite batch
+	 * @param stateTime the state time
 	 */
 	public void drawMine(SpriteBatch spriteBatch, float stateTime){
 		

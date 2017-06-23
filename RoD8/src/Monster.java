@@ -26,6 +26,7 @@ public class Monster extends B2DSprite{
 	/** The jump height. */
 	public float jumpHeight;
 
+	/** The move speed. */
 	public float moveSpeed;
 
 	/** The on ground. */
@@ -67,6 +68,7 @@ public class Monster extends B2DSprite{
 	/** The attack range. */
 	private float attackRange;
 	
+	/** The damage. */
 	private float damage;
 
 	/** The primary attack frames. */
@@ -81,6 +83,7 @@ public class Monster extends B2DSprite{
 	/** The Constant DETECTION_RANGE. */
 	private static final float DETECTION_RANGE = 2f;
 
+	/** The is in lava. */
 	public int isInLava;
 	
 	/**

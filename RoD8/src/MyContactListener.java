@@ -32,6 +32,7 @@ public class MyContactListener implements ContactListener{
 	/** The player on ground. */
 	private int playerOnGround;
 	
+	/** The player in lava. */
 	private int playerInLava;
 	
 	/** The player on ladder. */
@@ -40,6 +41,7 @@ public class MyContactListener implements ContactListener{
 	/** The bodies to remove. */
 	private Array<Body> bodiesToRemove;
 	
+	/** The filter. */
 	private Filter filter;
 	
 	/**
@@ -85,6 +87,11 @@ public class MyContactListener implements ContactListener{
 	 */
 	public boolean isPlayerOnLadder(){return playerOnLadder > 0;}
 	
+	/**
+	 * Checks if is player in lava.
+	 *
+	 * @return true, if is player in lava
+	 */
 	public boolean isPlayerInLava(){return playerInLava > 0;}
 	
 	/* (non-Javadoc)

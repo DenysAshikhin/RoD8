@@ -24,6 +24,7 @@ public class MainMenu implements Screen{
 	/** The play button inactive. */
 	Texture playButtonInactive;
 	
+	/** The splash screen. */
 	Texture splashScreen;
 
 	/** The exit button width. */

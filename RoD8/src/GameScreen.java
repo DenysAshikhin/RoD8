@@ -63,6 +63,7 @@ public class GameScreen implements Screen{
 	/** The remove mobs. */
 	public static Array<Monster> removeMobs = new Array<Monster>();
 	
+	/** The remove mines. */
 	public static Array<Mine> removeMines = new Array<Mine>();
 
 	/** The transition items. */
@@ -71,6 +72,7 @@ public class GameScreen implements Screen{
 	/** The chests. */
 	public static HashSet<Chest> chests;
 	
+	/** The mines. */
 	public static Array<Mine> mines = new Array<Mine>();
 
 	
@@ -145,11 +147,13 @@ public class GameScreen implements Screen{
 	/** The spawn timer. */
 	private long spawnTimer;
 	
+	/** The item timer. */
 	private long itemTimer;
 
 	/** The blank. */
 	private Texture blank;
 	
+	/** The char type. */
 	private int charType;
 
 	/** The Constant BIT_PLAYER. */
@@ -192,13 +196,17 @@ public class GameScreen implements Screen{
 	/** The Constant BIT_EXPLOSION. */
 	private static final short BIT_EXPLOSION = 8192;
 	
+	/** The Constant BIT_LAVA. */
 	private static final short BIT_LAVA = 16384;
 	
+	/** The game. */
 	private SpaceGame game;
+	
 	/**
 	 * Instantiates a new game screen.
 	 *
 	 * @param game the game
+	 * @param charType the char type
 	 */
 	public GameScreen(SpaceGame game, int charType){
 		

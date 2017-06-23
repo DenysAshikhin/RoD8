@@ -13,6 +13,7 @@ public class CharacterScreen implements Screen{
 	/** The game. */
 	SpaceGame game;
 	
+	/** The score font. */
 	BitmapFont scoreFont;
 
 	
@@ -28,6 +29,7 @@ public class CharacterScreen implements Screen{
 	/** The play button inactive. */
 	Texture sniperInactive;
 
+	/** The scrolling background. */
 	public Object scrollingBackground;
 	
 	/**
