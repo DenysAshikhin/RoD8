@@ -559,7 +559,7 @@ public class GameScreen implements Screen{
 		
 			if (teleporter.wasActivated){
 				
-				int tempTime = (int)((1*1000) - (System.currentTimeMillis() - portalStart))/1000;
+				int tempTime = (int)((60*1000) - (System.currentTimeMillis() - portalStart))/1000;
 				GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
 			
 				if(tempTime > 0){
