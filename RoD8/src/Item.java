@@ -74,7 +74,7 @@ public class Item extends B2DSprite{
 			GameScreen.player.increaseHealthSteal(2f);
 			break;
 		case 5: //leech
-			GameScreen.player.increaseHealthLeech(0.1f);
+			GameScreen.player.increaseHealthLeech(0.05f);
 			break;
 		case 6: //double jump
 			GameScreen.player.increaseJumps(1);

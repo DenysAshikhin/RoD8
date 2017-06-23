@@ -420,388 +420,380 @@ public class GameScreen implements Screen{
 			//changing = false;
 	//	}
 		else{
-		//stateTime += Gdx.graphics.getDeltaTime();
-		stateTime += delta;
-		
-		if(player.getState() > 3){
+			//stateTime += Gdx.graphics.getDeltaTime();
+			stateTime += delta;
 			
-			player.increaseAnimTime(delta);	
-		}
-		
-		world.step(delta, 6, 2);
-		
-		for(Monster m : monsterList){
-			
-			if(m.health <= 0){
+			if(player.getState() > 3){
 				
-				if(!(m.isInLava > 0)){
+				player.increaseAnimTime(delta);	
+			}
+			
+			world.step(delta, 6, 2);
+			
+			for(Monster m : monsterList){
+				
+				if(m.health <= 0){
 					
-					GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
-					GameScreen.player.health += GameScreen.player.HealthSteal;
-					player.money += player.goldLeech;
+					if(!(m.isInLava > 0)){
+						
+						GameScreen.player.maxHealth += GameScreen.player.HealthSteal;
+						GameScreen.player.health += GameScreen.player.HealthSteal;
+						player.money += player.goldLeech;
+					}
+					
+					if(m.isMarked){
+						
+						player.markedMob = null;
+					}
+					
+					removeMobs.add(m);
+					world.destroyBody(m.getBody());
+				}
+			}
+			
+			HashSet<Body> bodies = contactListener.getBodyToRemove();
+			
+			for (Body body : bodies){
+			
+					world.destroyBody(body);
+			}
+			bodies.clear();
+		
+			
+			for(Monster j : removeMobs){
+				
+				monsterList.removeValue(j, true);
+			}
+			removeMobs.clear();
+			
+			for(Mine m : removeMines){
+				
+				mines.removeValue(m, true);
+			}
+			removeMines.clear();
+			
+			LOOP : for(Item i : transitionItems){
+	
+				floatingItemList.removeValue(i, true);
+				
+				for(Item j : itemList){
+					if(j.type == i.type){
+						j.itemCount += 1;
+						break LOOP;
+					}
 				}
 				
+				itemNum++;
+				itemList.add(i);
+				i.itemNum = itemNum;
+				
+				itemTimer = System.currentTimeMillis() + 6000;
+			}
+			transitionItems.clear();
+			
+			Gdx.gl.glClearColor(255, 255, 255, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+			//movement update
+			player.updateMovement();
+			
+			player.money += player.goldGain;
+			
+			cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
+			cam.update();
+			spriteBatch.setProjectionMatrix(cam.combined);
+		
+			tmr.setView(cam);
+			tmr.render();
+			
+			for(Launcher launcher : launchers){
+				
+				launcher.drawLauncher(spriteBatch, stateTime);
+			}
+			//True = green portal, false = red portal
+			teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
+			
+			spriteBatch.begin();
+	
+			for(Item i : floatingItemList){
+				
+				i.drawItem(spriteBatch);
+			}
+			
+			for(Mine m : mines){
+				
+				m.drawMine(spriteBatch, stateTime);
+			}
+			
+			for(Monster m : monsterList){
+				
+				if(m.getState() > 3){
+					m.increaseAnimTime(delta);
+				}
+				m.monsterMovement();
+	
 				if(m.isMarked){
 					
-					player.markedMob = null;
+					spriteBatch.setColor(Color.SALMON);
+					m.drawMonsters(spriteBatch, stateTime);
+					spriteBatch.setColor(Color.WHITE);
+				}
+				else{
+					
+					m.drawMonsters(spriteBatch, stateTime);
 				}
 				
-				removeMobs.add(m);
-				world.destroyBody(m.getBody());
-			}
-		}
-		
-		HashSet<Body> bodies = contactListener.getBodyToRemove();
-		
-		for (Body body : bodies){
-		
-				world.destroyBody(body);
-		}
-		bodies.clear();
-	
-		
-		for(Monster j : removeMobs){
-			
-			monsterList.removeValue(j, true);
-		}
-		removeMobs.clear();
-		
-		for(Mine m : removeMines){
-			
-			mines.removeValue(m, true);
-		}
-		removeMines.clear();
-		
-		LOOP : for(Item i : transitionItems){
-
-			floatingItemList.removeValue(i, true);
-			
-			for(Item j : itemList){
-				if(j.type == i.type){
-					j.itemCount += 1;
-					break LOOP;
-				}
-			}
-			
-			itemNum++;
-			itemList.add(i);
-			i.itemNum = itemNum;
-			
-			itemTimer = System.currentTimeMillis() + 6000;
-		}
-		transitionItems.clear();
-		
-		Gdx.gl.glClearColor(255, 255, 255, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		//movement update
-		player.updateMovement();
-		
-		player.money += player.goldGain;
-		
-		cam.position.set(player.getPosition().x * PPM, player.getPosition().y * PPM, 0);
-		cam.update();
-		spriteBatch.setProjectionMatrix(cam.combined);
-	
-		tmr.setView(cam);
-		tmr.render();
-		
-		for(Launcher launcher : launchers){
-			
-			launcher.drawLauncher(spriteBatch, stateTime);
-		}
-		//True = green portal, false = red portal
-		teleporter.drawPortal(spriteBatch, !teleporter.wasActivated || teleporter.isFinished);
-		
-		spriteBatch.begin();
-
-		for(Item i : floatingItemList){
-			
-			i.drawItem(spriteBatch);
-		}
-		
-		for(Mine m : mines){
-			
-			m.drawMine(spriteBatch, stateTime);
-		}
-		
-		for(Monster m : monsterList){
-			
-			if(m.getState() > 3){
-				m.increaseAnimTime(delta);
-			}
-			m.monsterMovement();
-
-			if(m.isMarked){
-				
-				spriteBatch.setColor(Color.SALMON);
-				m.drawMonsters(spriteBatch, stateTime);
+				spriteBatch.setColor(Color.GREEN);
+				spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - ((float) (0.12 * m.health)), m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
 				spriteBatch.setColor(Color.WHITE);
 			}
-			else{
-				
-				m.drawMonsters(spriteBatch, stateTime);
-			}
 			
-			spriteBatch.setColor(Color.GREEN);
-			spriteBatch.draw(blank, m.getBody().getPosition().x * PPM - ((float) (0.12 * m.health)), m.getBody().getPosition().y * PPM + 20, (float) (0.24 * m.health), 3);
-			spriteBatch.setColor(Color.WHITE);
-		}
-		
-		for(Chest chest : chests){
-				
-			chest.drawChest(spriteBatch);
-		}
-		
-		//Draw player
-		player.drawPlayer(spriteBatch, stateTime);
-		
-	
-		if (teleporter.wasActivated){
-			
-			int tempTime = (int)((60*1000) - (System.currentTimeMillis() - portalStart))/1000;
-			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
-		
-			if(tempTime > 0){
-				
-				scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
-			}
-			else if(tempTime <= 0 && monsterList.size == 0){
-				
-					teleporter.isActive = false;
-					teleporter.isFinished = true;
+			for(Chest chest : chests){
 					
-					guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
-					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
+				chest.drawChest(spriteBatch);
+			}
+			
+			//Draw player
+			player.drawPlayer(spriteBatch, stateTime);
+			
+		
+			if (teleporter.wasActivated){
+				
+				int tempTime = (int)((1*1000) - (System.currentTimeMillis() - portalStart))/1000;
+				GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Time Remaining: " + tempTime);
+			
+				if(tempTime > 0){
+					
+					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+				}
+				else if(tempTime <= 0 && monsterList.size == 0){
+					
+						teleporter.isActive = false;
+						teleporter.isFinished = true;
+						
+						guiLayout = new GlyphLayout(scoreFont, "Press E to go to the next level...");
+						scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 40, teleporter.getBody().getPosition().y * PPM + 33);
+				}
+				else{
+					
+					teleporter.isActive = false;
+					guiLayout = new GlyphLayout(scoreFont, monsterList.size + " monsters left.");
+					scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
+				}
 			}
 			else{
 				
-				teleporter.isActive = false;
-				guiLayout = new GlyphLayout(scoreFont, monsterList.size + " monsters left.");
+				GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Press E to begin...");
 				scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
 			}
-		}
-		else{
+	
+			spriteBatch.end();		
+	
+			if (Gdx.input.isKeyJustPressed(Keys.L)){
+				
+				createMonster(false);
+			}
 			
-			GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Press E to begin...");
-			scoreFont.draw(spriteBatch, guiLayout, teleporter.getBody().getPosition().x * PPM - 30, teleporter.getBody().getPosition().y * PPM + 33);
-		}
-
-		spriteBatch.end();		
-
-		if (Gdx.input.isKeyJustPressed(Keys.L)){
+			if (Gdx.input.isKeyJustPressed(Keys.E)){
+				
+				if(player.money >= 100){
+					
+					for(Chest chest : chests){
+						
+						if (chest.isTouched && !chest.isOpen){
+							
+							chest.isOpen = true;
+							player.money -= 100;
+							createItem(chest);
+						}
+					}
+				}
+				
+				if(teleporter.isTouched && monsterList.size == 0){
+					
+					teleporter.isActive = true;
+					teleporter.wasActivated = true;
+					portalStart = System.currentTimeMillis();
+					if(difficulty == 3){
+						createMonster(true);
+					}
+					phase = 10;
+					
+					if(difficulty < 4 && teleporter.isFinished){
+						
+						changeLevel();
+					}
+				}
+			}
 			
-			createMonster(false);
-		}
+			if(difficulty < 4){
+				if (Gdx.input.isKeyJustPressed(Keys.M)){
+					
+					for(Monster m : monsterList){
+						m.getBody().setTransform(player.getPosition(), 0);
+					}
+				}
+			
+				Matrix4 uiMatrix = cam.combined.cpy();
+				uiMatrix.setToOrtho2D(0, 0, 500, 500);
+				spriteBatch.setProjectionMatrix(uiMatrix);
+				spriteBatch.begin();
+				
+				GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + (int) player.money);
+				scoreFont.draw(spriteBatch, guiLayout, 5, 490);
+				
+				spriteBatch.setColor(Color.BLACK);
+				spriteBatch.draw(blank, 100, 50, 300, 10);
+				
+				spriteBatch.setColor(Color.GREEN);
+				spriteBatch.draw(blank, 100, 50, 3 * (100 * (player.health / player.maxHealth)), 10);
+				spriteBatch.setColor(Color.WHITE);
+				
+				for(Item i : itemList){
+					i.writeItem(spriteBatch);
+				}
+				
+				if(System.currentTimeMillis() < itemTimer){
+					itemList.peek().writeDesc(spriteBatch);
+				}
+				
+				int t = (int) ((System.currentTimeMillis() - player.secondUsed)/1000);
+				if(t < player.secondCD/1000){
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability S ready in..." + ((player.secondCD/1000) - t));
+					scoreFont.draw(spriteBatch, guiLayout, 5, 470);
+				}
+				else{
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability S: Ready!");
+					scoreFont.draw(spriteBatch, guiLayout, 5, 470);
 		
-		if (Gdx.input.isKeyJustPressed(Keys.E)){
-			
-			if(player.money >= 100){
+				}
+				
+				
+				t = (int) ((System.currentTimeMillis() - player.thirdUsed)/1000);
+				if(t < player.thirdCD/1000){
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability D ready in..." + ((player.thirdCD/1000) - t));
+					scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+				}
+				else{
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability D: Ready!");
+					scoreFont.draw(spriteBatch, guiLayout, 5, 450);
+		
+				}
+				
+				
+				t = (int) ((System.currentTimeMillis() - player.fourthUsed)/1000);
+				if(t < player.fourthCD/1000){
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability F ready in..." + ((player.fourthCD/1000) - t));
+					scoreFont.draw(spriteBatch, guiLayout, 5, 430);
+				}
+				else{
+					
+					guiLayout = new GlyphLayout(scoreFont, "Ability F: Ready!");
+					scoreFont.draw(spriteBatch, guiLayout, 5, 430);
+		
+				}
+				
+				guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health + "/" + player.maxHealth);
+				scoreFont.draw(spriteBatch, guiLayout, 210, 57);
+				
+				switch(phase){
+				
+				case 0:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press Left and Right Arrow Keys To Move.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					
+					break;
+				case 1:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press spacebar To Jump.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					break;
+				case 2:
+					
+					if(this.contactListener.isPlayerOnLadder()){
+					
+						guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
+						scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					}
+					else{
+						
+						guiLayout = new GlyphLayout(scoreFont, "Look around...");
+						scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					}
+					break;
+				case 3:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press  A  to use your basic attack.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					break;
+				case 4:
+		
+					guiLayout = new GlyphLayout(scoreFont, "Press  S  to use your secondary attack.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					break;
+				case 5:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press  D  to use your third ability.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					break;
+				case 6:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Press F to use your fourth ability.");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+					break;
+				case 7:
+					
+					guiLayout = new GlyphLayout(scoreFont, "Find the portal...");
+					scoreFont.draw(spriteBatch, guiLayout, 190, 300);
+				}
+					
 				
 				for(Chest chest : chests){
 					
-					if (chest.isTouched && !chest.isOpen){
+					if(chest.isTouched && player.money >= 100){
 						
-						chest.isOpen = true;
-						player.money -= 100;
-						createItem(chest);
+						guiLayout = new GlyphLayout(scoreFont, "Press  E  to open the chest.");
+						scoreFont.draw(spriteBatch, guiLayout, 200, 310);
 					}
 				}
-			}
+				
+				spriteBatch.end();
 			
-			if(teleporter.isTouched && monsterList.size == 0){
-				
-				teleporter.isActive = true;
-				teleporter.wasActivated = true;
-				portalStart = System.currentTimeMillis();
-				if(difficulty == 3){
-					createMonster(true);
+				int i = 0;
+				for (i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
+			
+					createMonster(false);
 				}
-				phase = 10;
-				
-				if(difficulty < 4 && teleporter.isFinished){
+				if(i >= difficulty){
 					
-					if(difficulty == 3){
-						
-						game.setScreen(new GameOverScreen(game));
-					}
-					else{
-
-						changeLevel();	
-					}
+					spawnTimer = System.currentTimeMillis();
+				}
+			
+				if(debug){
+			
+					b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
+					b2dCam.update();
+					b2dr.render(world, b2dCam.combined);
+				}
+				
+				
+				if(player.getBody().getPosition().y < 35 && difficulty == 3){
+					
+					player.getBody().setTransform(new Vector2(47, 48), 0);
+				}
+				
+				if(contactListener.isPlayerInLava()){
+					
+					player.health -= 1;
 				}
 			}
 		}
-		
-		if (Gdx.input.isKeyJustPressed(Keys.M)){
-			
-			for(Monster m : monsterList){
-				m.getBody().setTransform(player.getPosition(), 0);
-			}
-		}
-	
-		Matrix4 uiMatrix = cam.combined.cpy();
-		uiMatrix.setToOrtho2D(0, 0, 500, 500);
-		spriteBatch.setProjectionMatrix(uiMatrix);
-		spriteBatch.begin();
-		
-		GlyphLayout guiLayout = new GlyphLayout(scoreFont, "Gold: " + (int) player.money);
-		scoreFont.draw(spriteBatch, guiLayout, 5, 490);
-		
-		spriteBatch.setColor(Color.BLACK);
-		spriteBatch.draw(blank, 100, 50, 300, 10);
-		
-		spriteBatch.setColor(Color.GREEN);
-		spriteBatch.draw(blank, 100, 50, 3 * (100 * (player.health / player.maxHealth)), 10);
-		spriteBatch.setColor(Color.WHITE);
-		
-		for(Item i : itemList){
-			i.writeItem(spriteBatch);
-		}
-		
-		if(System.currentTimeMillis() < itemTimer){
-			itemList.peek().writeDesc(spriteBatch);
-		}
-		
-		int t = (int) ((System.currentTimeMillis() - player.secondUsed)/1000);
-		if(t < player.secondCD/1000){
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability S ready in..." + ((player.secondCD/1000) - t));
-			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
-		}
-		else{
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability S: Ready!");
-			scoreFont.draw(spriteBatch, guiLayout, 5, 470);
-
-		}
-		
-		
-		t = (int) ((System.currentTimeMillis() - player.thirdUsed)/1000);
-		if(t < player.thirdCD/1000){
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability D ready in..." + ((player.thirdCD/1000) - t));
-			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
-		}
-		else{
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability D: Ready!");
-			scoreFont.draw(spriteBatch, guiLayout, 5, 450);
-
-		}
-		
-		
-		t = (int) ((System.currentTimeMillis() - player.fourthUsed)/1000);
-		if(t < player.fourthCD/1000){
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability F ready in..." + ((player.fourthCD/1000) - t));
-			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
-		}
-		else{
-			
-			guiLayout = new GlyphLayout(scoreFont, "Ability F: Ready!");
-			scoreFont.draw(spriteBatch, guiLayout, 5, 430);
-
-		}
-		
-		guiLayout = new GlyphLayout(scoreFont, "Health: " + player.health + "/" + player.maxHealth);
-		scoreFont.draw(spriteBatch, guiLayout, 210, 57);
-		
-		switch(phase){
-		
-		case 0:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Press Left and Right Arrow Keys To Move.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			
-			break;
-		case 1:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Press spacebar To Jump.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			break;
-		case 2:
-			
-			if(this.contactListener.isPlayerOnLadder()){
-			
-				guiLayout = new GlyphLayout(scoreFont, "Hold the up arrow to climb ladders.");
-				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			}
-			else{
-				
-				guiLayout = new GlyphLayout(scoreFont, "Look around...");
-				scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			}
-			break;
-		case 3:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Press  A  to use your basic attack.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			break;
-		case 4:
-
-			guiLayout = new GlyphLayout(scoreFont, "Press  S  to use your secondary attack.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			break;
-		case 5:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Press  D  to use your third ability.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			break;
-		case 6:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Press F to use your fourth ability.");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-			break;
-		case 7:
-			
-			guiLayout = new GlyphLayout(scoreFont, "Find the portal...");
-			scoreFont.draw(spriteBatch, guiLayout, 190, 300);
-		}
-			
-		
-		for(Chest chest : chests){
-			
-			if(chest.isTouched && player.money >= 100){
-				
-				guiLayout = new GlyphLayout(scoreFont, "Press  E  to open the chest.");
-				scoreFont.draw(spriteBatch, guiLayout, 200, 310);
-			}
-		}
-		
-		spriteBatch.end();
-	
-		int i = 0;
-		for (i = 0; i < difficulty && (((System.currentTimeMillis() - spawnTimer)/1000 >= 1)) && teleporter.isActive; i++){
-	
-			createMonster(false);
-		}
-		if(i >= difficulty){
-			
-			spawnTimer = System.currentTimeMillis();
-		}
-	
-		if(debug){
-	
-			b2dCam.position.set(player.getPosition().x, player.getPosition().y, 0);
-			b2dCam.update();
-			b2dr.render(world, b2dCam.combined);
-		}
-		
-		
-		if(player.getBody().getPosition().y < 35 && difficulty == 3){
-			
-			player.getBody().setTransform(new Vector2(47, 48), 0);
-		}
-		
-		if(contactListener.isPlayerInLava()){
-			
-			player.health -= 1;
-		}
-		}
-		
-		
-		
 	}
 
 	/* (non-Javadoc)
@@ -858,8 +850,7 @@ public class GameScreen implements Screen{
 	 */
 	private void changeLevel(){
 		
-		teleporter = null;
-	
+		
 		crystals.clear();
 		chests.clear();
 		transitionItems.clear();
@@ -874,25 +865,33 @@ public class GameScreen implements Screen{
 		
 		world.dispose();
 		
-		world = new World(new Vector2(0, -9.81f), true);
-		contactListener = new MyContactListener(this);
-		world.setContactListener(contactListener);	
-		
-		difficulty ++;
+		if(difficulty == 3){
+			
+			game.setScreen(new GameOverScreen(game));
+			
+			difficulty ++;
+		}else{
+			
+			world = new World(new Vector2(0, -9.81f), true);
+			contactListener = new MyContactListener(this);
+			world.setContactListener(contactListener);
 
-		createTiles();
-		createCrystals();
-		createChests();
-		createPortal();
-		createLaunchers();
-		createPlayer();
+			difficulty ++;
+			
+			createTiles();
+			createCrystals();
+			createChests();
+			createPortal();
+			createLaunchers();
+			createPlayer();
 
-		
-		portalStart = 0;
-				
-		stateTime = 0f;
-		
-		spawnTimer = 0;
+			
+			portalStart = 0;
+					
+			stateTime = 0f;
+			
+			spawnTimer = 0;
+		}
 	}
 
 	/**

@@ -66,6 +66,8 @@ public class Monster extends B2DSprite{
 	
 	/** The attack range. */
 	private float attackRange;
+	
+	private float damage;
 
 	/** The primary attack frames. */
 	private int primaryAttackFrames;
@@ -202,9 +204,9 @@ public class Monster extends B2DSprite{
 					GameScreen.player.getBody().setAwake(true);
 					
 					if(this.type == 4 || this.type == 5){
-						gameScreen.createLocalAttack(this, 5f, this.getFacing(), true);
+						gameScreen.createLocalAttack(this, this.damage, this.getFacing(), true);
 					}else{
-						gameScreen.createLocalAttack(this, 5f, this.getFacing(), false);
+						gameScreen.createLocalAttack(this, this.damage, this.getFacing(), false);
 					}
 				}
 				framesRun++;
@@ -236,7 +238,7 @@ public class Monster extends B2DSprite{
 				
 				if(framesRun == 4){
 					
-					gameScreen.createLocalAttack(this, 5f, this.getFacing(), false);
+					gameScreen.createLocalAttack(this, damage, this.getFacing(), false);
 				}
 				framesRun++;
 				prevFrame = secondaryright.getKeyFrame(animTime, true);
@@ -384,6 +386,7 @@ public class Monster extends B2DSprite{
 	 */
 	private void createCrab(){
 		this.health = 90f;
+		this.damage = 10f;
 		this.jumpStrength = 0f;
 		this.moveSpeed = 0.5f;
 		this.primaryAttackFrames = 4;
@@ -406,6 +409,7 @@ public class Monster extends B2DSprite{
 	 */
 	private void createLemurian(){
 		this.health = 60f;
+		this.damage = 5f;
 		this.jumpStrength = 1.3f;
 		this.moveSpeed = 1f;
 		this.primaryAttackFrames = 3;
@@ -428,6 +432,7 @@ public class Monster extends B2DSprite{
 	 */
 	private void createGiant(){
 		this.health = 120f;
+		this.damage = 15f;
 		this.jumpStrength = 0f;
 		this.moveSpeed = 0.4f;
 		this.primaryAttackFrames = 4;
@@ -450,6 +455,7 @@ public class Monster extends B2DSprite{
 	 */
 	private void createGolem(){
 		this.health = 80f;
+		this.damage = 8f;
 		this.jumpStrength = 0.8f;
 		this.moveSpeed = 0.7f;
 		this.primaryAttackFrames = 5;
@@ -472,6 +478,7 @@ public class Monster extends B2DSprite{
 	 */
 	private void createCastle(){
 		this.health = 1000f;
+		this.damage = 40f;
 		this.jumpStrength = 0f;
 		this.moveSpeed = 0.5f;
 		this.primaryAttackFrames = 8;
